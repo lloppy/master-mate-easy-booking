@@ -16,7 +16,7 @@ fun SetupNavGraph(
             LogInScreen(navController = navHastController)
         }
         composable(route = Screen.Registration.route,){
-            RegistrationScreen()
+            RegistrationScreen(navController = navHastController)
         }
     }
 }

@@ -1,6 +1,9 @@
 package com.example.skills.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -11,7 +14,17 @@ import androidx.compose.ui.unit.sp
 val Typography = Typography(
     headlineMedium = TextStyle(
         fontFamily = FontFamily.Default,
-        fontSize = 36.sp
+        fontSize = 64.sp,
+        color = blackTextMaterial,
+        fontWeight = FontWeight.Thin,
+        shadow = Shadow(color = Color.LightGray, offset = Offset(1f, 3f), blurRadius = 10f)
+    ),
+    headlineSmall = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontSize = 58.sp,
+        color = blackTextMaterial,
+        fontWeight = FontWeight.Thin,
+        shadow = Shadow(color = Color.LightGray, offset = Offset(1f, 3f), blurRadius = 10f)
     ),
     labelMedium = TextStyle(
         fontFamily = FontFamily.Default,
