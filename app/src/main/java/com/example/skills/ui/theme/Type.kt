@@ -45,4 +45,5 @@ val Typography = Typography(
 )
 
 val paddingBetweenElements = 8.dp
+val spacer = 8.dp
 
