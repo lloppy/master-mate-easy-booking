@@ -77,7 +77,8 @@ fun MainUserScreen() {
 
         Column(
             modifier = Modifier
-                .fillMaxSize(0.5f)
+                .fillMaxHeight(0.5f)
+                .fillMaxWidth()
                 .clip(shape = RoundedCornerShape(dimen, dimen, dimen, dimen))
                 .background(Color.White)
         ) {}
