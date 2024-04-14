@@ -44,23 +44,25 @@ fun MainUserScreen() {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.5f)
-                .clip(shape = RoundedCornerShape(dimen, dimen, dimen, dimen))
+                .fillMaxHeight(0.2f)
+                .clip(shape = RoundedCornerShape(dimen))
                 .background(blackMaterial)
         ) {
+            val firstAppointment = Repository.currentUser.mastersAppointment!!.first()
+
         }
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.4f),
+                .fillMaxHeight(0.5f),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth(0.42f)
                     .fillMaxHeight()
-                    .clip(shape = RoundedCornerShape(dimen, dimen, dimen, dimen))
+                    .clip(shape = RoundedCornerShape(dimen))
                     .background(greenMaterial)
             ) {
             }
@@ -68,7 +70,7 @@ fun MainUserScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                    .clip(shape = RoundedCornerShape(dimen, dimen, dimen, dimen))
+                    .clip(shape = RoundedCornerShape(dimen))
                     .background(orangeMaterial)
             ) {
 
@@ -77,9 +79,9 @@ fun MainUserScreen() {
 
         Column(
             modifier = Modifier
-                .fillMaxHeight(0.5f)
+                .fillMaxHeight(0.6f)
                 .fillMaxWidth()
-                .clip(shape = RoundedCornerShape(dimen, dimen, dimen, dimen))
+                .clip(shape = RoundedCornerShape(dimen))
                 .background(Color.White)
         ) {}
     }
@@ -103,4 +105,4 @@ fun GreetingText(name: String) {
     )
 }
 
-val dimen = 60.dp
+val dimen = 22.dp

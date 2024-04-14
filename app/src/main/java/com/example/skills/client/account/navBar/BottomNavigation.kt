@@ -15,10 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.skills.client.account.dimen
 import com.example.skills.navigation.client.account.Screen
-import com.example.skills.navigation.client.registration.Screen.LogIn
 import com.example.skills.ui.theme.blackMaterial
 import com.example.skills.ui.theme.orangeMaterial
 import com.exyte.animatednavbar.AnimatedNavigationBar
@@ -46,7 +43,7 @@ fun BottomNavigation(
         selectedIndex = selectedItem,
         ballColor = blackMaterial,
         barColor = blackMaterial,
-        cornerRadius = shapeCornerRadius(dimen),
+        cornerRadius = shapeCornerRadius(60.dp),
         ballAnimation = Parabolic(tween(Duration, easing = LinearOutSlowInEasing)),
         indentAnimation = Height(
             indentWidth = 56.dp,
@@ -65,7 +62,7 @@ fun BottomNavigation(
                 animationSpec = tween(durationMillis = Duration, easing = LinearEasing),
                 onClick = {
                     selectedItem = index
-                    navController.navigate(item.route){
+                    navController.navigate(item.route) {
                         popUpTo(Screen.UserHomeScreen.route) {
                             saveState = true
                         }

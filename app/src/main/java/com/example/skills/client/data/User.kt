@@ -8,5 +8,6 @@ data class User(
     var phone: String,
     var city: String,
     var birthdate: Date,
-    var password: String
+    var password: String,
+    var mastersAppointment: List<Appointment>? = null   //Встречи
 )
