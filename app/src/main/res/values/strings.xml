@@ -13,4 +13,44 @@
     <string name="Circle">Circle</string>
     <string name="Drop">Drop</string>
     <string name="Leaf">Leaf</string>
+
+    <string name="in_my_free_time">Заполните информацию о себе</string>
+    <string name="select_all" translatable="false">Это поможет коммуницировать с вашими клиентами</string>
+
+    <string name="takeaway">Создайте свой график</string>
+
+
+    <string name="pick_superhero">Выберете ваш вид предпринимательской деятельности</string>
+    <string name="spark">Индивидуальный предприниматель (ИП)</string>
+    <string name="lenz">Общество с ограниченной ответственностью (ООО)</string>
+    <string name="bugchaos">АО (Акционерное общество)</string>
+    <string name="frag">Кооператив или другие формы совместного предпринимательства</string>
+
+    <string name="selfie_skills">Загрузите фото профиля 🤳</string>
+
+    <string name="feature_not_available">Функция недоступна</string>
+    <string name="dismiss">Игнорировать</string>
+    <string name="next">Далее</string>
+    <string name="previous">Назад</string>
+    <string name="done">Готово</string>
+    <string name="back">Назад</string>
+    <string name="close">Закрыть</string>
+
+    <string name="show_password">Показать пароль</string>
+    <string name="hide_password">"Скрыть пароль "</string>
+    <string name="question_count">\u00A0из %d</string>
+    <string name="select_one">Выберете ваш вид</string>
+    <string name="select_date">"Выберите дату. "</string>
+
+    <string name="add_photo">ДОБАВИТЬ ФОТО</string>
+    <string name="retake_photo">ПЕРЕСНЯТЬ</string>
+    <string name="profile_input_title">Создайте имя профиля\n</string>
+    <string name="profile_name">Имя профиля</string>
+    <string name="website">Ваш веб-сайт</string>
+    <string name="continue_label">Продолжить</string>
+
+    <string name="survey_result_title">Готово!</string>
+    <string name="survey_result_subtitle">Профиль создан</string>
+    <string name="survey_result_description">Поздравляю, вы создали аккаунт мастера! Делитесь своим QR-кодом с клиентами, упрощая запись и контролируя свое расписание.</string>
+
 </resources>

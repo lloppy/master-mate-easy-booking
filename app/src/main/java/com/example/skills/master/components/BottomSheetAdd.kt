@@ -1,4 +1,4 @@
-package com.example.skills.ui.components
+package com.example.skills.master.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -92,7 +92,6 @@ fun ModalBottomSheetAdd() {
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
-
                     Button(
                         onClick = { /*TODO*/ },
                         modifier = Modifier

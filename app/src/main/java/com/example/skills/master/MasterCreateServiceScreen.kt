@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.example.skills.ui.components.ModalBottomSheetAdd
+import com.example.skills.master.components.ModalBottomSheetAdd
 import com.example.skills.ui.theme.blackMaterial
 import com.example.skills.ui.theme.greenMaterial
 import com.example.skills.ui.theme.orangeMaterial

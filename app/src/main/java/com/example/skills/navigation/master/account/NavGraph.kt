@@ -19,6 +19,10 @@ fun SetupMasterNavGraph(
             MasterCreateServiceScreen()
         }
 
+        composable(route = ScreenMater.MasterCreateServiceScreen.route){
+            MasterCreateServiceScreen()
+        }
+
         composable(route = ScreenMater.MasterCalendarScreen.route){
 //            CalendarScreen()
         }
