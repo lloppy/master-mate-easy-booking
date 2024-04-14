@@ -24,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.skills.client.data.Repository
 import com.example.skills.navigation.client.registration.Screen
 import com.example.skills.ui.theme.backgroundMaterial
 import com.example.skills.ui.theme.paddingBetweenElements
@@ -76,11 +75,10 @@ fun LogInScreen(navController: NavHostController) {
 
             Button(
                 onClick = {
-                    if (Repository.currentUser.password == "123" + Repository.currentUser.name) {
-                        navController.navigate(Screen.MainLayout.route)
-
+                    if (password == "123" ) {
+                        navController.navigate(Screen.MainUserLayout.route)
                     } else{
-                        navController.navigate(Screen.MainLayout.route)
+                        navController.navigate(Screen.MainUserLayout.route)
                     }
                           },
                 modifier = Modifier
