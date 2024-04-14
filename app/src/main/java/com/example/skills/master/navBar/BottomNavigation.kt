@@ -1,4 +1,4 @@
-package com.example.skills.client.account.navBar
+package com.example.skills.master.navBar
 
 import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.LinearEasing
@@ -15,7 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.skills.navigation.client.account.ScreenClient
+import com.example.skills.navigation.master.account.ScreenMater
 import com.example.skills.ui.theme.blackMaterial
 import com.example.skills.ui.theme.orangeMaterial
 import com.exyte.animatednavbar.AnimatedNavigationBar
@@ -26,13 +26,12 @@ import com.exyte.animatednavbar.items.dropletbutton.DropletButton
 
 
 @Composable
-fun ClientBottomNavigation(
+fun MasterBottomNavigation(
     navController: NavController
 ) {
     val dropletButtons = listOf(
-        ScreenClient.ClientCalendarScreen,
-        ScreenClient.ClientHomeScreen,
-        ScreenClient.ClientChatsScreen
+        ScreenMater.MasterHomeScreen,
+        ScreenMater.MasterChatsScreen
     )
 
     var selectedItem by remember { mutableStateOf(1) }
@@ -48,7 +47,9 @@ fun ClientBottomNavigation(
         indentAnimation = Height(
             indentWidth = 56.dp,
             indentHeight = 15.dp,
-            animationSpec = tween(DoubleDuration, easing = { OvershootInterpolator().getInterpolation(it) })
+            animationSpec = tween(
+                DoubleDuration,
+                easing = { OvershootInterpolator().getInterpolation(it) })
         )
     ) {
         dropletButtons.forEachIndexed { index, item ->
@@ -57,14 +58,11 @@ fun ClientBottomNavigation(
                 isSelected = selectedItem == index,
                 icon = item.iconId,
                 dropletColor = orangeMaterial,
-                animationSpec = tween(
-                    durationMillis = Duration,
-                    easing = LinearEasing
-                ),
+                animationSpec = tween(durationMillis = Duration, easing = LinearEasing),
                 onClick = {
                     selectedItem = index
                     navController.navigate(item.route) {
-                        popUpTo(ScreenClient.ClientHomeScreen.route) {
+                        popUpTo(ScreenMater.MasterHomeScreen.route) {
                             saveState = true
                         }
                         launchSingleTop = true

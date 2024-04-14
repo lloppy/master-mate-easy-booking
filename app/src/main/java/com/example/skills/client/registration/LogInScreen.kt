@@ -75,12 +75,12 @@ fun LogInScreen(navController: NavHostController) {
 
             Button(
                 onClick = {
-                    if (password == "123" ) {
-                        navController.navigate(Screen.MainUserLayout.route)
-                    } else{
-                        navController.navigate(Screen.MainUserLayout.route)
+                    if (password == "123") {
+                        navController.navigate(Screen.MainMasterLayout.route)
+                    } else {
+                        navController.navigate(Screen.MainClientLayout.route)
                     }
-                          },
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(80.dp)

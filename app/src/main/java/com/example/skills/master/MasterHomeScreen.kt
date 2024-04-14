@@ -1,4 +1,4 @@
-package com.example.skills.client.account
+package com.example.skills.master
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,7 +29,7 @@ import com.example.skills.ui.theme.greenMaterial
 import com.example.skills.ui.theme.orangeMaterial
 
 @Composable
-fun MainUserScreen() {
+fun MainMasterScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()

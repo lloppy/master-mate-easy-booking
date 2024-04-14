@@ -5,9 +5,7 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Stable
 import com.example.skills.R
-import com.exyte.navbar.colorButtons.BellColorButton
-import com.exyte.navbar.colorButtons.ButtonBackground
-import com.exyte.navbar.colorButtons.ColorButtonAnimation
+import com.example.skills.client.account.navBar.BellColorButton
 
 @Stable
 data class Item(

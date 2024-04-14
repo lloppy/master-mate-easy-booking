@@ -4,16 +4,16 @@ import android.annotation.SuppressLint
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
-import com.example.skills.client.account.navBar.BottomNavigation
-import com.example.skills.navigation.client.account.SetupNavGraph
+import com.example.skills.client.account.navBar.ClientBottomNavigation
+import com.example.skills.navigation.client.account.SetupClientNavGraph
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainLayout() {
+fun MainClientLayout() {
     val navController = rememberNavController()
     Scaffold(
-        bottomBar = { BottomNavigation(navController = navController) }
+        bottomBar = { ClientBottomNavigation(navController = navController) }
     ) {
-        SetupNavGraph(navHostController = navController)
+        SetupClientNavGraph(navHostController = navController)
     }
 }
