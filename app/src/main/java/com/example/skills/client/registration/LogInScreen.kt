@@ -75,7 +75,7 @@ fun LogInScreen(navController: NavHostController) {
 
             Button(
                 onClick = {
-                    if (password == "123") {
+                    if (password != "123") {
                         navController.navigate(Screen.MainMasterLayout.route)
                     } else {
                         navController.navigate(Screen.MainClientLayout.route)

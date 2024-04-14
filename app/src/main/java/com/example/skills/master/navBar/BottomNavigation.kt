@@ -30,11 +30,12 @@ fun MasterBottomNavigation(
     navController: NavController
 ) {
     val dropletButtons = listOf(
+        ScreenMater.MasterChatsScreen,
+        ScreenMater.MasterCreateServiceScreen,
         ScreenMater.MasterHomeScreen,
-        ScreenMater.MasterChatsScreen
-    )
+        )
 
-    var selectedItem by remember { mutableStateOf(1) }
+    var selectedItem by remember { mutableStateOf(2) }
     AnimatedNavigationBar(
         modifier = Modifier
             .padding(bottom = 10.dp, start = 40.dp, end = 40.dp)
