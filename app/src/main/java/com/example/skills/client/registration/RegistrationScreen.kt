@@ -24,7 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.skills.navigation.Screen
+import com.example.skills.navigation.client.registration.Screen
 import com.example.skills.ui.theme.backgroundMaterial
 import com.example.skills.ui.theme.paddingBetweenElements
 import com.example.skills.ui.theme.spacer

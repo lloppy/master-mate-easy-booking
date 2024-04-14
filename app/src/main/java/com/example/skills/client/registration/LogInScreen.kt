@@ -10,11 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ButtonDefaults.buttonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -24,16 +21,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.skills.navigation.Screen
+import com.example.skills.navigation.client.registration.Screen
 import com.example.skills.ui.theme.backgroundMaterial
-import com.example.skills.ui.theme.blackMaterial
-import com.example.skills.ui.theme.horizontalGradient
 import com.example.skills.ui.theme.paddingBetweenElements
 import com.example.skills.ui.theme.spacer
 
@@ -82,7 +74,7 @@ fun LogInScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = { /* TODO: Handle login */ },
+                onClick = { navController.navigate(Screen.MainLayout.route) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(80.dp)

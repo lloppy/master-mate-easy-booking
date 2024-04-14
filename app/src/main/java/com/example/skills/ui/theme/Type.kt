@@ -26,6 +26,11 @@ val Typography = Typography(
         fontWeight = FontWeight.Thin,
         shadow = Shadow(color = Color.LightGray, offset = Offset(1f, 3f), blurRadius = 10f)
     ),
+    titleMedium = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontSize = 24.sp,
+        color = blackTextMaterial,
+    ),
     labelMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontSize = 24.sp

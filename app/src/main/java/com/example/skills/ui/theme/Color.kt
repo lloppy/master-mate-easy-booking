@@ -6,11 +6,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.TileMode
 
+val ElectricViolet = Color(0xFF7D26FE)
+val Purple = Color(0xFF742DF6)
+val LightPurple = Color(0xFFBCA1E7)
+val RoyalPurple = Color(0xFF64419F)
+val LightGrey = Color(0xFFB1B1B1)
+
 val backgroundMaterial = Color(0xFFF9F8F4)
-val greenMaterial = Color(0xFFF9F8F4)
-val orangeMaterial = Color(0xFFF9F8F4)
+val greenMaterial = Color(0xFF598744)
+val orangeMaterial = Color(0xFFF5982A)
 val blackMaterial = Color(0xFF111111)
 val itemMaterial = Color(0xFFEEEEEA)
+val whiteMaterial = Color(0xFFFFFFFF)
 
 val blackTextMaterial = Color(0xFF111111)
 val whiteTextMaterial = Color(0xFFFFFFFF)
