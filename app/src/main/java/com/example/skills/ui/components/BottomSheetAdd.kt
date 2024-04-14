@@ -1,20 +1,19 @@
 package com.example.skills.ui.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -26,14 +25,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.skills.R
 import com.example.skills.ui.theme.blackMaterial
+import com.example.skills.ui.theme.greenMaterial
+import com.example.skills.ui.theme.orangeMaterial
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,13 +39,14 @@ fun ModalBottomSheetAdd() {
     val bottomSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false
     )
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(blackMaterial)
     ) {
-        Button(onClick = { openBottomSheet = !openBottomSheet }, modifier = Modifier.fillMaxSize()) {
+        Button(
+            onClick = { openBottomSheet = !openBottomSheet },
+            modifier = Modifier.fillMaxSize()
+        ) {
             Text(text = "Добавить новую услугу")
         }
     }
@@ -62,49 +59,56 @@ fun ModalBottomSheetAdd() {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(16.dp, top = 0.dp)
             ) {
-                Image(
-                    painter = painterResource(R.drawable.background_bubble),
-                    contentDescription = "Spirit Vale Sanctuary Image",
-                    contentScale = ContentScale.Crop,
+                Text(
+                    text = "Добавить услугу",
+                    style = MaterialTheme.typography.titleSmall,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Row(
                     modifier = Modifier
-                        .height(180.dp)
                         .fillMaxWidth()
-                        .clip(MaterialTheme.shapes.medium)
-                )
+                        .padding(end = 12.dp, bottom = 36.dp)
+                        .fillMaxHeight(0.3f),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Button(
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier
+                            .fillMaxWidth(0.48f)
+                            .fillMaxHeight()
+                            .clip(shape = RoundedCornerShape(15.dp))
+                            .background(blackMaterial),
+//                        colors = ButtonDefaults.buttonColors(containerColor = greenMaterial),
+                    ) {
+                        Text(
+                            text = "Редактировать старую",
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = "Spirit Vale Sanctuary",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "The perfect fusion of valley and architecture.",
-                    fontSize = 16.sp
-                )
-                Text(
-                    text = "Open 08:30 - 19:00",
-                    fontSize = 14.sp,
-                    color = Color.Gray
-                )
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-
-            LazyColumn {
-                items(10) {
-                    ListItem(
-                        headlineContent = { Text("Item $it") },
-                        leadingContent = {
-                            Icon(
-                                Icons.Default.Favorite,
-                                contentDescription = "Localized description"
-                            )
-                        }
-                    )
+                    Button(
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .clip(shape = RoundedCornerShape(15.dp))
+                            .background(blackMaterial),
+                    ) {
+                        Text(
+                            text = "Создать новую",
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
+
             }
         }
     }
