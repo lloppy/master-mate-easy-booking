@@ -1,4 +1,4 @@
-package com.example.skills.master
+package com.example.skills.master.creatingService
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,14 +13,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.skills.master.components.ModalBottomSheetAdd
+import com.example.skills.master.dimen
 import com.example.skills.ui.theme.blackMaterial
 import com.example.skills.ui.theme.greenMaterial
 import com.example.skills.ui.theme.orangeMaterial
 import com.example.skills.ui.theme.whiteMaterial
 
 @Composable
-fun MasterCreateServiceScreen() {
+fun MasterCreateServiceScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -36,8 +38,7 @@ fun MasterCreateServiceScreen() {
                 .clip(shape = RoundedCornerShape(dimen))
                 .background(blackMaterial)
         ) {
-            ModalBottomSheetAdd()
-
+            ModalBottomSheetAdd(navController)
         }
 
         Row(

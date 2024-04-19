@@ -9,8 +9,8 @@ sealed class ScreenMater(val route: String, val iconId: Int) {
 
     object MasterCalendarScreen : ScreenMater(route = "master_calendar_screen", iconId = R.drawable.person)
     object MasterCreateServiceScreen : ScreenMater(route = "master_create_service_screen", iconId = R.drawable.plus)
-    object MasterCreateServiceScreen : ScreenMater(route = "master_create_service_screen", iconId = R.drawable.plus)
-    SetupMasterServiceNavGraph
+    object MainCreationLayout: ScreenMater(route = "master_create_service_layout", iconId = R.drawable.plus)
+
 
 
 

@@ -5,7 +5,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.skills.master.MainMasterScreen
-import com.example.skills.master.MasterCreateServiceScreen
+import com.example.skills.master.creatingService.MainCreationLayout
+import com.example.skills.master.creatingService.MasterCreateServiceScreen
+import com.example.skills.navigation.master.createService.ScreenMaterCreateService
 
 @Composable
 fun SetupMasterNavGraph(
@@ -16,11 +18,10 @@ fun SetupMasterNavGraph(
             MainMasterScreen()
         }
         composable(route = ScreenMater.MasterCreateServiceScreen.route){
-            MasterCreateServiceScreen()
+            MasterCreateServiceScreen(navController = navHostController)
         }
-
-        composable(route = ScreenMater.MasterCreateServiceScreen.route){
-            MasterCreateServiceScreen()
+        composable(route = ScreenMater.MainCreationLayout.route){
+            MainCreationLayout()
         }
 
         composable(route = ScreenMater.MasterCalendarScreen.route){

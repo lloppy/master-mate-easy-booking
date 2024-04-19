@@ -27,6 +27,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.example.skills.navigation.client.registration.Screen
+import com.example.skills.navigation.master.account.ScreenMater
+import com.example.skills.navigation.master.createService.ScreenMaterCreateService
 import com.example.skills.ui.theme.blackMaterial
 import com.example.skills.ui.theme.greenMaterial
 import com.example.skills.ui.theme.orangeMaterial
@@ -34,7 +38,7 @@ import com.example.skills.ui.theme.orangeMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ModalBottomSheetAdd() {
+fun ModalBottomSheetAdd(navController: NavHostController) {
     var openBottomSheet by rememberSaveable { mutableStateOf(true) }
     val bottomSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false
@@ -44,7 +48,9 @@ fun ModalBottomSheetAdd() {
             .fillMaxSize()
     ) {
         Button(
-            onClick = { openBottomSheet = !openBottomSheet },
+            onClick = {
+                openBottomSheet = !openBottomSheet
+            },
             modifier = Modifier.fillMaxSize()
         ) {
             Text(text = "Добавить новую услугу")
@@ -93,7 +99,9 @@ fun ModalBottomSheetAdd() {
                         )
                     }
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            navController.navigate(ScreenMater.MainCreationLayout.route)
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .fillMaxHeight()
