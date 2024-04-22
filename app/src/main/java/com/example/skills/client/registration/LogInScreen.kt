@@ -93,7 +93,7 @@ fun LogInScreen(navController: NavHostController) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text("или")
                 TextButton(onClick = {
-                    navController.navigate(route = Screen.Registration.route)
+                    navController.navigate(route = Screen.ClientRegistration.route)
                 }) {
                     Text("Зарегестрироваться")
                 }

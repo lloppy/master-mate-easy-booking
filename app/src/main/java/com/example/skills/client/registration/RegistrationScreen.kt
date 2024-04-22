@@ -118,8 +118,8 @@ fun RegistrationScreen(navController: NavHostController) {
                     // navController.navigate(Screen.LogIn.route)
                     // navController.popBackStack()
 
-                    navController.navigate(Screen.LogIn.route) {
-                        popUpTo(Screen.LogIn.route) {
+                    navController.navigate(Screen.ClientLogIn.route) {
+                        popUpTo(Screen.ClientLogIn.route) {
                             inclusive = true
                         }
                     }
