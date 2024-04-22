@@ -17,7 +17,7 @@ fun SetupRoleNavGraph(
 ) {
     NavHost(navController = navHostController, startDestination = ScreenRole.RoleLayout.route) {
         composable(route = ScreenRole.RoleLayout.route) {
-            ChooseRoleScreen(navController = navHostController)
+            RolesScreen(navController = navHostController)
         }
 
 

@@ -24,11 +24,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.skills.R
+import com.example.skills.master.components.CustomButton
 import com.example.skills.ui.theme.fontFamilyInter
 import com.example.skills.ui.theme.paddingBetweenElements
 
 @Composable
-fun ChooseRoleScreen(navController: NavController) {
+fun RolesScreen(navController: NavController) {
 
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Column(
@@ -93,35 +94,3 @@ fun ChooseRoleScreen(navController: NavController) {
         }
     }
 }
-
-
-@Composable
-fun CustomButton(
-    navResId: String,
-    navController: NavController,
-    buttonText: String,
-    height: Float = 1f,
-    color: Color = Color.Black
-) {
-    Button(
-        onClick = { navController.navigate(navResId) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(height)
-            .padding(start = paddingBetweenElements, end = paddingBetweenElements),
-        shape = RoundedCornerShape(buttonRoundedCorner),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = color,
-            contentColor = if (color == Color.Black) Color.White else Color.Black
-        ),
-        border = BorderStroke(1.dp, Color.Black)
-
-    ) {
-        Text(text = buttonText)
-    }
-}
-
-
-const val buttonRoundedCorner = 16
-
-
