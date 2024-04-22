@@ -23,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -126,6 +127,8 @@ fun Content(innerPadding: PaddingValues, navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
+            Spacer(modifier = Modifier.height(16.dp))
+
             Email(emailState, onImeAction = { focusRequester.requestFocus() })
             Spacer(modifier = Modifier.height(16.dp))
             Password(
@@ -147,7 +150,7 @@ fun Content(innerPadding: PaddingValues, navController: NavHostController) {
                 ScreenRole.MasterMainLayout.route,
                 navController,
                 "Войти",
-                0.13f
+                0.15f
             )
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -156,7 +159,7 @@ fun Content(innerPadding: PaddingValues, navController: NavHostController) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text("У вас нет учетной записи?", fontSize = 14.sp)
+                Text("У вас нет учетной записи?", fontSize = 14.sp, color = Color.Gray)
                 TextButton(
                     onClick = { navController.navigate(route = ScreenRole.MasterRegistration.route) }) {
                     Text("Зарегестрироваться", fontSize = 14.sp)
@@ -178,12 +181,7 @@ fun Email(
         onValueChange = {
             emailState.text = it
         },
-        label = {
-            Text(
-                text = "Email",
-                style = MaterialTheme.typography.bodyMedium,
-            )
-        },
+        label = { Text(text = "Email") },
         modifier = Modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
@@ -203,7 +201,8 @@ fun Email(
                 onImeAction()
             }
         ),
-        singleLine = true
+        singleLine = true,
+        colors = OutlinedTextFieldDefaults.colors(unfocusedLabelColor = Color.Gray, unfocusedBorderColor = Color.Gray)
     )
 
     emailState.getError()?.let { error -> TextFieldError(textError = error) }
@@ -282,7 +281,8 @@ fun Password(
                 onImeAction()
             }
         ),
-        singleLine = true
+        singleLine = true,
+        colors = OutlinedTextFieldDefaults.colors(unfocusedLabelColor = Color.Gray, unfocusedBorderColor = Color.Gray)
     )
 }
 
