@@ -12,6 +12,7 @@ sealed class ScreenRole(val route: String) {
     object MasterRegistration : ScreenRole(route = "master_registration_screen")
     object MasterMainLayout : ScreenRole(route = "master_main_layout_screen")
 
-    object DoneRegistration : ScreenRole(route = "done_registration_screen")
+    object DoneMasterRegistration : ScreenRole(route = "done_master_registration_screen")
+    object DoneClientRegistration : ScreenRole(route = "done_client_registration_screen")
 
 }

@@ -8,7 +8,8 @@ import com.example.skills.client.account.MainClientLayout
 import com.example.skills.client.registration.LogInClientScreen
 import com.example.skills.client.registration.RegistrationClientScreen
 import com.example.skills.master.MainMasterLayout
-import com.example.skills.master.components.DoneRegistrationScreen
+import com.example.skills.master.components.DoneClientRegistrationScreen
+import com.example.skills.master.components.DoneMasterRegistrationScreen
 import com.example.skills.master.registration.LogInMasterScreen
 import com.example.skills.master.registration.RegistrationMasterScreen
 
@@ -43,8 +44,12 @@ fun SetupRoleNavGraph(
             MainMasterLayout()
         }
 
-        composable(route = ScreenRole.DoneRegistration.route) {
-            DoneRegistrationScreen()
+        composable(route = ScreenRole.DoneMasterRegistration.route) {
+            DoneMasterRegistrationScreen()
+        }
+
+        composable(route = ScreenRole.DoneClientRegistration.route) {
+            DoneClientRegistrationScreen()
         }
     }
 }

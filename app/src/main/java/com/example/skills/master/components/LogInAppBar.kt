@@ -72,7 +72,7 @@ fun LogInAlignedTopAppBar(
                 ),
                 title = {
                     Text(
-                        "Вход",
+                        "Вход " + routeLogIn,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,

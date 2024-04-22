@@ -7,8 +7,7 @@ import com.example.skills.role.ScreenRole
 
 @Composable
 fun RegistrationMasterScreen(navController: NavHostController) {
-    SignInAlignedTopAppBar(navController = navController, ScreenRole.MasterMainLayout.route)
-
+    SignInAlignedTopAppBar(navController = navController, ScreenRole.DoneMasterRegistration.route)
 }
 
 

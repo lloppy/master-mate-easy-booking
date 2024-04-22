@@ -42,12 +42,11 @@ import androidx.navigation.NavHostController
 import com.example.skills.master.components.tools.EmailState
 import com.example.skills.master.components.tools.EmailStateSaver
 import com.example.skills.master.components.tools.PasswordState
-import com.example.skills.role.ScreenRole
 import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignInAlignedTopAppBar(navController: NavHostController, nextMainScreenRoute: String,  routeDone: String = ScreenRole.DoneRegistration.route) {
+fun SignInAlignedTopAppBar(navController: NavHostController, routeDone: String) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -57,7 +56,7 @@ fun SignInAlignedTopAppBar(navController: NavHostController, nextMainScreenRoute
                 ),
                 title = {
                     Text(
-                        "Регистрация",
+                        "Регистрация" + routeDone,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
@@ -187,7 +186,7 @@ fun ContentSingIn(
             Spacer(modifier = Modifier.height(16.dp))
 
             CustomButton(
-                ScreenRole.MasterMainLayout.route,
+                routeDone,
                 navController,
                 "Зарегистрироваться",
                 0.34f
