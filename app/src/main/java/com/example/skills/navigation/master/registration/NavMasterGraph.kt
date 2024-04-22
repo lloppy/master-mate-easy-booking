@@ -1,4 +1,4 @@
-package com.example.skills.navigation.client.registration
+package com.example.skills.navigation.master.registration
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController

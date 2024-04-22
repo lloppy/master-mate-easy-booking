@@ -9,7 +9,7 @@ import com.example.skills.master.creatingService.MainCreationLayout
 import com.example.skills.master.creatingService.MasterCreateServiceScreen
 
 @Composable
-fun SetupMasterNavClientGraph(
+fun SetupMasterNavGraph(
     navHostController: NavHostController,
 ) {
     NavHost(navController = navHostController, startDestination = ScreenMater.MasterHomeScreen.route) {

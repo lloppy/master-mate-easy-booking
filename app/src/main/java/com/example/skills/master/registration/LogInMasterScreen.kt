@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -24,75 +26,79 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.skills.master.components.CenterAlignedMasterTopAppBar
 import com.example.skills.navigation.client.registration.ClientScreen
 import com.example.skills.navigation.master.registration.MasterScreen
 import com.example.skills.ui.theme.backgroundMaterial
 import com.example.skills.ui.theme.paddingBetweenElements
 import com.example.skills.ui.theme.spacer
 
+
 @Composable
 fun LogInMasterScreen(navController: NavHostController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = backgroundMaterial)
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            "Вход",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier
-                .align(Alignment.Start)
-                .padding(8.dp)
-        )
 
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Bottom
-        ) {
-            OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text("Почта") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(spacer))
-
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Пароль") },
-
-                visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = { navController.navigate(MasterScreen.MainMasterLayout.route) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp)
-                    .padding(paddingBetweenElements),
-                shape = RoundedCornerShape(40)
-            ) {
-                Text("Войти")
-            }
-
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("или")
-                TextButton(onClick = {
-                    navController.navigate(route = MasterScreen.MasterRegistration.route)
-                }) {
-                    Text("Зарегестрироваться")
-                }
-            }
-        }
-    }
+//    Column(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .background(color = backgroundMaterial)
+//            .padding(16.dp),
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        verticalArrangement = Arrangement.Center
+//    ) {
+//
+//        Text(
+//            "Вход",
+//            style = MaterialTheme.typography.headlineMedium,
+//            modifier = Modifier
+//                .align(Alignment.Start)
+//                .padding(8.dp)
+//        )
+//
+//        Column(
+//            modifier = Modifier.fillMaxSize(),
+//            horizontalAlignment = Alignment.CenterHorizontally,
+//            verticalArrangement = Arrangement.Bottom
+//        ) {
+//            OutlinedTextField(
+//                value = email,
+//                onValueChange = { email = it },
+//                label = { Text("Почта") },
+//                modifier = Modifier.fillMaxWidth()
+//            )
+//            Spacer(modifier = Modifier.height(spacer))
+//
+//            OutlinedTextField(
+//                value = password,
+//                onValueChange = { password = it },
+//                label = { Text("Пароль") },
+//
+//                visualTransformation = PasswordVisualTransformation(),
+//                modifier = Modifier.fillMaxWidth()
+//            )
+//            Spacer(modifier = Modifier.height(16.dp))
+//
+//            Button(
+//                onClick = { navController.navigate(MasterScreen.MainMasterLayout.route) },
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(80.dp)
+//                    .padding(paddingBetweenElements),
+//                shape = RoundedCornerShape(40)
+//            ) {
+//                Text("Войти")
+//            }
+//
+//            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+//                Text("или")
+//                TextButton(onClick = {
+//                    navController.navigate(route = MasterScreen.MasterRegistration.route)
+//                }) {
+//                    Text("Зарегестрироваться")
+//                }
+//            }
+//        }
+//    }
 }
