@@ -42,6 +42,6 @@ fun LogInMasterScreen(navController: NavHostController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        CenterAlignedMasterTopAppBar(navController)
+        CenterAlignedMasterTopAppBar(navController, ScreenRole.MasterMainLayout.route)
     }
 }

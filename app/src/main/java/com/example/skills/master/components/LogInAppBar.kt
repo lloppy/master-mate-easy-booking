@@ -58,7 +58,7 @@ import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CenterAlignedMasterTopAppBar(navController: NavHostController) {
+fun CenterAlignedMasterTopAppBar(navController: NavHostController, route: String) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -91,14 +91,13 @@ fun CenterAlignedMasterTopAppBar(navController: NavHostController) {
             )
         },
     ) { innerPadding ->
-        Content(innerPadding, navController)
+        Content(innerPadding, navController, route)
     }
 }
 
 @Composable
-fun Content(innerPadding: PaddingValues, navController: NavHostController) {
+fun Content(innerPadding: PaddingValues, navController: NavHostController, route: String) { //по идее три роута - тк три кнопки
     var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -116,7 +115,7 @@ fun Content(innerPadding: PaddingValues, navController: NavHostController) {
         val onSubmit = {
             if (emailState.isValid && passwordState.isValid) {
                 //onSignInSubmitted(emailState.text, passwordState.text)
-                navController.navigate(ScreenRole.MasterMainLayout.route)
+                navController.navigate(route)
             }
         }
 

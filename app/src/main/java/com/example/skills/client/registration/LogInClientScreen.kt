@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.skills.master.components.CenterAlignedMasterTopAppBar
 import com.example.skills.role.ScreenRole
 import com.example.skills.ui.theme.backgroundMaterial
 import com.example.skills.ui.theme.paddingBetweenElements
@@ -31,67 +32,13 @@ import com.example.skills.ui.theme.spacer
 
 @Composable
 fun LogInClientScreen(navController: NavHostController) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = backgroundMaterial)
-            .padding(16.dp),
+            .background(color = backgroundMaterial),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            "Вход client",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier
-                .align(Alignment.Start)
-                .padding(8.dp)
-        )
-
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Bottom
-        ) {
-            OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text("Почта") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(spacer))
-
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Пароль") },
-
-                visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = { navController.navigate(ScreenRole.ClientMainLayout.route) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp)
-                    .padding(paddingBetweenElements),
-                shape = RoundedCornerShape(40)
-            ) {
-                Text("Войти")
-            }
-
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("или")
-                TextButton(onClick = {
-                    navController.navigate(route = ScreenRole.ClientRegistration.route)
-                }) {
-                    Text("Зарегестрироваться")
-                }
-            }
-        }
+        CenterAlignedMasterTopAppBar(navController, ScreenRole.ClientMainLayout.route)
     }
 }
