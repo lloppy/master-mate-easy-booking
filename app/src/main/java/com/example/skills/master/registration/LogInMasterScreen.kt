@@ -27,8 +27,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.skills.master.components.CenterAlignedMasterTopAppBar
-import com.example.skills.navigation.client.registration.ClientScreen
-import com.example.skills.navigation.master.registration.MasterScreen
 import com.example.skills.ui.theme.backgroundMaterial
 import com.example.skills.ui.theme.paddingBetweenElements
 import com.example.skills.ui.theme.spacer

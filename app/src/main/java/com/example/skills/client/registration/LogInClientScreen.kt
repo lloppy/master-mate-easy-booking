@@ -24,7 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.skills.navigation.client.registration.ClientScreen
+import com.example.skills.role.ScreenRole
 import com.example.skills.ui.theme.backgroundMaterial
 import com.example.skills.ui.theme.paddingBetweenElements
 import com.example.skills.ui.theme.spacer
@@ -43,7 +43,7 @@ fun LogInClientScreen(navController: NavHostController) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            "Вход",
+            "Вход client",
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier
                 .align(Alignment.Start)
@@ -74,7 +74,7 @@ fun LogInClientScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = { navController.navigate(ClientScreen.MainClientLayout.route) },
+                onClick = { navController.navigate(ScreenRole.ClientMainLayout.route) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(80.dp)
@@ -87,7 +87,7 @@ fun LogInClientScreen(navController: NavHostController) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text("или")
                 TextButton(onClick = {
-                    navController.navigate(route = ClientScreen.ClientRegistration.route)
+                    navController.navigate(route = ScreenRole.ClientRegistration.route)
                 }) {
                     Text("Зарегестрироваться")
                 }

@@ -25,7 +25,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.skills.client.registration.DateTransformation
-import com.example.skills.navigation.client.registration.ClientScreen
+import com.example.skills.role.ScreenRole
 import com.example.skills.ui.theme.backgroundMaterial
 import com.example.skills.ui.theme.paddingBetweenElements
 import com.example.skills.ui.theme.spacer
@@ -119,8 +119,8 @@ fun RegistrationMasterScreen(navController: NavHostController) {
                     // navController.navigate(Screen.LogIn.route)
                     // navController.popBackStack()
 
-                    navController.navigate(ClientScreen.ClientLogIn.route) {
-                        popUpTo(ClientScreen.ClientLogIn.route) {
+                    navController.navigate(ScreenRole.ClientLogIn.route) {
+                        popUpTo(ScreenRole.ClientLogIn.route) {
                             inclusive = true
                         }
                     }
@@ -129,7 +129,8 @@ fun RegistrationMasterScreen(navController: NavHostController) {
                     .fillMaxWidth()
                     .height(80.dp)
                     .padding(paddingBetweenElements),
-                shape = RoundedCornerShape(40)            ) {
+                shape = RoundedCornerShape(40)
+            ) {
                 Text("Создать аккаунт")
             }
         }

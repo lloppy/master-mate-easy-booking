@@ -1,4 +1,4 @@
-package com.example.skills.navigation.master.account
+package com.example.skills.master.navigation.account
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController

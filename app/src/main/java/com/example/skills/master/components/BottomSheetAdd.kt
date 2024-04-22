@@ -27,7 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.skills.navigation.master.account.ScreenMater
+import com.example.skills.master.navigation.account.ScreenMater
 import com.example.skills.ui.theme.blackMaterial
 
 

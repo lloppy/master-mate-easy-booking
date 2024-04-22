@@ -1,4 +1,4 @@
-package com.example.skills.navigation.client.account
+package com.example.skills.client.navigation.account
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -7,7 +7,6 @@ import androidx.navigation.compose.composable
 import com.example.skills.client.account.CalendarScreen
 import com.example.skills.client.account.ChatsScreen
 import com.example.skills.client.account.MainClientScreen
-import com.example.skills.navigation.master.account.ScreenMater
 
 @Composable
 fun SetupClientNavGraph(

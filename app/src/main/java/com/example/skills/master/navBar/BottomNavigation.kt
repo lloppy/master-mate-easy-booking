@@ -15,7 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.skills.navigation.master.account.ScreenMater
+import com.example.skills.master.navigation.account.ScreenMater
 import com.example.skills.ui.theme.blackMaterial
 import com.example.skills.ui.theme.orangeMaterial
 import com.exyte.animatednavbar.AnimatedNavigationBar

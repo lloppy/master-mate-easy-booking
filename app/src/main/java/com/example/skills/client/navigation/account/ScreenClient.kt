@@ -1,7 +1,6 @@
-package com.example.skills.navigation.client.account
+package com.example.skills.client.navigation.account
 
 import com.example.skills.R
-import com.example.skills.navigation.master.account.ScreenMater
 
 sealed class ScreenClient(val route: String, val iconId: Int) {
     object ClientHomeScreen : ScreenClient(route = "client_home_screen", iconId = R.drawable.home)

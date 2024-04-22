@@ -1,4 +1,4 @@
-package com.example.skills.navigation.master.createService
+package com.example.skills.master.navigation.createService
 
 sealed class ScreenMaterCreateService(val route: String) {
     object InputServiceName : ScreenMaterCreateService(route = "input_service_name_screen")

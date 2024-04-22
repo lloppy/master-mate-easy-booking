@@ -1,4 +1,4 @@
-package com.example.skills.navigation.role
+package com.example.skills.role
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.skills.R
-import com.example.skills.navigation.client.registration.ClientScreen
 import com.example.skills.ui.theme.fontFamilyInter
 import com.example.skills.ui.theme.paddingBetweenElements
 
@@ -79,14 +78,14 @@ fun ChooseRoleScreen(navController: NavController) {
         ) {
 
             CustomButton(
-                ClientScreen.ClientLogIn.route,
+                ScreenRole.ClientLogIn.route,
                 navController,
                 "Я клиент",
                 0.45f
             )
             Spacer(modifier = Modifier.padding(8.dp))
             CustomButton(
-                ClientScreen.ClientLogIn.route,
+                ScreenRole.MasterLogIn.route,
                 navController,
                 "Я мастер",
                 color = Color.Transparent
@@ -120,8 +119,8 @@ fun CustomButton(
     ) {
         Text(text = buttonText)
     }
-
 }
+
 
 const val buttonRoundedCorner = 16
 
