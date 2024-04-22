@@ -58,7 +58,11 @@ import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CenterAlignedMasterTopAppBar(navController: NavHostController, route: String) {
+fun LogInAlignedTopAppBar(
+    navController: NavHostController,
+    routeLogIn: String,
+    routeSignIn: String
+) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -91,12 +95,22 @@ fun CenterAlignedMasterTopAppBar(navController: NavHostController, route: String
             )
         },
     ) { innerPadding ->
-        Content(innerPadding, navController, route)
+        ContentLogIn(
+            innerPadding,
+            navController,
+            routeLogIn = routeLogIn,
+            routeSignIn = routeSignIn
+        )
     }
 }
 
 @Composable
-fun Content(innerPadding: PaddingValues, navController: NavHostController, route: String) { //по идее три роута - тк три кнопки
+fun ContentLogIn(
+    innerPadding: PaddingValues,
+    navController: NavHostController,
+    routeLogIn: String,
+    routeSignIn: String
+) { //по идее три роута - тк три кнопки
     var email by remember { mutableStateOf("") }
 
     Column(
@@ -115,7 +129,7 @@ fun Content(innerPadding: PaddingValues, navController: NavHostController, route
         val onSubmit = {
             if (emailState.isValid && passwordState.isValid) {
                 //onSignInSubmitted(emailState.text, passwordState.text)
-                navController.navigate(route)
+                navController.navigate(routeLogIn)
             }
         }
 
@@ -137,9 +151,13 @@ fun Content(innerPadding: PaddingValues, navController: NavHostController, route
                 onImeAction = { onSubmit() }
             )
 
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.Top) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.Top
+            ) {
                 TextButton(
-                    onClick = { /**/ }) {
+                    onClick = { navController.navigate(routeSignIn) }) {
                     Text("Забыли пароль?", fontSize = 14.sp)
                 }
             }
@@ -154,7 +172,9 @@ fun Content(innerPadding: PaddingValues, navController: NavHostController, route
             Spacer(modifier = Modifier.height(8.dp))
 
             Row(
-                modifier = Modifier.fillMaxWidth().padding(start = 4.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
@@ -201,7 +221,10 @@ fun Email(
             }
         ),
         singleLine = true,
-        colors = OutlinedTextFieldDefaults.colors(unfocusedLabelColor = Color.Gray, unfocusedBorderColor = Color.Gray)
+        colors = OutlinedTextFieldDefaults.colors(
+            unfocusedLabelColor = Color.Gray,
+            unfocusedBorderColor = Color.Gray
+        )
     )
 
     emailState.getError()?.let { error -> TextFieldError(textError = error) }
@@ -218,7 +241,6 @@ fun TextFieldError(textError: String) {
         )
     }
 }
-
 
 
 @Composable
@@ -281,7 +303,10 @@ fun Password(
             }
         ),
         singleLine = true,
-        colors = OutlinedTextFieldDefaults.colors(unfocusedLabelColor = Color.Gray, unfocusedBorderColor = Color.Gray)
+        colors = OutlinedTextFieldDefaults.colors(
+            unfocusedLabelColor = Color.Gray,
+            unfocusedBorderColor = Color.Gray
+        )
     )
 }
 
