@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -28,12 +27,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.skills.navigation.client.registration.Screen
 import com.example.skills.navigation.master.account.ScreenMater
-import com.example.skills.navigation.master.createService.ScreenMaterCreateService
 import com.example.skills.ui.theme.blackMaterial
-import com.example.skills.ui.theme.greenMaterial
-import com.example.skills.ui.theme.orangeMaterial
 
 
 @OptIn(ExperimentalMaterial3Api::class)

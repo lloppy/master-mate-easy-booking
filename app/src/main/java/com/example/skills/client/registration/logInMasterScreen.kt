@@ -24,13 +24,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.skills.navigation.client.registration.Screen
+import com.example.skills.navigation.client.registration.ClientScreen
 import com.example.skills.ui.theme.backgroundMaterial
 import com.example.skills.ui.theme.paddingBetweenElements
 import com.example.skills.ui.theme.spacer
 
 @Composable
-fun LogInScreen(navController: NavHostController) {
+fun LogInClientScreen(navController: NavHostController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -74,13 +74,7 @@ fun LogInScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = {
-                    if (password != "123") {
-                        navController.navigate(Screen.MainMasterLayout.route)
-                    } else {
-                        navController.navigate(Screen.MainClientLayout.route)
-                    }
-                },
+                onClick = { navController.navigate(ClientScreen.MainClientLayout.route) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(80.dp)
@@ -93,7 +87,7 @@ fun LogInScreen(navController: NavHostController) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text("или")
                 TextButton(onClick = {
-                    navController.navigate(route = Screen.ClientRegistration.route)
+                    navController.navigate(route = ClientScreen.ClientRegistration.route)
                 }) {
                     Text("Зарегестрироваться")
                 }

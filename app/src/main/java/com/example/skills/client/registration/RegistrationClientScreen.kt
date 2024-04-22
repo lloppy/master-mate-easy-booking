@@ -24,13 +24,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.skills.navigation.client.registration.Screen
+import com.example.skills.navigation.client.registration.ClientScreen
 import com.example.skills.ui.theme.backgroundMaterial
 import com.example.skills.ui.theme.paddingBetweenElements
 import com.example.skills.ui.theme.spacer
 
 @Composable
-fun RegistrationScreen(navController: NavHostController) {
+fun RegistrationClientScreen(navController: NavHostController) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
@@ -118,8 +118,8 @@ fun RegistrationScreen(navController: NavHostController) {
                     // navController.navigate(Screen.LogIn.route)
                     // navController.popBackStack()
 
-                    navController.navigate(Screen.ClientLogIn.route) {
-                        popUpTo(Screen.ClientLogIn.route) {
+                    navController.navigate(ClientScreen.ClientLogIn.route) {
+                        popUpTo(ClientScreen.ClientLogIn.route) {
                             inclusive = true
                         }
                     }

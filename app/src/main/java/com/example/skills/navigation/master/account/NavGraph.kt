@@ -7,10 +7,9 @@ import androidx.navigation.compose.composable
 import com.example.skills.master.MainMasterScreen
 import com.example.skills.master.creatingService.MainCreationLayout
 import com.example.skills.master.creatingService.MasterCreateServiceScreen
-import com.example.skills.navigation.master.createService.ScreenMaterCreateService
 
 @Composable
-fun SetupMasterNavGraph(
+fun SetupMasterNavClientGraph(
     navHostController: NavHostController,
 ) {
     NavHost(navController = navHostController, startDestination = ScreenMater.MasterHomeScreen.route) {
