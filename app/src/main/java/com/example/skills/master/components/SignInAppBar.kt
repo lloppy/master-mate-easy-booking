@@ -46,7 +46,7 @@ import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationScreen(navController: NavHostController, nextScreen: ScreenRole) {
+fun RegistrationScreen(navController: NavHostController, verificationScreen: ScreenRole) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -79,7 +79,7 @@ fun RegistrationScreen(navController: NavHostController, nextScreen: ScreenRole)
             )
         },
     ) { innerPadding ->
-        ContentSingIn(innerPadding, navController, nextScreen.route)
+        ContentSingIn(innerPadding, navController, verificationScreen.route)
     }
 }
 
@@ -87,7 +87,7 @@ fun RegistrationScreen(navController: NavHostController, nextScreen: ScreenRole)
 fun ContentSingIn(
     innerPadding: PaddingValues,
     navController: NavHostController,
-    routeDone: String
+    routeVerification: String
 ) {
     var email by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
@@ -102,7 +102,7 @@ fun ContentSingIn(
     val onSubmit = {
         if (emailState.isValid && passwordState.isValid) {
             //onSignInSubmitted(emailState.text, passwordState.text)
-            navController.navigate(routeDone)
+            navController.navigate(routeVerification)
         }
     }
     Column(
@@ -186,7 +186,7 @@ fun ContentSingIn(
             Spacer(modifier = Modifier.height(16.dp))
 
             CustomButton(
-                routeDone,
+                routeVerification,
                 navController,
                 "Зарегистрироваться",
                 0.34f

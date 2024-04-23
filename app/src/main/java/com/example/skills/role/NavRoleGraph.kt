@@ -6,6 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.skills.client.account.MainClientLayout
 import com.example.skills.master.MainMasterLayout
+import com.example.skills.master.components.CodeVerificationClientScreen
+import com.example.skills.master.components.CodeVerificationMasterScreen
 import com.example.skills.master.components.DoneClientRegistrationScreen
 import com.example.skills.master.components.DoneMasterRegistrationScreen
 import com.example.skills.master.components.ForgotPasswordScreen
@@ -25,11 +27,11 @@ fun SetupRoleNavGraph(
                 navController = navHostController,
                 routeLogIn = ScreenRole.ClientMainLayout.route,
                 routeSignIn = ScreenRole.ClientRegistration.route,
-                routeForgotPassword = ScreenRole.ForgotPassword.route // разделить на клиента и мастера
+                routeForgotPassword = ScreenRole.ForgotPasswordClient.route // разделить на клиента и мастера
             )
         }
         composable(route = ScreenRole.ClientRegistration.route) {
-            RegistrationScreen(navController = navHostController, ScreenRole.DoneClientRegistration)
+            RegistrationScreen(navController = navHostController, ScreenRole.CodeVerificationClient)
         }
         composable(route = ScreenRole.ClientMainLayout.route) {
             MainClientLayout()
@@ -41,11 +43,11 @@ fun SetupRoleNavGraph(
                 navController = navHostController,
                 routeLogIn = ScreenRole.MasterMainLayout.route,
                 routeSignIn = ScreenRole.MasterRegistration.route,
-                routeForgotPassword = ScreenRole.ForgotPassword.route // разделить на клиента и мастера
+                routeForgotPassword = ScreenRole.ForgotPasswordClient.route // разделить на клиента и мастера
             )
         }
         composable(route = ScreenRole.MasterRegistration.route) {
-            RegistrationScreen(navController = navHostController, ScreenRole.DoneMasterRegistration)
+            RegistrationScreen(navController = navHostController, ScreenRole.CodeVerificationMaster)
         }
         composable(route = ScreenRole.MasterMainLayout.route) {
             MainMasterLayout()
@@ -58,8 +60,15 @@ fun SetupRoleNavGraph(
             DoneMasterRegistrationScreen(navController = navHostController)
         }
 
-        composable(route = ScreenRole.ForgotPassword.route) {
+        composable(route = ScreenRole.ForgotPasswordClient.route) {
             ForgotPasswordScreen(navController = navHostController)
+        }
+
+        composable(route = ScreenRole.CodeVerificationClient.route) {
+            CodeVerificationClientScreen(navController = navHostController)
+        }
+        composable(route = ScreenRole.CodeVerificationMaster.route) {
+            CodeVerificationMasterScreen(navController = navHostController)
         }
     }
 }
