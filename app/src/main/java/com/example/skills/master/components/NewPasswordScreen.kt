@@ -49,7 +49,7 @@ fun NewPasswordScreen(navController: NavHostController, nextScreen: ScreenRole) 
                 ),
                 title = {
                     Text(
-                        "Новый пароль" + nextScreen.route,
+                        "Новый пароль",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,

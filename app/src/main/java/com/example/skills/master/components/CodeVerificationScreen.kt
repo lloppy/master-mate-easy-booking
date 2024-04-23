@@ -62,7 +62,7 @@ fun CodeVerificationScreen(
                 ),
                 title = {
                     Text(
-                        "Подтвердите Email" + nextScreen.route,
+                        "Подтвердите Email",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,

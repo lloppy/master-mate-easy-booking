@@ -189,7 +189,7 @@ fun ContentSingIn(
                 routeVerification,
                 navController,
                 "Зарегистрироваться",
-                0.34f
+                0.32f
             )
         }
     }
