@@ -15,4 +15,6 @@ sealed class ScreenRole(val route: String) {
     object DoneMasterRegistration : ScreenRole(route = "done_master_registration_screen")
     object DoneClientRegistration : ScreenRole(route = "done_client_registration_screen")
 
+    object ForgotPassword : ScreenRole(route = "forgot_password_screen")
+
 }

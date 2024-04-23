@@ -61,7 +61,8 @@ import com.example.skills.ui.theme.backgroundMaterial
 fun LogInScreen(
     navController: NavHostController,
     routeLogIn: String,
-    routeSignIn: String
+    routeSignIn: String,
+    routeForgotPassword: String
 ) {
     Scaffold(
         topBar = {
@@ -99,7 +100,8 @@ fun LogInScreen(
             innerPadding,
             navController,
             routeLogIn = routeLogIn,
-            routeSignIn = routeSignIn
+            routeSignIn = routeSignIn,
+            routeForgotPassword = routeForgotPassword
         )
     }
 }
@@ -110,7 +112,7 @@ fun ContentLogIn(
     navController: NavHostController,
     routeLogIn: String,
     routeSignIn: String,
-    routeForgotPassword: String = null.toString()
+    routeForgotPassword: String
 ) {
     var email by remember { mutableStateOf("") }
 

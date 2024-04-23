@@ -8,6 +8,7 @@ import com.example.skills.client.account.MainClientLayout
 import com.example.skills.master.MainMasterLayout
 import com.example.skills.master.components.DoneClientRegistrationScreen
 import com.example.skills.master.components.DoneMasterRegistrationScreen
+import com.example.skills.master.components.ForgotPasswordScreen
 import com.example.skills.master.components.LogInScreen
 import com.example.skills.master.components.RegistrationScreen
 
@@ -23,7 +24,8 @@ fun SetupRoleNavGraph(
             LogInScreen(
                 navController = navHostController,
                 routeLogIn = ScreenRole.ClientMainLayout.route,
-                routeSignIn = ScreenRole.ClientRegistration.route
+                routeSignIn = ScreenRole.ClientRegistration.route,
+                routeForgotPassword = ScreenRole.ForgotPassword.route // разделить на клиента и мастера
             )
         }
         composable(route = ScreenRole.ClientRegistration.route) {
@@ -38,7 +40,8 @@ fun SetupRoleNavGraph(
             LogInScreen(
                 navController = navHostController,
                 routeLogIn = ScreenRole.MasterMainLayout.route,
-                routeSignIn = ScreenRole.MasterRegistration.route
+                routeSignIn = ScreenRole.MasterRegistration.route,
+                routeForgotPassword = ScreenRole.ForgotPassword.route // разделить на клиента и мастера
             )
         }
         composable(route = ScreenRole.MasterRegistration.route) {
@@ -53,6 +56,10 @@ fun SetupRoleNavGraph(
         }
         composable(route = ScreenRole.DoneMasterRegistration.route) {
             DoneMasterRegistrationScreen(navController = navHostController)
+        }
+
+        composable(route = ScreenRole.ForgotPassword.route) {
+            ForgotPasswordScreen(navController = navHostController)
         }
     }
 }
