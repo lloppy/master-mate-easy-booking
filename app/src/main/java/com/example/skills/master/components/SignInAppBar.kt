@@ -21,7 +21,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,11 +41,15 @@ import androidx.navigation.NavHostController
 import com.example.skills.master.components.tools.EmailState
 import com.example.skills.master.components.tools.EmailStateSaver
 import com.example.skills.master.components.tools.PasswordState
+import com.example.skills.role.ScreenRole
 import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignInAlignedTopAppBar(navController: NavHostController, routeDone: String) {
+fun RegistrationScreen(navController: NavHostController, nextScreen: ScreenRole) {
+    var testText = ""
+    testText = if (nextScreen.route == ScreenRole.DoneClientRegistration.route) "client" else "master"
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -56,7 +59,7 @@ fun SignInAlignedTopAppBar(navController: NavHostController, routeDone: String) 
                 ),
                 title = {
                     Text(
-                        "Регистрация" + routeDone,
+                        "Регистрация " + testText,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
@@ -79,7 +82,7 @@ fun SignInAlignedTopAppBar(navController: NavHostController, routeDone: String) 
             )
         },
     ) { innerPadding ->
-        ContentSingIn(innerPadding, navController, routeDone)
+        ContentSingIn(innerPadding, navController, nextScreen.route)
     }
 }
 

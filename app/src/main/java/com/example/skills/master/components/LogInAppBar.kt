@@ -58,7 +58,7 @@ import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LogInAlignedTopAppBar(
+fun LogInScreen(
     navController: NavHostController,
     routeLogIn: String,
     routeSignIn: String
@@ -109,8 +109,9 @@ fun ContentLogIn(
     innerPadding: PaddingValues,
     navController: NavHostController,
     routeLogIn: String,
-    routeSignIn: String
-) { //по идее три роута - тк три кнопки
+    routeSignIn: String,
+    routeForgotPassword: String = null.toString()
+) {
     var email by remember { mutableStateOf("") }
 
     Column(
@@ -157,14 +158,14 @@ fun ContentLogIn(
                 verticalAlignment = Alignment.Top
             ) {
                 TextButton(
-                    onClick = { navController.navigate(routeSignIn) }) {
+                    onClick = { navController.navigate(routeForgotPassword) }) {
                     Text("Забыли пароль?", fontSize = 14.sp)
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
 
             CustomButton(
-                ScreenRole.MasterMainLayout.route,
+                routeLogIn,
                 navController,
                 "Войти",
                 0.15f
@@ -180,7 +181,7 @@ fun ContentLogIn(
             ) {
                 Text("У вас нет учетной записи?", fontSize = 14.sp, color = Color.Gray)
                 TextButton(
-                    onClick = { navController.navigate(route = ScreenRole.MasterRegistration.route) }) {
+                    onClick = { navController.navigate(route = routeSignIn) }) {
                     Text("Зарегестрироваться", fontSize = 14.sp)
                 }
             }
@@ -226,7 +227,6 @@ fun Email(
             unfocusedBorderColor = Color.Gray
         )
     )
-
     emailState.getError()?.let { error -> TextFieldError(textError = error) }
 }
 

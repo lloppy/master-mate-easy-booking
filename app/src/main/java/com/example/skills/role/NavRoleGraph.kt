@@ -5,13 +5,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.skills.client.account.MainClientLayout
-import com.example.skills.client.registration.LogInClientScreen
-import com.example.skills.client.registration.RegistrationClientScreen
 import com.example.skills.master.MainMasterLayout
 import com.example.skills.master.components.DoneClientRegistrationScreen
 import com.example.skills.master.components.DoneMasterRegistrationScreen
-import com.example.skills.master.registration.LogInMasterScreen
-import com.example.skills.master.registration.RegistrationMasterScreen
+import com.example.skills.master.components.LogInScreen
+import com.example.skills.master.components.RegistrationScreen
 
 @Composable
 fun SetupRoleNavGraph(
@@ -21,13 +19,15 @@ fun SetupRoleNavGraph(
         composable(route = ScreenRole.RoleLayout.route) {
             RolesScreen(navController = navHostController)
         }
-
-
         composable(route = ScreenRole.ClientLogIn.route) {
-            LogInClientScreen(navController = navHostController)
+            LogInScreen(
+                navController = navHostController,
+                routeLogIn = ScreenRole.ClientMainLayout.route,
+                routeSignIn = ScreenRole.ClientRegistration.route
+            )
         }
         composable(route = ScreenRole.ClientRegistration.route) {
-            RegistrationClientScreen(navController = navHostController)
+            RegistrationScreen(navController = navHostController, ScreenRole.DoneClientRegistration)
         }
         composable(route = ScreenRole.ClientMainLayout.route) {
             MainClientLayout()
@@ -35,21 +35,24 @@ fun SetupRoleNavGraph(
 
 
         composable(route = ScreenRole.MasterLogIn.route) {
-            LogInMasterScreen(navController = navHostController)
+            LogInScreen(
+                navController = navHostController,
+                routeLogIn = ScreenRole.MasterMainLayout.route,
+                routeSignIn = ScreenRole.MasterRegistration.route
+            )
         }
         composable(route = ScreenRole.MasterRegistration.route) {
-            RegistrationMasterScreen(navController = navHostController)
+            RegistrationScreen(navController = navHostController, ScreenRole.DoneMasterRegistration)
         }
         composable(route = ScreenRole.MasterMainLayout.route) {
             MainMasterLayout()
         }
 
-        composable(route = ScreenRole.DoneMasterRegistration.route) {
-            DoneMasterRegistrationScreen()
-        }
-
         composable(route = ScreenRole.DoneClientRegistration.route) {
             DoneClientRegistrationScreen()
+        }
+        composable(route = ScreenRole.DoneMasterRegistration.route) {
+            DoneMasterRegistrationScreen()
         }
     }
 }

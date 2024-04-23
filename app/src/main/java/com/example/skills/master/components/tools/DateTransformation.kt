@@ -1,4 +1,4 @@
-package com.example.skills.client.registration
+package com.example.skills.master.components.tools
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.OffsetMapping
