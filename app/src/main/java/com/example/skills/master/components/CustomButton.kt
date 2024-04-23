@@ -21,12 +21,13 @@ fun CustomButton(
     navController: NavController,
     buttonText: String,
     height: Float = 1f,
+    width: Float = 1f,
     color: Color = Color.Black
 ) {
     Button(
         onClick = { navController.navigate(navResId) },
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth(width)
             .fillMaxHeight(height)
             .padding(start = paddingBetweenElements, end = paddingBetweenElements),
         shape = RoundedCornerShape(buttonRoundedCorner),

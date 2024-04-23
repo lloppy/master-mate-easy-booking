@@ -227,6 +227,7 @@ fun Email(
             unfocusedBorderColor = Color.Gray
         )
     )
+
     emailState.getError()?.let { error -> TextFieldError(textError = error) }
 }
 

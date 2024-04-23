@@ -49,10 +49,10 @@ fun SetupRoleNavGraph(
         }
 
         composable(route = ScreenRole.DoneClientRegistration.route) {
-            DoneClientRegistrationScreen()
+            DoneClientRegistrationScreen(navController = navHostController)
         }
         composable(route = ScreenRole.DoneMasterRegistration.route) {
-            DoneMasterRegistrationScreen()
+            DoneMasterRegistrationScreen(navController = navHostController)
         }
     }
 }

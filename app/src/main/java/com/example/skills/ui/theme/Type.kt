@@ -13,38 +13,38 @@ import androidx.compose.ui.unit.sp
 // Set of Material typography styles to start with
 val Typography = Typography(
     headlineMedium = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = fontFamilyInter,
         fontSize = 64.sp,
         color = blackTextMaterial,
         fontWeight = FontWeight.Thin,
         shadow = Shadow(color = Color.LightGray, offset = Offset(1f, 3f), blurRadius = 10f)
     ),
     headlineSmall = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = fontFamilyInter,
         fontSize = 58.sp,
         color = blackTextMaterial,
         fontWeight = FontWeight.Thin,
         shadow = Shadow(color = Color.LightGray, offset = Offset(1f, 3f), blurRadius = 10f)
     ),
     titleSmall = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = fontFamilyInter,
         fontSize = 36.sp,
         color = blackTextMaterial,
         fontWeight = FontWeight.Thin,
         shadow = Shadow(color = Color.LightGray, offset = Offset(1f, 3f), blurRadius = 10f)
     ),
     titleMedium = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = fontFamilyInter,
         fontSize = 24.sp,
         color = blackTextMaterial,
     ),
     labelMedium = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = fontFamilyInter,
         fontSize = 24.sp
     ),
 
     bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = fontFamilyInter,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
