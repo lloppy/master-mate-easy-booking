@@ -184,7 +184,7 @@ fun ContentLogIn(
                 Text("У вас нет учетной записи?", fontSize = 14.sp, color = Color.Gray)
                 TextButton(
                     onClick = { navController.navigate(route = routeSignIn) }) {
-                    Text("Зарегестрироваться", fontSize = 14.sp)
+                    Text("Зарегистрироваться", fontSize = 14.sp)
                 }
             }
         }
