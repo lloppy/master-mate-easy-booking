@@ -49,8 +49,9 @@ import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CodeVerificationClientScreen(
+fun CodeVerificationScreen(
     navController: NavHostController,
+    nextScreen: ScreenRole
 ) {
     Scaffold(
         topBar = {
@@ -61,7 +62,7 @@ fun CodeVerificationClientScreen(
                 ),
                 title = {
                     Text(
-                        "Подтвердите Email",
+                        "Подтвердите Email" + nextScreen.route,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
@@ -84,12 +85,16 @@ fun CodeVerificationClientScreen(
             )
         },
     ) { innerPadding ->
-        CodeVerificationComponents(navController, innerPadding)
+        CodeVerificationComponents(navController, innerPadding, nextScreen)
     }
 }
 
 @Composable
-private fun CodeVerificationComponents(navController: NavHostController, innerPadding: PaddingValues) {
+private fun CodeVerificationComponents(
+    navController: NavHostController,
+    innerPadding: PaddingValues,
+    nextScreen: ScreenRole
+) {
     var code by remember { mutableStateOf("") }
     var timeLeft by remember { mutableStateOf(55) }
 
@@ -134,8 +139,8 @@ private fun CodeVerificationComponents(navController: NavHostController, innerPa
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomButton(
-            ScreenRole.DoneClientRegistration.route,
-             navController,
+            nextScreen.route,
+            navController,
             "Подтвердить",
             height = 0.14f
         )
@@ -156,7 +161,9 @@ fun OtpTextField(
     }
 
     BasicTextField(
-        modifier = modifier.fillMaxWidth().fillMaxHeight(0.2f),
+        modifier = modifier
+            .fillMaxWidth()
+            .fillMaxHeight(0.2f),
         value = TextFieldValue(otpText, selection = TextRange(otpText.length)),
         onValueChange = {
             if (it.text.length <= otpCount) {

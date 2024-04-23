@@ -5,11 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -43,7 +41,7 @@ import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ForgotPasswordScreen(navController: NavHostController) {
+fun ForgotPasswordScreen(navController: NavHostController, nextScreen: ScreenRole) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -76,7 +74,7 @@ fun ForgotPasswordScreen(navController: NavHostController) {
             )
         },
     ) { innerPadding ->
-        ContentForgotPassword(innerPadding, navController) //nextScreen.route)
+        ContentForgotPassword(innerPadding, navController, nextScreen)
     }
 }
 
@@ -84,7 +82,7 @@ fun ForgotPasswordScreen(navController: NavHostController) {
 fun ContentForgotPassword(
     innerPadding: PaddingValues,
     navController: NavHostController,
-    //nextScreen: String
+    nextScreen: ScreenRole
 ) {
     var email by remember { mutableStateOf("") }
     val focusRequester = remember { FocusRequester() }
@@ -94,7 +92,7 @@ fun ContentForgotPassword(
     val onSubmit = {
         if (emailState.isValid) {
             //onSignInSubmitted(emailState.text, passwordState.text)
-            //   navController.navigate()
+            navController.navigate(nextScreen.route)
         }
     }
     Column(
@@ -123,7 +121,7 @@ fun ContentForgotPassword(
                 Email(emailState, onImeAction = { focusRequester.requestFocus() })
             }
             CustomButton(
-                ScreenRole.DoneClientRegistration.route, // тут переделать на ввод кода из почты
+                nextScreen.route,
                 navController,
                 "Продолжить",
                 0.1f
