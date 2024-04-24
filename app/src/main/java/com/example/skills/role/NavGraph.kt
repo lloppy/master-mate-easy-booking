@@ -27,7 +27,7 @@ fun NavGraphBuilder.clientNavGraph(navController: NavHostController) {
                 navController = navController,
                 routeLogIn = ScreenRole.Client.MainLayout.route,
                 navigateToRegistration = {
-                    navController.navigate(ScreenRole.Client.ForgotPassword.route)
+                    navController.navigate(ScreenRole.Client.Registration.route)
                 },
                 navigateToForgotPassword = {
                     navController.navigate(ScreenRole.Client.ForgotPassword.route)
