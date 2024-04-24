@@ -1,5 +1,6 @@
 package com.example.skills.master.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,8 @@ import com.example.skills.ui.theme.fontFamilyInter
 
 @Composable
 fun DoneClientRegistrationScreen(navController: NavHostController) {
+    Log.i("routing_info", "DoneClientRegistrationScreen")
+
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Column(
             modifier = Modifier
@@ -73,7 +76,7 @@ fun DoneClientRegistrationScreen(navController: NavHostController) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             CustomButton(
-                ScreenRole.ClientMainLayout.route,
+                ScreenRole.Client.MainLayout.route,
                 navController,
                 "В другой раз",
                 color = Color.Transparent,
@@ -82,7 +85,7 @@ fun DoneClientRegistrationScreen(navController: NavHostController) {
             )
 
             CustomButton(
-                ScreenRole.ClientMainLayout.route,  //тут роутинг на тг и календарь
+                ScreenRole.Client.MainLayout.route,
                 navController,
                 "Продолжить",
                 height = 0.4f

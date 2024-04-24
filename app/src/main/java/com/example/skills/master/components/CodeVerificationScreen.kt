@@ -1,5 +1,6 @@
 package com.example.skills.master.components
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -53,6 +54,8 @@ fun CodeVerificationScreen(
     navController: NavHostController,
     nextScreen: ScreenRole
 ) {
+    Log.i("routing_info", nextScreen.route)
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -62,7 +65,7 @@ fun CodeVerificationScreen(
                 ),
                 title = {
                     Text(
-                        "Подтвердите Email",
+                        "Подтвердите Email " + nextScreen.route.take(6),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,

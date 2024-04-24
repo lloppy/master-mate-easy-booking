@@ -1,5 +1,6 @@
 package com.example.skills.master.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,8 @@ import com.example.skills.ui.theme.fontFamilyInter
 
 @Composable
 fun DoneMasterRegistrationScreen(navController: NavHostController) {
+    Log.i("routing_info", "DoneMasterRegistrationScreen")
+
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Column(
             modifier = Modifier
@@ -55,7 +58,7 @@ fun DoneMasterRegistrationScreen(navController: NavHostController) {
             )
             Spacer(modifier = Modifier.padding(8.dp))
             Text(
-                text = "Вы успешно зарегистрировались в нашем приложении как мастера. Для начала заполните свой профиль.",
+                text = "Вы успешно зарегистрировались в нашем приложении как мастер. Для начала заполните свой профиль.",
                 fontSize = 14.sp,
                 fontFamily = fontFamilyInter,
                 fontWeight = FontWeight.Normal,
@@ -71,7 +74,7 @@ fun DoneMasterRegistrationScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.Center
         ) {
             CustomButton(
-                ScreenRole.MasterMainLayout.route,
+                ScreenRole.Master.MainLayout.route,
                 navController,
                 "Продолжить",
                 height = 0.4f

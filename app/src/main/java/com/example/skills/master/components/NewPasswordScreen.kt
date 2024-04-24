@@ -1,5 +1,6 @@
 package com.example.skills.master.components
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,6 +41,8 @@ import com.example.skills.ui.theme.backgroundMaterial
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewPasswordScreen(navController: NavHostController, nextScreen: ScreenRole) {
+    Log.i("routing_info", nextScreen.route)
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -49,7 +52,7 @@ fun NewPasswordScreen(navController: NavHostController, nextScreen: ScreenRole) 
                 ),
                 title = {
                     Text(
-                        "Новый пароль",
+                        "Новый пароль " + nextScreen.route.take(6),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,

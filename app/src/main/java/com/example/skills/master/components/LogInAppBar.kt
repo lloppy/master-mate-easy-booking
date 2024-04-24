@@ -73,7 +73,7 @@ fun LogInScreen(
                 ),
                 title = {
                     Text(
-                        "Вход",
+                        "Вход " + routeLogIn.take(6),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,

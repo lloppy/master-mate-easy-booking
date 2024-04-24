@@ -1,6 +1,5 @@
 package com.example.skills.role
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,9 +8,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,10 +22,9 @@ import androidx.navigation.NavController
 import com.example.skills.R
 import com.example.skills.master.components.CustomButton
 import com.example.skills.ui.theme.fontFamilyInter
-import com.example.skills.ui.theme.paddingBetweenElements
 
 @Composable
-fun RolesScreen(navController: NavController) {
+fun RoleScreen(navController: NavController) {
 
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Column(
@@ -77,16 +72,15 @@ fun RolesScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-
             CustomButton(
-                ScreenRole.ClientLogIn.route,
+                ScreenRole.Client.LogIn.route,
                 navController,
                 "Я клиент",
                 0.45f
             )
             Spacer(modifier = Modifier.padding(8.dp))
             CustomButton(
-                ScreenRole.MasterLogIn.route,
+                ScreenRole.Master.LogIn.route,
                 navController,
                 "Я мастер",
                 color = Color.Transparent
