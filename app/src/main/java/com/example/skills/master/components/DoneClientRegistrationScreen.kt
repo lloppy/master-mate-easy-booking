@@ -26,7 +26,7 @@ import com.example.skills.role.ScreenRole
 import com.example.skills.ui.theme.fontFamilyInter
 
 @Composable
-fun DoneClientRegistrationScreen(navController: NavHostController) {
+fun DoneClientRegistrationScreen(navigateToMain: () -> Unit, navigateToSetUpCalendar: () -> Unit) {
     Log.i("routing_info", "DoneClientRegistrationScreen")
 
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -60,7 +60,7 @@ fun DoneClientRegistrationScreen(navController: NavHostController) {
             )
             Spacer(modifier = Modifier.padding(8.dp))
             Text(
-                text = "Вы успешно зарегистрировались в нашем приложении как клиент. Теперь давайте настроим подключение к Google Календарю и уведомления через Telegram.",
+                text = "Вы успешно зарегистрировались в  приложении как клиент. Теперь давайте настроим подключение к Google Календарю и уведомлениям через Telegram.",
                 fontSize = 14.sp,
                 fontFamily = fontFamilyInter,
                 fontWeight = FontWeight.Normal,
@@ -76,8 +76,7 @@ fun DoneClientRegistrationScreen(navController: NavHostController) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             CustomButton(
-                ScreenRole.Client.MainLayout.route,
-                navController,
+                navigateToMain,
                 "В другой раз",
                 color = Color.Transparent,
                 width = 0.5f,
@@ -85,8 +84,7 @@ fun DoneClientRegistrationScreen(navController: NavHostController) {
             )
 
             CustomButton(
-                ScreenRole.Client.MainLayout.route,
-                navController,
+                navigateToSetUpCalendar,
                 "Продолжить",
                 height = 0.4f
             )

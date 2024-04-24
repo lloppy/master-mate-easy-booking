@@ -1,6 +1,5 @@
 package com.example.skills.master.components
 
-import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,17 +44,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.skills.role.ScreenRole
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CodeVerificationScreen(
     navController: NavHostController,
-    nextScreen: ScreenRole
+    navigateToDoneRegistration: (() -> Unit)? = null,
+    navigateToCreateNewPassword: (() -> Unit)? = null
 ) {
-    Log.i("routing_info", nextScreen.route)
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -65,7 +62,7 @@ fun CodeVerificationScreen(
                 ),
                 title = {
                     Text(
-                        "Подтвердите Email " + nextScreen.route.take(6),
+                        "Подтвердите Email",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
@@ -88,15 +85,14 @@ fun CodeVerificationScreen(
             )
         },
     ) { innerPadding ->
-        CodeVerificationComponents(navController, innerPadding, nextScreen)
+        CodeVerificationComponents(innerPadding, navigateToDoneRegistration ?: navigateToCreateNewPassword!!)
     }
 }
 
 @Composable
 private fun CodeVerificationComponents(
-    navController: NavHostController,
     innerPadding: PaddingValues,
-    nextScreen: ScreenRole
+    navigateTo: () -> Unit
 ) {
     var code by remember { mutableStateOf("") }
     var timeLeft by remember { mutableStateOf(55) }
@@ -142,8 +138,7 @@ private fun CodeVerificationComponents(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomButton(
-            nextScreen.route,
-            navController,
+            navigateTo,
             "Подтвердить",
             height = 0.14f
         )

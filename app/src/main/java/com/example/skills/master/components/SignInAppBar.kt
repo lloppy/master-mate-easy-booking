@@ -47,9 +47,10 @@ import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationScreen(navController: NavHostController, verificationScreen: ScreenRole) {
-    Log.i("routing_info", verificationScreen.route)
-
+fun RegistrationScreen(
+    navController: NavHostController,
+    navigateToCodeVerification: () -> Unit
+) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -59,7 +60,7 @@ fun RegistrationScreen(navController: NavHostController, verificationScreen: Scr
                 ),
                 title = {
                     Text(
-                        "Регистрация " + verificationScreen.route.take(6),
+                        "Регистрация",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
@@ -82,15 +83,14 @@ fun RegistrationScreen(navController: NavHostController, verificationScreen: Scr
             )
         },
     ) { innerPadding ->
-        ContentSingIn(innerPadding, navController, verificationScreen.route)
+        ContentSingIn(innerPadding, navigateToCodeVerification)
     }
 }
 
 @Composable
 fun ContentSingIn(
     innerPadding: PaddingValues,
-    navController: NavHostController,
-    routeVerification: String
+    navigateToCodeVerification: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
@@ -105,7 +105,7 @@ fun ContentSingIn(
     val onSubmit = {
         if (emailState.isValid && passwordState.isValid) {
             //onSignInSubmitted(emailState.text, passwordState.text)
-            navController.navigate(routeVerification)
+            navigateToCodeVerification
         }
     }
     Column(
@@ -189,8 +189,7 @@ fun ContentSingIn(
             Spacer(modifier = Modifier.height(16.dp))
 
             CustomButton(
-                routeVerification,
-                navController,
+                navigateToCodeVerification,
                 "Зарегистрироваться",
                 0.32f
             )

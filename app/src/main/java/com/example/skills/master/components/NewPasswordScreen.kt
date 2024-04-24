@@ -1,6 +1,5 @@
 package com.example.skills.master.components
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,14 +34,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.master.components.tools.PasswordState
-import com.example.skills.role.ScreenRole
 import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewPasswordScreen(navController: NavHostController, nextScreen: ScreenRole) {
-    Log.i("routing_info", nextScreen.route)
-
+fun NewPasswordScreen(
+    navController: NavHostController,
+    navigateToMain: () -> Unit
+) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -52,7 +51,7 @@ fun NewPasswordScreen(navController: NavHostController, nextScreen: ScreenRole) 
                 ),
                 title = {
                     Text(
-                        "Новый пароль " + nextScreen.route.take(6),
+                        "Новый пароль",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
@@ -75,15 +74,14 @@ fun NewPasswordScreen(navController: NavHostController, nextScreen: ScreenRole) 
             )
         },
     ) { innerPadding ->
-        ContentNewPassword(innerPadding, navController, nextScreen)
+        ContentNewPassword(innerPadding, navigateToMain)
     }
 }
 
 @Composable
 fun ContentNewPassword(
     innerPadding: PaddingValues,
-    navController: NavHostController,
-    nextScreen: ScreenRole
+    navigateToMain: () -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
     val passwordState = remember { PasswordState() }
@@ -91,7 +89,7 @@ fun ContentNewPassword(
     val onSubmit = {
         if (passwordState.isValid) {
             //onSignInSubmitted(emailState.text, passwordState.text)
-            navController.navigate(nextScreen.route)
+            navigateToMain
         }
     }
 
@@ -141,8 +139,7 @@ fun ContentNewPassword(
             Spacer(modifier = Modifier.height(16.dp))
 
             CustomButton(
-                nextScreen.route,
-                navController,
+                navigateToMain,
                 "Сохранить",
                 0.14f
             )

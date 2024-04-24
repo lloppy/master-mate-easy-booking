@@ -24,9 +24,7 @@ import com.example.skills.role.ScreenRole
 import com.example.skills.ui.theme.fontFamilyInter
 
 @Composable
-fun DoneMasterRegistrationScreen(navController: NavHostController) {
-    Log.i("routing_info", "DoneMasterRegistrationScreen")
-
+fun DoneMasterRegistrationScreen(navigateToMain: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Column(
             modifier = Modifier
@@ -74,8 +72,7 @@ fun DoneMasterRegistrationScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.Center
         ) {
             CustomButton(
-                ScreenRole.Master.MainLayout.route,
-                navController,
+                navigateToMain,
                 "Продолжить",
                 height = 0.4f
             )

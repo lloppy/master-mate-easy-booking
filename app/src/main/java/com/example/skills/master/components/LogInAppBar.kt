@@ -53,7 +53,6 @@ import com.example.skills.master.components.tools.EmailState
 import com.example.skills.master.components.tools.EmailStateSaver
 import com.example.skills.master.components.tools.PasswordState
 import com.example.skills.master.components.tools.TextFieldState
-import com.example.skills.role.ScreenRole
 import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,8 +60,9 @@ import com.example.skills.ui.theme.backgroundMaterial
 fun LogInScreen(
     navController: NavHostController,
     routeLogIn: String,
-    routeSignIn: String,
-    routeForgotPassword: String
+    navigateToRegistration: () -> Unit,
+    navigateToForgotPassword: () -> Unit,
+    navigateToMain: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -100,8 +100,9 @@ fun LogInScreen(
             innerPadding,
             navController,
             routeLogIn = routeLogIn,
-            routeSignIn = routeSignIn,
-            routeForgotPassword = routeForgotPassword
+            navigateToRegistration,
+            navigateToForgotPassword,
+            navigateToMain
         )
     }
 }
@@ -111,8 +112,9 @@ fun ContentLogIn(
     innerPadding: PaddingValues,
     navController: NavHostController,
     routeLogIn: String,
-    routeSignIn: String,
-    routeForgotPassword: String
+    navigateToRegistration: () -> Unit,
+    navigateToForgotPassword: () -> Unit,
+    navigateToMain: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
 
@@ -159,16 +161,14 @@ fun ContentLogIn(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.Top
             ) {
-                TextButton(
-                    onClick = { navController.navigate(routeForgotPassword) }) {
+                TextButton(onClick = navigateToForgotPassword) {
                     Text("Забыли пароль?", fontSize = 14.sp)
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
 
             CustomButton(
-                routeLogIn,
-                navController,
+                navigateToMain,
                 "Войти",
                 0.15f
             )
@@ -182,8 +182,7 @@ fun ContentLogIn(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text("У вас нет учетной записи?", fontSize = 14.sp, color = Color.Gray)
-                TextButton(
-                    onClick = { navController.navigate(route = routeSignIn) }) {
+                TextButton(onClick = navigateToRegistration) {
                     Text("Зарегистрироваться", fontSize = 14.sp)
                 }
             }

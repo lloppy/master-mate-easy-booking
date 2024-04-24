@@ -26,13 +26,25 @@ fun NavGraphBuilder.clientNavGraph(navController: NavHostController) {
             LogInScreen(
                 navController = navController,
                 routeLogIn = ScreenRole.Client.MainLayout.route,
-                routeSignIn = ScreenRole.Client.Registration.route,
-                routeForgotPassword = ScreenRole.Client.ForgotPassword.route
+                navigateToRegistration = {
+                    navController.navigate(ScreenRole.Client.ForgotPassword.route)
+                },
+                navigateToForgotPassword = {
+                    navController.navigate(ScreenRole.Client.ForgotPassword.route)
+                },
+                navigateToMain = {
+                    navController.navigate(ScreenRole.Client.MainLayout.route)
+                }
             )
         }
 
         composable(ScreenRole.Client.Registration.route) {
-            RegistrationScreen(navController = navController, ScreenRole.Client.CodeVerification)
+            RegistrationScreen(
+                navController = navController, // используется только для стрелки Назад
+                navigateToCodeVerification = {
+                    navController.navigate(ScreenRole.Client.CodeVerification.route)
+                }
+            )
         }
 
         composable(ScreenRole.Client.MainLayout.route) {
@@ -40,23 +52,50 @@ fun NavGraphBuilder.clientNavGraph(navController: NavHostController) {
         }
 
         composable(ScreenRole.Client.ForgotPassword.route) {
-            ForgotPasswordScreen(navController = navController, ScreenRole.Client.CodeVerificationNewPassword)
+            ForgotPasswordScreen(
+                navController = navController,
+                navigateToCodeVerification = {
+                    navController.navigate(ScreenRole.Client.VerificationEmailForNewPassword.route)
+                }
+            )
         }
 
         composable(ScreenRole.Client.CodeVerification.route) {
-            CodeVerificationScreen(navController = navController, ScreenRole.Client.DoneRegistration)
+            CodeVerificationScreen(
+                navController = navController,
+                navigateToDoneRegistration = {
+                    navController.navigate(ScreenRole.Client.DoneRegistration.route)
+                }
+            )
         }
 
-        composable(ScreenRole.Client.CodeVerificationNewPassword.route) {
-            CodeVerificationScreen(navController = navController, ScreenRole.Client.NewPassword)
+        composable(ScreenRole.Client.VerificationEmailForNewPassword.route) {
+            CodeVerificationScreen(
+                navController = navController,
+                navigateToCreateNewPassword = {
+                    navController.navigate(ScreenRole.Client.CreateNewPassword.route)
+                }
+            )
         }
 
-        composable(ScreenRole.Client.NewPassword.route) {
-            NewPasswordScreen(navController = navController, ScreenRole.Client.MainLayout)
+        composable(ScreenRole.Client.CreateNewPassword.route) {
+            NewPasswordScreen(
+                navController = navController,
+                navigateToMain = {
+                    navController.navigate(ScreenRole.Client.MainLayout.route)
+                }
+            )
         }
 
         composable(ScreenRole.Client.DoneRegistration.route) {
-            DoneClientRegistrationScreen(navController = navController)
+            DoneClientRegistrationScreen(
+                navigateToMain = {
+                    navController.navigate(ScreenRole.Client.MainLayout.route)
+                },
+                navigateToSetUpCalendar = {
+                    //TODO()
+                },
+            )
         }
 
     }
@@ -71,13 +110,25 @@ fun NavGraphBuilder.masterNavGraph(navController: NavHostController) {
             LogInScreen(
                 navController = navController,
                 routeLogIn = ScreenRole.Master.MainLayout.route,
-                routeSignIn = ScreenRole.Master.Registration.route,
-                routeForgotPassword = ScreenRole.Master.ForgotPassword.route
+                navigateToRegistration = {
+                    navController.navigate(ScreenRole.Master.Registration.route)
+                },
+                navigateToForgotPassword = {
+                    navController.navigate(ScreenRole.Master.ForgotPassword.route)
+                },
+                navigateToMain = {
+                    navController.navigate(ScreenRole.Master.MainLayout.route)
+                }
             )
         }
 
         composable(ScreenRole.Master.Registration.route) {
-            RegistrationScreen(navController = navController, ScreenRole.Master.CodeVerification)
+            RegistrationScreen(
+                navController = navController,
+                navigateToCodeVerification = {
+                    navController.navigate(ScreenRole.Master.CodeVerification.route)
+                }
+            )
         }
 
         composable(ScreenRole.Master.MainLayout.route) {
@@ -85,23 +136,46 @@ fun NavGraphBuilder.masterNavGraph(navController: NavHostController) {
         }
 
         composable(ScreenRole.Master.ForgotPassword.route) {
-            ForgotPasswordScreen(navController = navController, ScreenRole.Master.CodeVerificationNewPassword)
+            ForgotPasswordScreen(
+                navController = navController,
+                navigateToCodeVerification = {
+                    navController.navigate(ScreenRole.Master.VerificationEmailForNewPassword.route)
+                }
+            )
         }
 
         composable(ScreenRole.Master.CodeVerification.route) {
-            CodeVerificationScreen(navController = navController, ScreenRole.Master.DoneRegistration)
+            CodeVerificationScreen(
+                navController = navController,
+                navigateToDoneRegistration = {
+                    navController.navigate(ScreenRole.Master.DoneRegistration.route)
+                }
+            )
         }
 
-        composable(ScreenRole.Master.CodeVerificationNewPassword.route) {
-            CodeVerificationScreen(navController = navController, ScreenRole.Master.NewPassword)
+        composable(ScreenRole.Master.VerificationEmailForNewPassword.route) {
+            CodeVerificationScreen(navController = navController,
+                navigateToCreateNewPassword = {
+                    navController.navigate(ScreenRole.Master.CreateNewPassword.route)
+                }
+            )
         }
 
-        composable(ScreenRole.Master.NewPassword.route) {
-            NewPasswordScreen(navController = navController, ScreenRole.Master.MainLayout)
+        composable(ScreenRole.Master.CreateNewPassword.route) {
+            NewPasswordScreen(
+                navController = navController,
+                navigateToMain = {
+                    navController.navigate(ScreenRole.Master.MainLayout.route)
+                }
+            )
         }
 
         composable(ScreenRole.Master.DoneRegistration.route) {
-            DoneMasterRegistrationScreen(navController = navController)
+            DoneMasterRegistrationScreen(
+                navigateToMain = {
+                    navController.navigate(ScreenRole.Master.MainLayout.route)
+                }
+            )
         }
     }
 }

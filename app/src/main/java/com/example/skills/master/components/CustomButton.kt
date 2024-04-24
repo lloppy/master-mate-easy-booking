@@ -44,3 +44,31 @@ fun CustomButton(
 
 
 const val buttonRoundedCorner = 16
+
+
+
+@Composable
+fun CustomButton(
+    navigateTo: () -> Unit,
+    buttonText: String,
+    height: Float = 1f,
+    width: Float = 1f,
+    color: Color = Color.Black
+) {
+    Button(
+        onClick = navigateTo,
+        modifier = Modifier
+            .fillMaxWidth(width)
+            .fillMaxHeight(height)
+            .padding(start = paddingBetweenElements, end = paddingBetweenElements),
+        shape = RoundedCornerShape(buttonRoundedCorner),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = color,
+            contentColor = if (color == Color.Black) Color.White else Color.Black
+        ),
+        border = BorderStroke(1.dp, Color.Black)
+
+    ) {
+        Text(text = buttonText)
+    }
+}

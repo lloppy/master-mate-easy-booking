@@ -1,6 +1,5 @@
 package com.example.skills.master.components
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -42,9 +41,10 @@ import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ForgotPasswordScreen(navController: NavHostController, nextScreen: ScreenRole) {
-    Log.i("routing_info", nextScreen.route)
-
+fun ForgotPasswordScreen(
+    navController: NavHostController,
+    navigateToCodeVerification: () -> Unit
+) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -54,7 +54,7 @@ fun ForgotPasswordScreen(navController: NavHostController, nextScreen: ScreenRol
                 ),
                 title = {
                     Text(
-                        "Восстановление " + nextScreen.route.take(6),
+                        "Восстановление",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
@@ -77,15 +77,14 @@ fun ForgotPasswordScreen(navController: NavHostController, nextScreen: ScreenRol
             )
         },
     ) { innerPadding ->
-        ContentForgotPassword(innerPadding, navController, nextScreen)
+        ContentForgotPassword(innerPadding, navigateToCodeVerification)
     }
 }
 
 @Composable
 fun ContentForgotPassword(
     innerPadding: PaddingValues,
-    navController: NavHostController,
-    nextScreen: ScreenRole
+    navigateToCodeVerification: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     val focusRequester = remember { FocusRequester() }
@@ -95,7 +94,7 @@ fun ContentForgotPassword(
     val onSubmit = {
         if (emailState.isValid) {
             //onSignInSubmitted(emailState.text, passwordState.text)
-            navController.navigate(nextScreen.route)
+            navigateToCodeVerification
         }
     }
     Column(
@@ -124,8 +123,7 @@ fun ContentForgotPassword(
                 Email(emailState, onImeAction = { focusRequester.requestFocus() })
             }
             CustomButton(
-                nextScreen.route,
-                navController,
+                navigateToCodeVerification,
                 "Продолжить",
                 0.1f
             )
