@@ -10,8 +10,10 @@ import com.example.skills.client.account.MainClientLayout
 import com.example.skills.master.MainMasterLayout
 import com.example.skills.role.components.CodeVerificationScreen
 import com.example.skills.role.components.DoneClientRegistrationScreen
+import com.example.skills.role.components.DoneMasterInfoRegistrationScreen
 import com.example.skills.role.components.DoneMasterRegistrationScreen
 import com.example.skills.role.components.ForgotPasswordScreen
+import com.example.skills.role.components.FullProfileScreen
 import com.example.skills.role.components.LogInScreen
 import com.example.skills.role.components.NewPasswordScreen
 import com.example.skills.role.components.RegistrationScreen
@@ -172,8 +174,28 @@ fun NavGraphBuilder.masterNavGraph(navController: NavHostController) {
 
         composable(ScreenRole.Master.DoneRegistration.route) {
             DoneMasterRegistrationScreen(
+                navigateToFullProfile = {
+                    navController.navigate(ScreenRole.Master.FullProfile.route)
+                }
+            )
+        }
+
+        composable(ScreenRole.Master.FullProfile.route) {
+            FullProfileScreen(
+                navController = navController,
+                navigateToDoneRegistration = {
+                    navController.navigate(ScreenRole.Master.DoneMasterInfoRegistration.route)
+                }
+            )
+        }
+
+        composable(ScreenRole.Master.DoneMasterInfoRegistration.route) {
+            DoneMasterInfoRegistrationScreen(
                 navigateToMain = {
                     navController.navigate(ScreenRole.Master.MainLayout.route)
+                },
+                navigateToSetUpCalendar = {
+                    //TODO()
                 }
             )
         }

@@ -124,38 +124,22 @@ fun ContentSingIn(
             verticalArrangement = Arrangement.Top
         ) {
             Spacer(modifier = Modifier.height(8.dp))
-            OutlinedTextField(
+            CustomOutlinedTextField(
                 value = firstName,
-                onValueChange = {
-                    firstName = it
-                },
-                label = { Text(text = "Имя") },
-                modifier = Modifier.fillMaxWidth(),
-                textStyle = MaterialTheme.typography.bodyMedium,
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedLabelColor = Color.Gray,
-                    unfocusedBorderColor = Color.Gray
-                )
+                onValueChange = { firstName = it },
+                label = "Имя"
             )
             Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
-
-            OutlinedTextField(
+            CustomOutlinedTextField(
                 value = secondName,
-                onValueChange = {
-                    secondName = it
-                },
-                label = { Text(text = "Фамилия") },
-                modifier = Modifier.fillMaxWidth(),
-                textStyle = MaterialTheme.typography.bodyMedium,
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedLabelColor = Color.Gray,
-                    unfocusedBorderColor = Color.Gray
-                )
+                onValueChange = { secondName = it },
+                label = "Фамилия"
             )
-            Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
 
+            Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
+            Email(emailState, onImeAction = { focusRequester.requestFocus() })
+
+            Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
             OutlinedTextField(
                 value = phone,
                 onValueChange = { phone = it },
@@ -168,11 +152,8 @@ fun ContentSingIn(
                     unfocusedBorderColor = Color.Gray
                 )
             )
-            Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
 
-            Email(emailState, onImeAction = { focusRequester.requestFocus() })
             Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
-
             Password(
                 label = "Пароль",
                 passwordState = passwordState,
@@ -187,7 +168,6 @@ fun ContentSingIn(
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-
             CustomButton(
                 navigateToCodeVerification,
                 "Зарегистрироваться",
@@ -197,4 +177,4 @@ fun ContentSingIn(
     }
 }
 
-var spaceBetweenOutlinedTextField = 12.dp
+var spaceBetweenOutlinedTextField = 10.dp

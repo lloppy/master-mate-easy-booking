@@ -24,6 +24,10 @@ sealed class ScreenRole(val route: String) {
         object CodeVerification : Master("code_verification_registration_screen")
         object VerificationEmailForNewPassword : Master("verification_new_password_screen")
         object CreateNewPassword : Master("new_password_screen")
+        object FullProfile : Master("full_profile_screen")
+        object DoneMasterInfoRegistration : Master("done_master_info_registration_screen")
+
+
 
     }
 }
