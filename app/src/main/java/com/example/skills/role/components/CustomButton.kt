@@ -1,4 +1,4 @@
-package com.example.skills.master.components
+package com.example.skills.role.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxHeight

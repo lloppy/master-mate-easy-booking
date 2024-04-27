@@ -30,20 +30,22 @@ fun MasterBottomNavigation(
     navController: NavController
 ) {
     val dropletButtons = listOf(
-        ScreenMater.MasterChatsScreen,
-        ScreenMater.MasterCreateServiceScreen,
         ScreenMater.MasterHomeScreen,
-        )
+        ScreenMater.MasterCalendarScreen,
+        ScreenMater.MasterCreateServiceScreen,
+        ScreenMater.MasterServerScreen,
+        ScreenMater.MasterSettingsScreen,
+    )
 
-    var selectedItem by remember { mutableStateOf(2) }
+    var selectedItem by remember { mutableStateOf(0) }
     AnimatedNavigationBar(
         modifier = Modifier
-            .padding(bottom = 10.dp, start = 40.dp, end = 40.dp)
+            .padding(bottom = 10.dp, start = 20.dp, end = 20.dp)
             .height(80.dp),
         selectedIndex = selectedItem,
         ballColor = blackMaterial,
         barColor = blackMaterial,
-        cornerRadius = shapeCornerRadius(60.dp),
+        cornerRadius = shapeCornerRadius(80.dp),
         ballAnimation = Parabolic(tween(Duration, easing = LinearOutSlowInEasing)),
         indentAnimation = Height(
             indentWidth = 56.dp,
@@ -68,7 +70,7 @@ fun MasterBottomNavigation(
                         }
                         launchSingleTop = true
 
-                    }
+                    }   
                 }
             )
         }

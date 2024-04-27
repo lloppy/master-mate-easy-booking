@@ -1,4 +1,4 @@
-package com.example.skills.master.components.tools
+package com.example.skills.role.components.tools
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.OffsetMapping

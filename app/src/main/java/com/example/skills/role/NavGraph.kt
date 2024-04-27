@@ -8,13 +8,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.skills.client.account.MainClientLayout
 import com.example.skills.master.MainMasterLayout
-import com.example.skills.master.components.CodeVerificationScreen
-import com.example.skills.master.components.DoneClientRegistrationScreen
-import com.example.skills.master.components.DoneMasterRegistrationScreen
-import com.example.skills.master.components.ForgotPasswordScreen
-import com.example.skills.master.components.LogInScreen
-import com.example.skills.master.components.NewPasswordScreen
-import com.example.skills.master.components.RegistrationScreen
+import com.example.skills.role.components.CodeVerificationScreen
+import com.example.skills.role.components.DoneClientRegistrationScreen
+import com.example.skills.role.components.DoneMasterRegistrationScreen
+import com.example.skills.role.components.ForgotPasswordScreen
+import com.example.skills.role.components.LogInScreen
+import com.example.skills.role.components.NewPasswordScreen
+import com.example.skills.role.components.RegistrationScreen
 
 fun NavGraphBuilder.clientNavGraph(navController: NavHostController) {
     navigation(

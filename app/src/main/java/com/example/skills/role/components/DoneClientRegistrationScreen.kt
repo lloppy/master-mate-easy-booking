@@ -1,4 +1,4 @@
-package com.example.skills.master.components
+package com.example.skills.role.components
 
 import android.util.Log
 import androidx.compose.foundation.Image

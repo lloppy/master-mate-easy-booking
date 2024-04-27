@@ -1,4 +1,4 @@
-package com.example.skills.master.components
+package com.example.skills.role.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -49,10 +49,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.skills.master.components.tools.EmailState
-import com.example.skills.master.components.tools.EmailStateSaver
-import com.example.skills.master.components.tools.PasswordState
-import com.example.skills.master.components.tools.TextFieldState
+import com.example.skills.role.components.tools.EmailState
+import com.example.skills.role.components.tools.EmailStateSaver
+import com.example.skills.role.components.tools.PasswordState
+import com.example.skills.role.components.tools.TextFieldState
 import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)

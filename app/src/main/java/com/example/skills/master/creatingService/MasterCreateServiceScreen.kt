@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.skills.master.components.ModalBottomSheetAdd
+import com.example.skills.role.components.ModalBottomSheetAdd
 import com.example.skills.master.dimen
 import com.example.skills.ui.theme.blackMaterial
 import com.example.skills.ui.theme.greenMaterial
