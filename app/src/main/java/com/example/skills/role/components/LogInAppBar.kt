@@ -251,7 +251,7 @@ fun Password(
     passwordState: TextFieldState,
     modifier: Modifier = Modifier,
     imeAction: ImeAction = ImeAction.Done,
-    onImeAction: () -> Unit = {}
+    onImeAction: @Composable () -> Unit = {}
 ) {
     val showPassword = rememberSaveable { mutableStateOf(false) }
     OutlinedTextField(
@@ -300,9 +300,7 @@ fun Password(
             keyboardType = KeyboardType.Password
         ),
         keyboardActions = KeyboardActions(
-            onDone = {
-                onImeAction()
-            }
+            onDone = {}
         ),
         singleLine = true,
         colors = OutlinedTextFieldDefaults.colors(

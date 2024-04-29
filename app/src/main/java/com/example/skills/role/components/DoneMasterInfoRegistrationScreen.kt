@@ -1,6 +1,5 @@
 package com.example.skills.role.components
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,9 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.example.skills.R
-import com.example.skills.role.ScreenRole
 import com.example.skills.ui.theme.fontFamilyInter
 
 @Composable

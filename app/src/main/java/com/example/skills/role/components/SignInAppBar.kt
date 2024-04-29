@@ -24,6 +24,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,11 +40,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.skills.backend.ApiService
+import com.example.skills.backend.AuthRequest
 import com.example.skills.role.components.tools.EmailState
 import com.example.skills.role.components.tools.EmailStateSaver
 import com.example.skills.role.components.tools.PasswordState
-import com.example.skills.role.ScreenRole
 import com.example.skills.ui.theme.backgroundMaterial
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -102,11 +106,28 @@ fun ContentSingIn(
     }
     val passwordState = remember { PasswordState() }
     val passwordStateRepeat = remember { PasswordState() }
-    val onSubmit = {
+    val onSubmit = @androidx.compose.runtime.Composable {
+        val apiService: ApiService = Retrofit.Builder()
+            .baseUrl("http://localhost:8080/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiService::class.java)
+
         if (emailState.isValid && passwordState.isValid) {
-            //onSignInSubmitted(emailState.text, passwordState.text)
-            navigateToCodeVerification
+            val authRequest = AuthRequest(emailState.text.trim(), passwordState.text.trim())
+            LaunchedEffect(authRequest) {
+                val response = apiService.register(authRequest)
+                if (response.isSuccessful) {
+                    Log.e("RegistrationError", "body code is ${response.body()!!.token} ${response.body()}")
+                    navigateToCodeVerification() // тут переделать
+                } else {
+                    Log.e("RegistrationError", "Server returned an error: ${response.errorBody()}")
+                }
+            }
+        } else {
+            Log.e("RegistrationError", "emailState.isValid && passwordState.isValid not valid")
         }
+
     }
     Column(
         modifier = Modifier
@@ -158,20 +179,27 @@ fun ContentSingIn(
                 label = "Пароль",
                 passwordState = passwordState,
                 modifier = Modifier.focusRequester(focusRequester),
-                onImeAction = { onSubmit() }
+                onImeAction = {
+                    onSubmit()
+                    Log.e("RegistrationError", "onSubmit")
+
+                }
             )
             Password(
                 label = "Повторите пароль",
                 passwordState = passwordStateRepeat,
                 modifier = Modifier.focusRequester(focusRequester),
-                onImeAction = { onSubmit() }
+                onImeAction = {
+                    onSubmit()
+                }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
             CustomButton(
-                navigateToCodeVerification,
-                "Зарегистрироваться",
-                0.32f
+                navigateTo = navigateToCodeVerification, //тут похоже переделать
+                buttonText = "Зарегистрироваться",
+                height = 0.32f,
+                action = onSubmit()
             )
         }
     }

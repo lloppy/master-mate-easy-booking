@@ -44,7 +44,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.skills.backend.ActivationRequest
+import com.example.skills.backend.ActivationResponse
+import com.example.skills.backend.ApiService
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,6 +60,8 @@ fun CodeVerificationScreen(
     navigateToDoneRegistration: (() -> Unit)? = null,
     navigateToCreateNewPassword: (() -> Unit)? = null
 ) {
+    var activationCode by remember { mutableStateOf("") }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -85,14 +94,15 @@ fun CodeVerificationScreen(
             )
         },
     ) { innerPadding ->
-        CodeVerificationComponents(innerPadding, navigateToDoneRegistration ?: navigateToCreateNewPassword!!)
+        CodeVerificationComponents(innerPadding, navigateToDoneRegistration ?: navigateToCreateNewPassword!!, activationCode)
     }
 }
 
 @Composable
 private fun CodeVerificationComponents(
     innerPadding: PaddingValues,
-    navigateTo: () -> Unit
+    navigateTo: () -> Unit,
+    activationCode: String
 ) {
     var code by remember { mutableStateOf("") }
     var timeLeft by remember { mutableStateOf(55) }
@@ -136,14 +146,25 @@ private fun CodeVerificationComponents(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+        val apiService: ApiService = Retrofit.Builder()
+            .baseUrl("http://localhost:8080/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiService::class.java)
+
+        var activationResponse: Response<ActivationResponse>? = null
+        LaunchedEffect(activationCode) {
+            activationResponse = apiService.activate(ActivationRequest(activationCode))
+        }
 
         CustomButton(
-            navigateTo,
+            { if (activationResponse!!.isSuccessful) navigateTo },
             "Подтвердить",
-            height = 0.14f
+            height = 0.14f,
         )
     }
 }
+
 
 @Composable
 fun OtpTextField(
