@@ -153,12 +153,14 @@ private fun CodeVerificationComponents(
             .create(ApiService::class.java)
 
         var activationResponse: Response<ActivationResponse>? = null
+
         LaunchedEffect(activationCode) {
             activationResponse = apiService.activate(ActivationRequest(activationCode))
+                navigateTo()
+            
         }
-
         CustomButton(
-            { if (activationResponse!!.isSuccessful) navigateTo },
+            navigateTo,
             "Подтвердить",
             height = 0.14f,
         )
