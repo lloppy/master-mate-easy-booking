@@ -1,5 +1,9 @@
 package com.example.skills.master.components
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -31,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -81,11 +86,19 @@ fun GoogleCalendarScreen(navController: NavHostController, navigateToMain: () ->
 @Composable
 fun ContentGoogleCalendarInfo(innerPadding: PaddingValues, navigateToMain: () -> Unit) {
     var calendarId by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 24.dp, end = 24.dp, top = innerPadding.calculateTopPadding()),
+            .padding(
+                start = 24.dp,
+                end = 24.dp,
+                top = innerPadding
+                    .calculateTopPadding()
+                    .plus(12.dp)
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -129,8 +142,13 @@ fun ContentGoogleCalendarInfo(innerPadding: PaddingValues, navigateToMain: () ->
                     text = "master@mate.gserviceaccount.com",
                     color = Color.Blue,
                     lineHeight = lineHeight,
-                    fontWeight = FontWeight.Bold, fontSize = 12.sp
+                    fontWeight = FontWeight.Bold, fontSize = 12.sp,
+                    modifier = Modifier.clickable {
+                        val clip = ClipData.newPlainText("Copied Text", "master@mate.gserviceaccount.com")
+                        clipboardManager.setPrimaryClip(clip)
+                    }
                 )
+
                 Text(
                     text = "7. В разрешении укажите \"Внесение изменений и предоставление доступа\".",
                     fontSize = 12.sp,
@@ -179,9 +197,9 @@ fun ContentGoogleCalendarInfo(innerPadding: PaddingValues, navigateToMain: () ->
         }
 
         CustomButton(
-             navigateToMain,
+            navigateToMain,
             "Сохранить",
-             height = 0.5f
+            height = 0.5f
         )
     }
 }
