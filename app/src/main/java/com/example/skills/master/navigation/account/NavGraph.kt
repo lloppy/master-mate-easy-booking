@@ -12,6 +12,7 @@ import com.example.skills.master.components.MasterClientServicesScreen
 import com.example.skills.master.components.MasterMyServicesScreen
 import com.example.skills.master.components.MasterPasswordScreen
 import com.example.skills.master.components.MasterSettingsScreen
+import com.example.skills.master.components.NotificationSettingsScreen
 import com.example.skills.master.creatingService.MainCreationLayout
 import com.example.skills.role.ScreenRole
 import com.example.skills.role.components.FullProfileScreen
@@ -59,7 +60,7 @@ fun SetupMasterNavGraph(
                     navHostController.navigate(ScreenRole.Master.GoogleCalendar.route)
                 },
                 navigateToNotifications = {
-                    //  navController.navigate(ScreenRole.Master.Registration.route)
+                    navHostController.navigate(ScreenRole.Master.Notifications.route)
                 },
                 exit = {
                     navHostController.navigate(ScreenRole.Master.LogIn.route)
@@ -87,6 +88,15 @@ fun SetupMasterNavGraph(
 
         composable(ScreenRole.Master.EditProfile.route) {
             EditProfileScreen(
+                navController = navHostController,
+                navigateToMain = {
+                    navHostController.navigate(ScreenMaster.MasterHomeScreen.route)
+                }
+            )
+        }
+
+        composable(ScreenRole.Master.Notifications.route) {
+            NotificationSettingsScreen(
                 navController = navHostController,
                 navigateToMain = {
                     navHostController.navigate(ScreenMaster.MasterHomeScreen.route)

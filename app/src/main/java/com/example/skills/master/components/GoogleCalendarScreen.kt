@@ -3,6 +3,7 @@ package com.example.skills.master.components
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.graphics.Color.parseColor
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -148,9 +149,10 @@ fun ContentGoogleCalendarInfo(innerPadding: PaddingValues, navigateToMain: () ->
                 )
                 Text(
                     text = "master@mate.gserviceaccount.com",
-                    color = Color.Blue,
+                    color = Color(parseColor("#007AFF")),
                     lineHeight = lineHeight,
-                    fontWeight = FontWeight.Bold, fontSize = instructionTextSize,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = instructionTextSize,
                     modifier = Modifier.clickable {
                         val clip =
                             ClipData.newPlainText("Copied Text", "master@mate.gserviceaccount.com")

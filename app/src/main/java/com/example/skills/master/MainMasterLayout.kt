@@ -17,6 +17,7 @@ fun MainMasterLayout() {
     val hideList = setOf(
         ScreenRole.Master.GoogleCalendar.route,
         ScreenRole.Master.EditProfile.route,
+        ScreenRole.Master.Notifications.route,
         ScreenRole.Master.PasswordSettings.route
     )
 
