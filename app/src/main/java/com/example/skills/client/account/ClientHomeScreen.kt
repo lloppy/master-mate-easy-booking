@@ -21,7 +21,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.skills.client.data.Repository
 import com.example.skills.ui.theme.backgroundMaterial
 import com.example.skills.ui.theme.blackMaterial
 import com.example.skills.ui.theme.greenMaterial
@@ -36,7 +35,7 @@ fun MainClientScreen() {
             .padding(top = 32.dp, bottom = 32.dp, start = 12.dp, end = 12.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        GreetingText(name = Repository.currentUser.name)
+        //GreetingText(name = Repository.currentUser.name)
 
         Divider()
 
@@ -47,7 +46,6 @@ fun MainClientScreen() {
                 .clip(shape = RoundedCornerShape(dimen))
                 .background(blackMaterial)
         ) {
-            val firstAppointment = Repository.currentUser.mastersAppointment!!.first()
 
         }
 

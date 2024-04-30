@@ -154,11 +154,10 @@ private fun CodeVerificationComponents(
 
         var activationResponse: Response<ActivationResponse>? = null
 
-        LaunchedEffect(activationCode) {
-            activationResponse = apiService.activate(ActivationRequest(activationCode))
-                navigateTo()
-            
-        }
+//        LaunchedEffect(activationCode) {
+//            activationResponse = apiService.activate(ActivationRequest(activationCode))
+//                navigateTo()
+//        }
         CustomButton(
             navigateTo,
             "Подтвердить",

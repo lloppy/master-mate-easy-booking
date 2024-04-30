@@ -53,14 +53,10 @@ fun CustomButton(
     buttonText: String,
     height: Float = 1f,
     width: Float = 1f,
-    color: Color = Color.Black,
-    action: Any? = null
+    color: Color = Color.Black
 ) {
     Button(
-        onClick = {
-            navigateTo
-            action
-        },
+        onClick = navigateTo,
         modifier = Modifier
             .fillMaxWidth(width)
             .fillMaxHeight(height)

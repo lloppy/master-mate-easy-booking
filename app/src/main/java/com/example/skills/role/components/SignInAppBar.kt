@@ -115,15 +115,15 @@ fun ContentSingIn(
 
         if (emailState.isValid && passwordState.isValid) {
             val authRequest = AuthRequest(emailState.text.trim(), passwordState.text.trim())
-            LaunchedEffect(authRequest) {
-                val response = apiService.register(authRequest)
-                if (response.isSuccessful) {
-                    Log.e("RegistrationError", "body code is ${response.body()!!.token} ${response.body()}")
-                    navigateToCodeVerification() // тут переделать
-                } else {
-                    Log.e("RegistrationError", "Server returned an error: ${response.errorBody()}")
-                }
-            }
+//            LaunchedEffect(authRequest) {
+//                val response = apiService.register(authRequest)
+//                if (response.isSuccessful) {
+//                    Log.e("RegistrationError", "body code is ${response.body()!!.token} ${response.body()}")
+//                    navigateToCodeVerification() // тут переделать
+//                } else {
+//                    Log.e("RegistrationError", "Server returned an error: ${response.errorBody()}")
+//                }
+//            }
         } else {
             Log.e("RegistrationError", "emailState.isValid && passwordState.isValid not valid")
         }
@@ -179,27 +179,25 @@ fun ContentSingIn(
                 label = "Пароль",
                 passwordState = passwordState,
                 modifier = Modifier.focusRequester(focusRequester),
-                onImeAction = {
-                    onSubmit()
-                    Log.e("RegistrationError", "onSubmit")
-
-                }
+//                onImeAction = {
+//                    onSubmit()
+//                }
             )
             Password(
                 label = "Повторите пароль",
                 passwordState = passwordStateRepeat,
                 modifier = Modifier.focusRequester(focusRequester),
-                onImeAction = {
-                    onSubmit()
-                }
+//                onImeAction = {
+//                    onSubmit()
+//                }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
             CustomButton(
                 navigateTo = navigateToCodeVerification, //тут похоже переделать
                 buttonText = "Зарегистрироваться",
-                height = 0.32f,
-                action = onSubmit()
+                height = 0.32f
+               // action = onSubmit()
             )
         }
     }
