@@ -105,63 +105,70 @@ fun ContentGoogleCalendarInfo(innerPadding: PaddingValues, navigateToMain: () ->
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.8f),
+                .fillMaxHeight(0.9f),
             verticalArrangement = Arrangement.Top
         ) {
             Text(
                 text = "Добавьте наш сервисный аккаунт к вашему календарю:",
                 lineHeight = lineHeight,
-                fontSize = 14.sp
+                fontSize = 14.sp, fontWeight = FontWeight.Medium
             )
             Spacer(modifier = Modifier.width(spacerValue))
 
             Column {
                 Text(
                     text = "1. Откройте Google Календарь через браузер.",
-                    fontSize = 12.sp,
+                    fontSize = instructionTextSize,
                     modifier = Modifier.padding(top = spacerValue)
                 )
                 Text(
                     text = "2. В левом меню найдите ваш календарь и кликните по трёхточечному меню рядом с его названием.",
                     lineHeight = lineHeight,
-                    fontSize = 12.sp
+                    fontSize = instructionTextSize
                 )
-                Text(text = "3. Выберите \"Настройки и общий доступ\".", fontSize = 12.sp)
+                Text(
+                    text = "3. Выберите \"Настройки и общий доступ\".",
+                    fontSize = instructionTextSize
+                )
                 Text(
                     text = "4. Пролистайте страницу до раздела \"Открыть доступ пользователям или группам\".",
                     lineHeight = lineHeight,
-                    fontSize = 12.sp
+                    fontSize = instructionTextSize
                 )
-                Text(text = "5. Нажмите \"Добавить пользователей или группы\".", fontSize = 12.sp)
+                Text(
+                    text = "5. Нажмите \"Добавить пользователей или группы\".",
+                    fontSize = instructionTextSize
+                )
                 Text(
                     text = "6. Введите адрес электронной почты нашего сервисного аккаунта",
                     lineHeight = lineHeight,
-                    fontSize = 12.sp
+                    fontSize = instructionTextSize
                 )
                 Text(
                     text = "master@mate.gserviceaccount.com",
                     color = Color.Blue,
                     lineHeight = lineHeight,
-                    fontWeight = FontWeight.Bold, fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold, fontSize = instructionTextSize,
                     modifier = Modifier.clickable {
-                        val clip = ClipData.newPlainText("Copied Text", "master@mate.gserviceaccount.com")
+                        val clip =
+                            ClipData.newPlainText("Copied Text", "master@mate.gserviceaccount.com")
                         clipboardManager.setPrimaryClip(clip)
                     }
                 )
 
                 Text(
                     text = "7. В разрешении укажите \"Внесение изменений и предоставление доступа\".",
-                    fontSize = 12.sp,
+                    fontSize = instructionTextSize,
                     lineHeight = lineHeight,
                 )
-                Text(text = "8. Нажмите \"Отправить\".", fontSize = 12.sp)
+                Text(text = "8. Нажмите \"Отправить\".", fontSize = instructionTextSize)
             }
 
             Spacer(modifier = Modifier.height(spacerValue))
 
             Text(
                 text = "Найдите идентификатор вашего календаря:", lineHeight = lineHeight,
-                fontSize = 14.sp
+                fontSize = 14.sp, fontWeight = FontWeight.Medium
             )
             Spacer(modifier = Modifier.width(spacerValue))
 
@@ -169,14 +176,14 @@ fun ContentGoogleCalendarInfo(innerPadding: PaddingValues, navigateToMain: () ->
                 Text(
                     text = "1. В настройках вашего календаря (см. предыдущий пункт) перейдите к разделу \"Интеграция календаря\".",
                     lineHeight = lineHeight,
-                    fontSize = 12.sp, modifier = Modifier.padding(top = spacerValue)
+                    fontSize = instructionTextSize, modifier = Modifier.padding(top = spacerValue)
                 )
                 Text(
                     text = "2. Скопируйте идентификатор календаря и вставьте в поле ниже.",
                     lineHeight = lineHeight,
-                    fontSize = 12.sp
+                    fontSize = instructionTextSize
                 )
-                Text(text = "3. Нажмите \"Сохранить\".", fontSize = 12.sp)
+                Text(text = "3. Нажмите \"Сохранить\".", fontSize = instructionTextSize)
             }
             Spacer(modifier = Modifier.width(spacerValue))
 
@@ -199,10 +206,11 @@ fun ContentGoogleCalendarInfo(innerPadding: PaddingValues, navigateToMain: () ->
         CustomButton(
             navigateToMain,
             "Сохранить",
-            height = 0.5f
+            height = 0.9f
         )
     }
 }
 
-var lineHeight = 14.sp
-var spacerValue = 12.dp
+var lineHeight = 18.sp
+var spacerValue = 14.dp
+var instructionTextSize = 14.sp
