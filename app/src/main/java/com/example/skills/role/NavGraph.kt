@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.skills.client.account.MainClientLayout
 import com.example.skills.master.MainMasterLayout
+import com.example.skills.master.components.GoogleCalendarScreen
 import com.example.skills.role.components.CodeVerificationScreen
 import com.example.skills.role.components.DoneClientRegistrationScreen
 import com.example.skills.role.components.DoneMasterInfoRegistrationScreen
@@ -199,6 +200,15 @@ fun NavGraphBuilder.masterNavGraph(navController: NavHostController) {
                 }
             )
         }
+
+//        composable(ScreenRole.Master.GoogleCalendar.route) {
+//            GoogleCalendarScreen(
+//                navController = navController,
+//                navigateToMain = {
+//                    navController.navigate(ScreenRole.Master.MainLayout.route)
+//                }
+//            )
+//        }
     }
 }
 

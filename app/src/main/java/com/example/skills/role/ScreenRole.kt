@@ -28,6 +28,9 @@ sealed class ScreenRole(val route: String) {
         object DoneMasterInfoRegistration : Master("done_master_info_registration_screen")
 
 
+        // in master profile
+        object GoogleCalendar : Master("google_calendar_screen")
+
 
     }
 }

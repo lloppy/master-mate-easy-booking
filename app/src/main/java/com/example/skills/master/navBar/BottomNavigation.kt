@@ -15,7 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.skills.master.navigation.account.ScreenMater
+import com.example.skills.master.navigation.account.ScreenMaster
 import com.example.skills.ui.theme.blackMaterial
 import com.example.skills.ui.theme.orangeMaterial
 import com.exyte.animatednavbar.AnimatedNavigationBar
@@ -30,11 +30,11 @@ fun MasterBottomNavigation(
     navController: NavController
 ) {
     val dropletButtons = listOf(
-        ScreenMater.MasterHomeScreen,
-        ScreenMater.MasterCalendarScreen,
-        ScreenMater.MasterCreateServiceScreen,
-        ScreenMater.MasterServerScreen,
-        ScreenMater.MasterSettingsScreen,
+        ScreenMaster.MasterHomeScreen,
+        ScreenMaster.MasterCalendarScreen,
+        ScreenMaster.MasterCreateServiceScreen,
+        ScreenMaster.MasterServerScreen,
+        ScreenMaster.MasterSettingsScreen,
     )
 
     var selectedItem by remember { mutableStateOf(0) }
@@ -65,7 +65,7 @@ fun MasterBottomNavigation(
                 onClick = {
                     selectedItem = index
                     navController.navigate(item.route) {
-                        popUpTo(ScreenMater.MasterHomeScreen.route) {
+                        popUpTo(ScreenMaster.MasterHomeScreen.route) {
                             saveState = true
                         }
                         launchSingleTop = true

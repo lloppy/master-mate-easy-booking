@@ -6,10 +6,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.skills.client.account.CalendarScreen
 import com.example.skills.master.MainMasterScreen
+import com.example.skills.master.components.GoogleCalendarScreen
 import com.example.skills.master.components.MasterClientServicesScreen
 import com.example.skills.master.components.MasterMyServicesScreen
 import com.example.skills.master.components.MasterSettingsScreen
 import com.example.skills.master.creatingService.MainCreationLayout
+import com.example.skills.role.ScreenRole
 
 @Composable
 fun SetupMasterNavGraph(
@@ -17,32 +19,58 @@ fun SetupMasterNavGraph(
 ) {
     NavHost(
         navController = navHostController,
-        startDestination = ScreenMater.MasterHomeScreen.route
+        startDestination = ScreenMaster.MasterHomeScreen.route
     ) {
         // person
-        composable(route = ScreenMater.MasterHomeScreen.route) {
+        composable(route = ScreenMaster.MasterHomeScreen.route) {
             MainMasterScreen()
         }
         //calendar
-        composable(route = ScreenMater.MasterCalendarScreen.route) {
+        composable(route = ScreenMaster.MasterCalendarScreen.route) {
             CalendarScreen()
         }
         // done checkbox
-        composable(route = ScreenMater.MasterCreateServiceScreen.route) {
+        composable(route = ScreenMaster.MasterCreateServiceScreen.route) {
             MasterClientServicesScreen()
         }
         // server
-        composable(route = ScreenMater.MasterServerScreen.route) {
+        composable(route = ScreenMaster.MasterServerScreen.route) {
             MasterMyServicesScreen()
-        }
-        // settings
-        composable(route = ScreenMater.MasterSettingsScreen.route) {
-            MasterSettingsScreen()
         }
 
         // all layout, setup navigation
-        composable(route = ScreenMater.MainCreationLayout.route) {
+        composable(route = ScreenMaster.MainCreationLayout.route) {
             MainCreationLayout()
+        }
+
+        // settings
+        composable(route = ScreenMaster.MasterSettingsScreen.route) {
+            MasterSettingsScreen(
+                navigateToEditAccount = {
+                    navHostController.navigate(ScreenRole.Master.FullProfile.route)
+                },
+                navigateToEditPassword = {
+                    navHostController.navigate(ScreenRole.Master.CreateNewPassword.route)
+                },
+                navigateToCalendar = {
+                    navHostController.navigate(ScreenRole.Master.GoogleCalendar.route)
+                },
+                navigateToNotifications = {
+                    //  navController.navigate(ScreenRole.Master.Registration.route)
+                },
+                exit = {
+                    navHostController.navigate(ScreenRole.Master.LogIn.route)
+                }
+            )
+        }
+
+        composable(ScreenRole.Master.GoogleCalendar.route) {
+            GoogleCalendarScreen(
+                navController = navHostController,
+                navigateToMain = {
+                    navHostController.navigate(ScreenRole.Master.MainLayout.route)
+                }
+            )
         }
     }
 }
