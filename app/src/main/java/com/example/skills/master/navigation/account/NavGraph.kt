@@ -68,7 +68,7 @@ fun SetupMasterNavGraph(
             GoogleCalendarScreen(
                 navController = navHostController,
                 navigateToMain = {
-                    navHostController.navigate(ScreenRole.Master.MainLayout.route)
+                    navHostController.navigate(ScreenMaster.MasterHomeScreen.route)
                 }
             )
         }
