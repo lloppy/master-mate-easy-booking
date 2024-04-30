@@ -63,6 +63,7 @@ fun SetupMasterNavGraph(
                     navHostController.navigate(ScreenRole.Master.Notifications.route)
                 },
                 exit = {
+                    // крашится, потому что другой роут, нужно потом полностью закрывать приложение
                     navHostController.navigate(ScreenRole.Master.LogIn.route)
                 }
             )
