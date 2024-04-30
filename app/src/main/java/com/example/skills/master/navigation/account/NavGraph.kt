@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.skills.client.account.CalendarScreen
 import com.example.skills.master.MainMasterScreen
+import com.example.skills.master.components.EditProfileScreen
 import com.example.skills.master.components.GoogleCalendarScreen
 import com.example.skills.master.components.MasterClientServicesScreen
 import com.example.skills.master.components.MasterMyServicesScreen
@@ -13,6 +14,7 @@ import com.example.skills.master.components.MasterPasswordScreen
 import com.example.skills.master.components.MasterSettingsScreen
 import com.example.skills.master.creatingService.MainCreationLayout
 import com.example.skills.role.ScreenRole
+import com.example.skills.role.components.FullProfileScreen
 
 @Composable
 fun SetupMasterNavGraph(
@@ -48,7 +50,7 @@ fun SetupMasterNavGraph(
         composable(route = ScreenMaster.MasterSettingsScreen.route) {
             MasterSettingsScreen(
                 navigateToEditAccount = {
-                    navHostController.navigate(ScreenRole.Master.FullProfile.route)
+                    navHostController.navigate(ScreenRole.Master.EditProfile.route)
                 },
                 navigateToEditPassword = {
                     navHostController.navigate(ScreenRole.Master.PasswordSettings.route)
@@ -76,6 +78,15 @@ fun SetupMasterNavGraph(
 
         composable(ScreenRole.Master.PasswordSettings.route) {
             MasterPasswordScreen(
+                navController = navHostController,
+                navigateToMain = {
+                    navHostController.navigate(ScreenMaster.MasterHomeScreen.route)
+                }
+            )
+        }
+
+        composable(ScreenRole.Master.EditProfile.route) {
+            EditProfileScreen(
                 navController = navHostController,
                 navigateToMain = {
                     navHostController.navigate(ScreenMaster.MasterHomeScreen.route)
