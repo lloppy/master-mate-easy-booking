@@ -30,12 +30,14 @@ fun ClientBottomNavigation(
     navController: NavController
 ) {
     val dropletButtons = listOf(
-        ScreenClient.ClientCalendarScreen,
         ScreenClient.ClientHomeScreen,
-        ScreenClient.ClientChatsScreen
+        ScreenClient.ClientCalendarScreen,
+        ScreenClient.ClientCreateServiceScreen,
+        ScreenClient.ClientServerScreen,
+        ScreenClient.ClientSettingsScreen,
     )
 
-    var selectedItem by remember { mutableStateOf(1) }
+    var selectedItem by remember { mutableStateOf(0) }
     AnimatedNavigationBar(
         modifier = Modifier
             .padding(bottom = 10.dp, start = 40.dp, end = 40.dp)

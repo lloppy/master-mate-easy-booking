@@ -10,12 +10,11 @@ import com.example.skills.master.components.EditProfileScreen
 import com.example.skills.master.components.GoogleCalendarScreen
 import com.example.skills.master.components.MasterClientServicesScreen
 import com.example.skills.master.components.MasterMyServicesScreen
-import com.example.skills.master.components.MasterPasswordScreen
+import com.example.skills.master.components.EditPasswordScreen
 import com.example.skills.master.components.MasterSettingsScreen
 import com.example.skills.master.components.NotificationSettingsScreen
 import com.example.skills.master.creatingService.MainCreationLayout
 import com.example.skills.role.ScreenRole
-import com.example.skills.role.components.FullProfileScreen
 
 @Composable
 fun SetupMasterNavGraph(
@@ -79,7 +78,7 @@ fun SetupMasterNavGraph(
         }
 
         composable(ScreenRole.Master.PasswordSettings.route) {
-            MasterPasswordScreen(
+            EditPasswordScreen(
                 navController = navHostController,
                 navigateToMain = {
                     navHostController.navigate(ScreenMaster.MasterHomeScreen.route)

@@ -13,6 +13,13 @@ sealed class ScreenRole(val route: String) {
         object VerificationEmailForNewPassword : Client("verification_new_password_screen")
         object CreateNewPassword : Client("new_password_screen")
 
+        // in client profile
+        object GoogleCalendar : Master("google_calendar_screen")
+        object PasswordSettings : Master("password_settings_screen")
+        object EditProfile : Master("edit_profile_screen")
+        object Notifications : Master("notifications_screen")
+
+
     }
 
     sealed class Master(val masterRoute: String) : ScreenRole("master/$masterRoute") {

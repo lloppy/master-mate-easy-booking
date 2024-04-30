@@ -40,7 +40,7 @@ import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MasterPasswordScreen(
+fun EditPasswordScreen(
     navController: NavHostController,
     navigateToMain: () -> Unit
 ) {
