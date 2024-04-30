@@ -15,8 +15,8 @@ import com.example.skills.role.ScreenRole
 fun MainMasterLayout() {
     val navController = rememberNavController()
     val hideList = setOf(
-        ScreenRole.Master.GoogleCalendar.route
-
+        ScreenRole.Master.GoogleCalendar.route,
+        ScreenRole.Master.PasswordSettings.route
     )
 
     val screen = navController.currentBackStackEntryAsState().value

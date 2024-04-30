@@ -93,8 +93,6 @@ fun ContentGoogleCalendarInfo(innerPadding: PaddingValues, navigateToMain: () ->
         modifier = Modifier
             .fillMaxSize()
             .padding(
-                start = 24.dp,
-                end = 24.dp,
                 top = innerPadding
                     .calculateTopPadding()
                     .plus(12.dp)
@@ -105,7 +103,11 @@ fun ContentGoogleCalendarInfo(innerPadding: PaddingValues, navigateToMain: () ->
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.9f),
+                .fillMaxHeight(0.9f)
+                .padding(
+                    start = 24.dp,
+                    end = 24.dp
+                ),
             verticalArrangement = Arrangement.Top
         ) {
             Text(
@@ -202,7 +204,6 @@ fun ContentGoogleCalendarInfo(innerPadding: PaddingValues, navigateToMain: () ->
                 )
             )
         }
-
         CustomButton(
             navigateToMain,
             "Сохранить",

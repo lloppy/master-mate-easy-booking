@@ -200,15 +200,6 @@ fun NavGraphBuilder.masterNavGraph(navController: NavHostController) {
                 }
             )
         }
-
-//        composable(ScreenRole.Master.GoogleCalendar.route) {
-//            GoogleCalendarScreen(
-//                navController = navController,
-//                navigateToMain = {
-//                    navController.navigate(ScreenRole.Master.MainLayout.route)
-//                }
-//            )
-//        }
     }
 }
 

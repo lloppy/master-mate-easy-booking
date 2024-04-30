@@ -9,6 +9,7 @@ import com.example.skills.master.MainMasterScreen
 import com.example.skills.master.components.GoogleCalendarScreen
 import com.example.skills.master.components.MasterClientServicesScreen
 import com.example.skills.master.components.MasterMyServicesScreen
+import com.example.skills.master.components.MasterPasswordScreen
 import com.example.skills.master.components.MasterSettingsScreen
 import com.example.skills.master.creatingService.MainCreationLayout
 import com.example.skills.role.ScreenRole
@@ -50,7 +51,7 @@ fun SetupMasterNavGraph(
                     navHostController.navigate(ScreenRole.Master.FullProfile.route)
                 },
                 navigateToEditPassword = {
-                    navHostController.navigate(ScreenRole.Master.CreateNewPassword.route)
+                    navHostController.navigate(ScreenRole.Master.PasswordSettings.route)
                 },
                 navigateToCalendar = {
                     navHostController.navigate(ScreenRole.Master.GoogleCalendar.route)
@@ -66,6 +67,15 @@ fun SetupMasterNavGraph(
 
         composable(ScreenRole.Master.GoogleCalendar.route) {
             GoogleCalendarScreen(
+                navController = navHostController,
+                navigateToMain = {
+                    navHostController.navigate(ScreenMaster.MasterHomeScreen.route)
+                }
+            )
+        }
+
+        composable(ScreenRole.Master.PasswordSettings.route) {
+            MasterPasswordScreen(
                 navController = navHostController,
                 navigateToMain = {
                     navHostController.navigate(ScreenMaster.MasterHomeScreen.route)
