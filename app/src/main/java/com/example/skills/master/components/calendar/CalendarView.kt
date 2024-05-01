@@ -1,16 +1,13 @@
 package com.example.skills.master.components.calendar
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,10 +15,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,28 +31,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.skills.R
 import com.example.skills.master.components.calendar.ContinuousSelectionHelper.getSelection
 import com.kizitonwose.calendar.compose.VerticalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
 import com.kizitonwose.calendar.core.DayPosition
-import com.kizitonwose.calendar.core.daysOfWeek
-import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
-import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
-import java.time.format.TextStyle
-import java.time.temporal.WeekFields
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 private val primaryColor = Color.Black.copy(alpha = 0.9f)
@@ -64,10 +57,10 @@ fun CalendarView(
     close: () -> Unit = {},
     dateSelected: (startDate: LocalDate, endDate: LocalDate) -> Unit = { _, _ -> },
 ) {
-    val rusDaysOfWeek = listOf("ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"    )
+    val rusDaysOfWeek = listOf("ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС")
     val daysOfWeek = remember { rusDaysOfWeek }
 
-    val currentMonth = remember { YearMonth.now() }
+    var currentMonth by remember { mutableStateOf(YearMonth.now()) }
     val startMonth = remember { currentMonth }
     val endMonth = remember { currentMonth.plusMonths(12) }
     val today = remember { LocalDate.now() }
@@ -79,13 +72,51 @@ fun CalendarView(
                 .background(Color.White),
         ) {
             Column {
-                val state = rememberCalendarState(
-                    startMonth = startMonth,
-                    endMonth = endMonth,
-                    firstVisibleMonth = currentMonth
-                )
+                val calendarState = rememberCalendarState(currentMonth)
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
+                    Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    val monthNames = listOf(
+                        "январь",
+                        "февраль",
+                        "март",
+                        "апрель",
+                        "май",
+                        "июнь",
+                        "июль",
+                        "август",
+                        "сентябрь",
+                        "октябрь",
+                        "ноябрь",
+                        "декабрь"
+                    )
+                    Text(
+                        text = "${monthNames[currentMonth.monthValue - 1]} ${currentMonth.year}".capitalize(),
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        fontSize = 18.sp,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                    Row {
+                        IconButton(onClick = {
+                            currentMonth = currentMonth.minusMonths(1)
+                        }) {
+                            Icon(Icons.Filled.ArrowBack, contentDescription = "Назад")
+                        }
+                        IconButton(onClick = {
+                            currentMonth = currentMonth.plusMonths(1)
+                        }) {
+                            Icon(Icons.Filled.ArrowForward, contentDescription = "Вперед")
+                        }
+                    }
+                }
                 VerticalCalendar(
-                    state = state,
+                    state = calendarState,
                     contentPadding = PaddingValues(bottom = 100.dp),
                     dayContent = { value ->
                         Day(
@@ -118,7 +149,7 @@ fun CalendarView(
                     if (startDate != null && endDate != null) {
                         dateSelected(startDate, endDate)
                     }
-                },
+                }
             )
         }
     }
@@ -136,7 +167,7 @@ private fun Day(
         modifier = Modifier
             .aspectRatio(1f) // This is important for square-sizing!
             .clickable(
-                enabled =   day.position == DayPosition.MonthDate && day.date >= today,
+                enabled = day.position == DayPosition.MonthDate && day.date >= today,
                 showRipple = false,
                 onClick = { onClick(day) },
             )
@@ -165,13 +196,12 @@ private fun MonthHeader(calendarMonth: CalendarMonth) {
             .fillMaxWidth()
             .padding(top = 12.dp, bottom = 8.dp),
     ) {
-        val rusDaysOfWeek = listOf("ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"    )
+        val rusDaysOfWeek = listOf("ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС")
         val daysOfWeek = remember { rusDaysOfWeek }
 
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 35.dp),
+                .fillMaxWidth(),
         ) {
             for (dayOfWeek in daysOfWeek) {
                 Text(
@@ -184,15 +214,6 @@ private fun MonthHeader(calendarMonth: CalendarMonth) {
                 )
             }
         }
-        Text(
-            textAlign = TextAlign.Center,
-            text = calendarMonth.yearMonth.displayText(),
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(start = 16.dp)
-        )
-
-
     }
 }
 
