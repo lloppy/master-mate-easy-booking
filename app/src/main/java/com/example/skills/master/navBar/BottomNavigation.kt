@@ -40,12 +40,12 @@ fun MasterBottomNavigation(
     var selectedItem by remember { mutableStateOf(0) }
     AnimatedNavigationBar(
         modifier = Modifier
-            .padding(bottom = 10.dp, start = 20.dp, end = 20.dp)
+            .padding(bottom = 8.dp, start = 10.dp, end = 10.dp)
             .height(80.dp),
         selectedIndex = selectedItem,
         ballColor = blackMaterial,
         barColor = blackMaterial,
-        cornerRadius = shapeCornerRadius(80.dp),
+        cornerRadius = shapeCornerRadius(25.dp),
         ballAnimation = Parabolic(tween(Duration, easing = LinearOutSlowInEasing)),
         indentAnimation = Height(
             indentWidth = 56.dp,
