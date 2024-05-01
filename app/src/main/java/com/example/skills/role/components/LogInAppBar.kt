@@ -141,21 +141,22 @@ fun ContentLogIn(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            Email(emailState, onImeAction = { focusRequester.requestFocus() })
-            Spacer(modifier = Modifier.height(16.dp))
-            Password(
-                label = "Пароль",
-                passwordState = passwordState,
-                modifier = Modifier.focusRequester(focusRequester),
-                onImeAction = { onSubmit() }
-            )
-
+            Column(modifier = Modifier.padding(start = 8.dp, end = 8.dp)) {
+                Email(emailState, onImeAction = { focusRequester.requestFocus() })
+                Spacer(modifier = Modifier.height(16.dp))
+                Password(
+                    label = "Пароль",
+                    passwordState = passwordState,
+                    modifier = Modifier.focusRequester(focusRequester),
+                    onImeAction = { onSubmit() }
+                )
+            }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
@@ -176,13 +177,20 @@ fun ContentLogIn(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 4.dp),
+                    .padding(start = 8.dp, end = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text("У вас нет учетной записи?", fontSize = 14.sp, color = Color.Gray)
+                Text(
+                    "У вас нет учетной записи?",
+                    fontSize = 14.sp,
+                    color = Color.Gray
+                )
                 TextButton(onClick = navigateToRegistration) {
-                    Text("Зарегистрироваться", fontSize = 14.sp)
+                    Text(
+                        "Зарегистрироваться",
+                        fontSize = 14.sp
+                    )
                 }
             }
         }
