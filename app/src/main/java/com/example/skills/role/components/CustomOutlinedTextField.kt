@@ -17,7 +17,8 @@ fun CustomOutlinedTextField(
     onValueChange: (String) -> Unit,
     label: String,
     width: Float = 1f,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    readOnly: Boolean = false
 ) {
     OutlinedTextField(
         value = value,
@@ -26,10 +27,20 @@ fun CustomOutlinedTextField(
         modifier = Modifier.fillMaxWidth(width),
         textStyle = MaterialTheme.typography.bodyMedium,
         singleLine = true,
-        colors = OutlinedTextFieldDefaults.colors(
-            unfocusedLabelColor = Color.Gray,
-            unfocusedBorderColor = Color.Gray
-        ),
-        interactionSource = interactionSource
+        colors = if (readOnly){
+            OutlinedTextFieldDefaults.colors(
+                unfocusedLabelColor = Color.LightGray,
+                unfocusedBorderColor = Color.LightGray,
+                unfocusedTextColor = Color.LightGray,
+                disabledTextColor = Color.LightGray
+            )
+        } else {
+            OutlinedTextFieldDefaults.colors(
+                unfocusedLabelColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray
+            )
+        },
+        interactionSource = interactionSource,
+        readOnly = readOnly
     )
 }

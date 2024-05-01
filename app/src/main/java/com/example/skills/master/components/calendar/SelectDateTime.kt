@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -30,11 +31,13 @@ import com.example.skills.role.components.CustomOutlinedTextField
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
+
 @Composable
 fun SelectDateTime() {
     val scrollState = rememberScrollState()
 
     var intervals by remember { mutableStateOf(listOf<IntervalData>()) }
+    var inEditMode by remember { mutableStateOf(true) }
 
     Column(
         modifier = Modifier
@@ -47,21 +50,24 @@ fun SelectDateTime() {
             Interval(
                 initialStartTime = interval.startTime,
                 initialEndTime = interval.endTime,
+                isEditable = inEditMode
             )
         }
 
-        TextButton(
-            onClick = {
-                intervals = intervals + IntervalData("", "")
-            },
-            modifier = Modifier.padding(end = 8.dp)
-        ) {
-            Text(text = "+ Добавить интервал")
+        if (inEditMode) {
+            TextButton(
+                onClick = { intervals = intervals + IntervalData("", "") },
+                modifier = Modifier.padding(end = 8.dp)
+            ) {
+                Text(text = "+ Добавить интервал")
+            }
         }
-
+        Spacer(modifier = Modifier.height(10.dp))
         CustomButton(
-            navigateTo = { /*TODO*/ },
-            buttonText = "Сохранить"
+            navigateTo = {
+                inEditMode = !inEditMode
+            },
+            buttonText = if (inEditMode) "Сохранить" else "Изменить"
         )
     }
 }
@@ -71,6 +77,7 @@ fun SelectDateTime() {
 fun Interval(
     initialStartTime: String,
     initialEndTime: String,
+    isEditable: Boolean,
 ) {
     var startTime by remember { mutableStateOf(initialStartTime) }
     var endTime by remember { mutableStateOf(initialEndTime) }
@@ -79,7 +86,7 @@ fun Interval(
     var showTimePickerStart by remember { mutableStateOf(false) }
     var showTimePickerEnd by remember { mutableStateOf(false) }
 
-    if (showTimePickerStart) {
+    if (isEditable && showTimePickerStart) {
         TimePickerDialog(
             onDismissRequest = { /*TODO*/ },
             confirmButton = {
@@ -107,7 +114,7 @@ fun Interval(
         }
     }
 
-    if (showTimePickerEnd) {
+    if (isEditable && showTimePickerEnd) {
         TimePickerDialog(
             onDismissRequest = { /*TODO*/ },
             confirmButton = {
@@ -136,13 +143,15 @@ fun Interval(
     }
 
     Row(
-        modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp),
+        modifier = Modifier
+            .padding(start = 8.dp, end = 8.dp, top = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         val focusManager = LocalFocusManager.current
 
         CustomOutlinedTextField(
+            readOnly = !isEditable,
             value = startTime,
             onValueChange = { startTime = it },
             label = "Время начала",
@@ -153,7 +162,7 @@ fun Interval(
                         interactionSource.interactions.collect {
                             if (it is PressInteraction.Release) {
                                 focusManager.clearFocus()
-                                showTimePickerStart = true
+                                if(isEditable) showTimePickerStart = true
                             }
                         }
                     }
@@ -163,6 +172,7 @@ fun Interval(
         Spacer(modifier = Modifier.width(10.dp))
 
         CustomOutlinedTextField(
+            readOnly = !isEditable,
             value = endTime,
             onValueChange = { endTime = it },
             label = "Время окончания",
@@ -172,7 +182,7 @@ fun Interval(
                         interactionSource.interactions.collect {
                             if (it is PressInteraction.Release) {
                                 focusManager.clearFocus()
-                                showTimePickerEnd = true
+                                if(isEditable) showTimePickerEnd = true
                             }
                         }
                     }
