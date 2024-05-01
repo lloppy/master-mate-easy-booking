@@ -38,7 +38,9 @@ fun SetupClientNavGraph(
         }
         // server
         composable(route = ScreenClient.ClientServerScreen.route) {
-            MasterMyServicesScreen()
+            MasterMyServicesScreen(
+                {}
+            )
         }
 
         // all layout, setup navigation

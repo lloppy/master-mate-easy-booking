@@ -40,6 +40,7 @@ sealed class ScreenRole(val route: String) {
         object PasswordSettings : Master("password_settings_screen")
         object EditProfile : Master("edit_profile_screen")
         object Notifications : Master("notifications_screen")
+        object CreateService : Master("create_service_screen")
 
 
     }
