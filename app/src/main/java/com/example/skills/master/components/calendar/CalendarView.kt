@@ -119,7 +119,7 @@ fun CalendarView(
                     },
                     monthHeader = { month -> MonthHeader(month) },
                 )
-                if (selection.daysBetween != null) {
+                if (selection.daysBetween != null || selection.startDate != null) {
                     SelectDateTime(
                         //onDismissRequest = { dateTimeDialogOpen = false }
                     )
