@@ -69,7 +69,11 @@ fun SelectDateTime() {
 
         if (inEditMode) {
             CustomButton(
-                navigateTo = { inEditMode = !inEditMode },
+                navigateTo = {
+                    if (intervals.isNotEmpty()) {
+                        inEditMode = !inEditMode
+                    }
+                },
                 buttonText = "Сохранить"
             )
         } else {
