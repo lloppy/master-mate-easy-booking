@@ -24,6 +24,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,6 +55,8 @@ fun CalendarView(
     close: () -> Unit = {},
     dateSelected: (startDate: LocalDate, endDate: LocalDate) -> Unit = { _, _ -> },
 ) {
+    var dateTimeDialogOpen by remember { mutableStateOf(false) }
+
     val rusDaysOfWeek = listOf("ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС")
     val daysOfWeek = remember { rusDaysOfWeek }
 
@@ -70,11 +73,9 @@ fun CalendarView(
         ) {
             Column {
                 val calendarState = rememberCalendarState(currentMonth)
-
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp),
+                        .fillMaxWidth(),
                     Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -100,12 +101,11 @@ fun CalendarView(
                 }
                 VerticalCalendar(
                     state = calendarState,
-                    contentPadding = PaddingValues(bottom = 100.dp),
                     dayContent = { value ->
                         Day(
                             value,
                             today = today,
-                            selection = selection,
+                            selection = selection
                         ) { day ->
                             if (day.position == DayPosition.MonthDate &&
                                 (day.date == today || day.date.isAfter(today))
@@ -119,6 +119,11 @@ fun CalendarView(
                     },
                     monthHeader = { month -> MonthHeader(month) },
                 )
+                if (dateTimeDialogOpen) {
+                    SelectDateTime(
+                        //onDismissRequest = { dateTimeDialogOpen = false }
+                    )
+                }
             }
             CalendarBottom(
                 modifier = Modifier
@@ -146,13 +151,16 @@ private fun Day(
     onClick: (CalendarDay) -> Unit,
 ) {
     var textColor = Color.Transparent
+
     Box(
         modifier = Modifier
             .aspectRatio(1f) // This is important for square-sizing!
             .clickable(
                 enabled = day.position == DayPosition.MonthDate && day.date >= today,
                 showRipple = false,
-                onClick = { onClick(day) },
+                onClick = {
+                    onClick(day)
+                },
             )
             .backgroundHighlight(
                 day = day,
@@ -174,18 +182,11 @@ private fun Day(
 
 @Composable
 private fun MonthHeader(calendarMonth: CalendarMonth) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 12.dp, bottom = 8.dp),
-    ) {
+    Box(modifier = Modifier.fillMaxWidth()) {
         val rusDaysOfWeek = listOf("ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС")
         val daysOfWeek = remember { rusDaysOfWeek }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-        ) {
+        Row(modifier = Modifier.fillMaxWidth(),) {
             for (dayOfWeek in daysOfWeek) {
                 Text(
                     modifier = Modifier.weight(1f),
@@ -237,4 +238,17 @@ private fun Example2Preview() {
 }
 
 
-val monthNames = listOf("январь", "февраль", "март", "апрель", "май", "июнь", "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь")
+val monthNames = listOf(
+    "январь",
+    "февраль",
+    "март",
+    "апрель",
+    "май",
+    "июнь",
+    "июль",
+    "август",
+    "сентябрь",
+    "октябрь",
+    "ноябрь",
+    "декабрь"
+)

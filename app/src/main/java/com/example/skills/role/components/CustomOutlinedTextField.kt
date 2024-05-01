@@ -13,13 +13,14 @@ import androidx.compose.ui.graphics.Color
 fun CustomOutlinedTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    label: String
+    label: String,
+    width: Float = 1f
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         label = { Text(text = label) },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(width),
         textStyle = MaterialTheme.typography.bodyMedium,
         singleLine = true,
         colors = OutlinedTextFieldDefaults.colors(
