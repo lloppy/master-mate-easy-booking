@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -24,27 +23,31 @@ import com.example.skills.role.components.CustomOutlinedTextField
 
 @Composable
 fun SelectDateTime() {
-    Column (modifier = Modifier
-        .fillMaxSize().padding(bottom = 100.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
-    ){
-        val scrollState = rememberScrollState()
+    val scrollState = rememberScrollState()
 
-        Column(
-            modifier = Modifier.verticalScroll(scrollState),
-            horizontalAlignment = Alignment.End,
-            verticalArrangement = Arrangement.Bottom
+    var intervals by remember { mutableStateOf(listOf<IntervalData>()) }
+
+    Column(
+        modifier = Modifier
+            .verticalScroll(scrollState)
+            .padding(bottom = 100.dp),
+        horizontalAlignment = Alignment.End,
+        verticalArrangement = Arrangement.Bottom
+    ) {
+        intervals.forEach { interval ->
+            Interval(
+                initialStartTime = interval.startTime,
+                initialEndTime = interval.endTime,
+            )
+        }
+
+        TextButton(
+            onClick = {
+                intervals = intervals + IntervalData("", "")
+            },
+            modifier = Modifier.padding(end = 8.dp, bottom = 8.dp)
         ) {
-
-            Column {
-                Interval()
-                Interval()
-            }
-
-            TextButton(onClick = { /*TODO*/ }) {
-                Text(text = "+ Добавить интервал")
-            }
+            Text(text = "+ Добавить интервал")
         }
 
         CustomButton(
@@ -55,9 +58,13 @@ fun SelectDateTime() {
 }
 
 @Composable
-fun Interval() {
-    var startTime by remember { mutableStateOf("") }
-    var endTime by remember { mutableStateOf("") }
+fun Interval(
+    initialStartTime: String,
+    initialEndTime: String,
+) {
+    var startTime by remember { mutableStateOf(initialStartTime) }
+    var endTime by remember { mutableStateOf(initialEndTime) }
+
 
     Row(
         modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp),
@@ -79,3 +86,5 @@ fun Interval() {
         )
     }
 }
+
+data class IntervalData(var startTime: String, var endTime: String)
