@@ -123,8 +123,7 @@ fun ContentForgotPassword(
             }
             CustomButton(
                 navigateToCodeVerification,
-                "Продолжить",
-                0.1f
+                "Продолжить"
             )
         }
     }

@@ -70,8 +70,7 @@ fun DoneMasterRegistrationScreen(navigateToFullProfile: () -> Unit) {
         ) {
             CustomButton(
                 navigateToFullProfile,
-                "Продолжить",
-                height = 0.4f
+                "Продолжить"
             )
         }
     }

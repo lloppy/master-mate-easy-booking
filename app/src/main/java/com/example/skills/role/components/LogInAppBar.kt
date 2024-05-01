@@ -169,8 +169,7 @@ fun ContentLogIn(
 
             CustomButton(
                 navigateToMain,
-                "Войти",
-                0.15f
+                "Войти"
             )
             Spacer(modifier = Modifier.height(8.dp))
 

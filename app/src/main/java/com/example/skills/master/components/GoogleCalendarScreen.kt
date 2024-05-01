@@ -208,8 +208,7 @@ fun ContentGoogleCalendarInfo(innerPadding: PaddingValues, navigateToMain: () ->
         }
         CustomButton(
             navigateToMain,
-            "Сохранить",
-            height = 0.9f
+            "Сохранить"
         )
     }
 }

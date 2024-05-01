@@ -77,14 +77,12 @@ fun DoneClientRegistrationScreen(navigateToMain: () -> Unit, navigateToSetUpCale
                 navigateToMain,
                 "В другой раз",
                 color = Color.Transparent,
-                width = 0.5f,
-                height = 0.4f
+                width = 0.5f
             )
 
             CustomButton(
                 navigateToSetUpCalendar,
-                "Продолжить",
-                height = 0.4f
+                "Продолжить"
             )
         }
     }

@@ -26,7 +26,11 @@ import com.example.skills.ui.theme.fontFamilyInter
 @Composable
 fun RoleScreen(navController: NavController) {
 
-    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -37,15 +41,15 @@ fun RoleScreen(navController: NavController) {
             Image(
                 painter = painterResource(R.drawable.logo),
                 contentDescription = "logo_image",
-                Modifier.fillMaxSize(0.3f),
+                Modifier.fillMaxSize(0.26f),
                 alignment = Alignment.Center
             )
         }
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.6f)
-                .padding(start = 16.dp, end = 16.dp),
+                .fillMaxHeight()
+                .padding(start = 8.dp, end = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround
         ) {
@@ -54,31 +58,26 @@ fun RoleScreen(navController: NavController) {
                 fontSize = 32.sp,
                 fontFamily = fontFamilyInter,
                 fontWeight = FontWeight.Bold,
-            )
+                modifier = Modifier.padding(start = 8.dp, end = 8.dp),
+                )
             Spacer(modifier = Modifier.padding(8.dp))
             Text(
                 text = "Как мастер, создавайте своё идеальное расписание, предлагайте услуги и управляйте записями клиентов. Как клиет, записывайтесь на услуги к разным специалистам и управляйте своими записями. Легко синхронизируйте свои данные и следите за своим расписанием в удобном Google Календаре.",
                 fontSize = 14.sp,
                 fontFamily = fontFamilyInter,
                 fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(start = 8.dp, end = 8.dp),
+
             )
-            Spacer(modifier = Modifier.padding(8.dp))
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
+            Spacer(modifier = Modifier.padding(12.dp))
+
             CustomButton(
                 ScreenRole.Client.LogIn.route,
                 navController,
-                "Я клиент",
-                0.45f
+                "Я клиент"
             )
-            Spacer(modifier = Modifier.padding(8.dp))
+            Spacer(modifier = Modifier.padding(2.dp))
             CustomButton(
                 ScreenRole.Master.LogIn.route,
                 navController,
@@ -86,5 +85,6 @@ fun RoleScreen(navController: NavController) {
                 color = Color.Transparent
             )
         }
+
     }
 }

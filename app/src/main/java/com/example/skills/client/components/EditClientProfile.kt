@@ -165,8 +165,7 @@ private fun EditClientAccountInfo(
 
         CustomButton(
             navigateToMain,
-            "Сохранить",
-            0.2f
+            "Сохранить"
         )
         Spacer(modifier = Modifier.height(16.dp))
 

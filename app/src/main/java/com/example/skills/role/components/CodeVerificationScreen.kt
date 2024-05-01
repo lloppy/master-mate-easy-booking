@@ -160,8 +160,7 @@ private fun CodeVerificationComponents(
 //        }
         CustomButton(
             navigateTo,
-            "Подтвердить",
-            height = 0.14f,
+            "Подтвердить"
         )
     }
 }

@@ -195,8 +195,7 @@ fun ContentSingIn(
             Spacer(modifier = Modifier.height(16.dp))
             CustomButton(
                 navigateTo = navigateToCodeVerification, //тут похоже переделать
-                buttonText = "Зарегистрироваться",
-                height = 0.32f
+                buttonText = "Зарегистрироваться"
                // action = onSubmit()
             )
         }

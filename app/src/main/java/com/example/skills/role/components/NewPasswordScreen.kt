@@ -140,8 +140,7 @@ fun ContentNewPassword(
 
             CustomButton(
                 navigateToMain,
-                "Сохранить",
-                0.14f
+                "Сохранить"
             )
         }
     }
