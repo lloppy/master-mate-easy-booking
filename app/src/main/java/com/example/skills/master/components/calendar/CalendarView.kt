@@ -47,9 +47,13 @@ import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
+import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.TextStyle
+import java.time.temporal.WeekFields
+import java.util.Locale
 
 private val primaryColor = Color.Black.copy(alpha = 0.9f)
 private val selectionColor = primaryColor
@@ -60,12 +64,14 @@ fun CalendarView(
     close: () -> Unit = {},
     dateSelected: (startDate: LocalDate, endDate: LocalDate) -> Unit = { _, _ -> },
 ) {
+    val rusDaysOfWeek = listOf("ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"    )
+    val daysOfWeek = remember { rusDaysOfWeek }
+
     val currentMonth = remember { YearMonth.now() }
     val startMonth = remember { currentMonth }
     val endMonth = remember { currentMonth.plusMonths(12) }
     val today = remember { LocalDate.now() }
     var selection by remember { mutableStateOf(DateSelection()) }
-    val daysOfWeek = remember { daysOfWeek() }
     MaterialTheme {
         Box(
             modifier = Modifier
@@ -76,14 +82,7 @@ fun CalendarView(
                 val state = rememberCalendarState(
                     startMonth = startMonth,
                     endMonth = endMonth,
-                    firstVisibleMonth = currentMonth,
-                    firstDayOfWeek = daysOfWeek.first(),
-                )
-                CalendarTop(
-                    daysOfWeek = daysOfWeek,
-                    selection = selection,
-                    close = close,
-                    clearDates = { selection = DateSelection() },
+                    firstVisibleMonth = currentMonth
                 )
                 VerticalCalendar(
                     state = state,
@@ -137,7 +136,7 @@ private fun Day(
         modifier = Modifier
             .aspectRatio(1f) // This is important for square-sizing!
             .clickable(
-                enabled = day.position == DayPosition.MonthDate && day.date >= today,
+                enabled =   day.position == DayPosition.MonthDate && day.date >= today,
                 showRipple = false,
                 onClick = { onClick(day) },
             )
@@ -166,85 +165,33 @@ private fun MonthHeader(calendarMonth: CalendarMonth) {
             .fillMaxWidth()
             .padding(top = 12.dp, bottom = 8.dp, start = 16.dp, end = 16.dp),
     ) {
+        val rusDaysOfWeek = listOf("ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"    )
+        val daysOfWeek = remember { rusDaysOfWeek }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 35.dp),
+        ) {
+            for (dayOfWeek in daysOfWeek) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Center,
+                    color = Color.LightGray,
+                    text = dayOfWeek,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+        }
         Text(
             textAlign = TextAlign.Center,
             text = calendarMonth.yearMonth.displayText(),
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
         )
-    }
-}
 
-@Composable
-private fun CalendarTop(
-    modifier: Modifier = Modifier,
-    daysOfWeek: List<DayOfWeek>,
-    selection: DateSelection,
-    close: () -> Unit,
-    clearDates: () -> Unit,
-) {
-    Column(modifier.fillMaxWidth()) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 6.dp, bottom = 10.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-        ) {
-            Row(
-                modifier = Modifier.height(IntrinsicSize.Max),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .aspectRatio(1f)
-                        .clip(CircleShape)
-                        .clickable(onClick = close)
-                        .padding(12.dp),
-                    painter = painterResource(id = R.drawable.ic_close),
-                    contentDescription = "Close",
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(percent = 50))
-                        .clickable(onClick = clearDates)
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    text = "Clear",
-                    fontWeight = FontWeight.Medium,
-                    textAlign = TextAlign.End,
-                )
-            }
-            val daysBetween = selection.daysBetween
-            val text = if (daysBetween == null) {
-                "Select dates"
-            } else {
-                // Ideally you'd do this using the strings.xml file
-                "$daysBetween ${if (daysBetween == 1L) "night" else "nights"} in Munich"
-            }
-            Text(
-                modifier = Modifier.padding(horizontal = 14.dp),
-                text = text,
-                fontWeight = FontWeight.Bold,
-                fontSize = 24.sp,
-            )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 4.dp),
-            ) {
-                for (dayOfWeek in daysOfWeek) {
-                    Text(
-                        modifier = Modifier.weight(1f),
-                        textAlign = TextAlign.Center,
-                        color = Color.DarkGray,
-                        text = dayOfWeek.displayText(),
-                        fontSize = 15.sp,
-                    )
-                }
-            }
-        }
-        Divider()
+
     }
 }
 
@@ -261,7 +208,7 @@ private fun CalendarBottom(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "€75 night",
+                text = "Выбрать дни",
                 fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.weight(1f))
