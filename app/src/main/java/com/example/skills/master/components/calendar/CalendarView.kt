@@ -152,8 +152,8 @@ private fun Day(
         Text(
             text = day.date.dayOfMonth.toString(),
             color = textColor,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Normal,
         )
     }
 }
@@ -163,7 +163,7 @@ private fun MonthHeader(calendarMonth: CalendarMonth) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 12.dp, bottom = 8.dp, start = 16.dp, end = 16.dp),
+            .padding(top = 12.dp, bottom = 8.dp),
     ) {
         val rusDaysOfWeek = listOf("ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"    )
         val daysOfWeek = remember { rusDaysOfWeek }
@@ -189,6 +189,7 @@ private fun MonthHeader(calendarMonth: CalendarMonth) {
             text = calendarMonth.yearMonth.displayText(),
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(start = 16.dp)
         )
 
 
