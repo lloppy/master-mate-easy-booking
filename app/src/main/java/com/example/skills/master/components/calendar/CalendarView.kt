@@ -55,8 +55,6 @@ fun CalendarView(
     close: () -> Unit = {},
     dateSelected: (startDate: LocalDate, endDate: LocalDate) -> Unit = { _, _ -> },
 ) {
-    var dateTimeDialogOpen by remember { mutableStateOf(false) }
-
     val rusDaysOfWeek = listOf("ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС")
     val daysOfWeek = remember { rusDaysOfWeek }
 
@@ -64,7 +62,9 @@ fun CalendarView(
     val startMonth = remember { currentMonth }
     val endMonth = remember { currentMonth.plusMonths(12) }
     val today = remember { LocalDate.now() }
+
     var selection by remember { mutableStateOf(DateSelection()) }
+
     MaterialTheme {
         Box(
             modifier = Modifier
@@ -119,7 +119,7 @@ fun CalendarView(
                     },
                     monthHeader = { month -> MonthHeader(month) },
                 )
-                if (dateTimeDialogOpen) {
+                if (selection.daysBetween != null) {
                     SelectDateTime(
                         //onDismissRequest = { dateTimeDialogOpen = false }
                     )
