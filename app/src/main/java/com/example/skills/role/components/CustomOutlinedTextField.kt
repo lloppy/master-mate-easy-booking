@@ -1,11 +1,13 @@
 package com.example.skills.role.components
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
@@ -14,7 +16,8 @@ fun CustomOutlinedTextField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
-    width: Float = 1f
+    width: Float = 1f,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
 ) {
     OutlinedTextField(
         value = value,
@@ -26,6 +29,7 @@ fun CustomOutlinedTextField(
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedLabelColor = Color.Gray,
             unfocusedBorderColor = Color.Gray
-        )
+        ),
+        interactionSource = interactionSource
     )
 }
