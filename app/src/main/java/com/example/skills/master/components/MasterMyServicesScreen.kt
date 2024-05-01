@@ -1,15 +1,13 @@
 package com.example.skills.master.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -27,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -91,6 +90,18 @@ fun MasterMyServices(
     innerPadding: PaddingValues,
     navigateToCreateCategory: () -> Unit,
 ) {
+    var selectedCategory by remember { mutableStateOf("") }
+    val categories by remember {
+        mutableStateOf(
+            listOf<Category>(
+                Category("Категория 1", {}),
+                Category("Категория 2", {}),
+                Category("Категория 3", {}),
+                Category("Добавить категорию", navigateToCreateCategory)
+            )
+        )
+    }
+
     Column(
         modifier = Modifier
             .padding(
@@ -99,30 +110,11 @@ fun MasterMyServices(
                 top = innerPadding.calculateTopPadding().plus(12.dp)
             )
     ) {
-        val scrollState = rememberScrollState()
-        val categories by remember { mutableStateOf(listOf<String>(
-            "Категория 1",
-            "Категория 2",
-            "Категория 3"
-        )) }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(45.dp)
-                .horizontalScroll(scrollState),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            categories.forEachIndexed { index, category ->
-                CategoryButton(
-                    text = category,
-                    onClick = {}
-                )
+        if (categories.size <= 1) {
+            Button(onClick = navigateToCreateCategory, Modifier.weight(1f)) {
+                Text("Добавить категорию")
             }
-            CategoryButton("Добавить категорию", navigateToCreateCategory)
-        }
 
-        if (categories.isEmpty()) {
             Text(
                 text = "В вашем списке отсутствуют категории услуг. Чтобы добавить категорию, воспользуйтесь кнопкой выше.",
                 fontSize = 14.sp,
@@ -130,15 +122,28 @@ fun MasterMyServices(
                 color = Color.Gray,
                 modifier = Modifier.padding(start = 12.dp, top = 25.dp)
             )
-        } else{
-            // if (categories == cardcategoty) display cardcategoty
+        } else {
+            Row {
+                LazyRow(Modifier.weight(1f)) {
+                    items(categories) { category ->
+                        CategoryButton(
+                            text = category.name,
+                            onClick = {
+                                category.action.invoke()
+                                selectedCategory = category.name
+                            },
+                            containerColor = if (category.name == selectedCategory) Color.Black else Color.White,
+                            contentColor = if (category.name == selectedCategory) Color.White else Color.Gray
+                        )
+                    }
+                }
+            }
         }
     }
 }
 
-
 @Composable
-fun CategoryButton(text: String, onClick: () -> Unit) {
+fun CategoryButton(text: String, onClick: () -> Unit, containerColor: Color, contentColor: Color) {
     Button(
         onClick = onClick,
         modifier = Modifier
@@ -146,8 +151,8 @@ fun CategoryButton(text: String, onClick: () -> Unit) {
             .padding(end = paddingBetweenElements),
         shape = RoundedCornerShape(40.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.White,
-            contentColor = Color.Gray
+            containerColor = containerColor,
+            contentColor = contentColor
         ),
         border = BorderStroke(1.dp, Color.Gray)
 
@@ -155,3 +160,6 @@ fun CategoryButton(text: String, onClick: () -> Unit) {
         Text(text = text, fontSize = 14.sp, fontWeight = FontWeight.Normal)
     }
 }
+
+
+data class Category(val name: String, var action: () -> Unit)
