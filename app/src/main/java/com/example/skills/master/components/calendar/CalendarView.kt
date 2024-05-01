@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
@@ -45,8 +44,6 @@ import com.kizitonwose.calendar.core.CalendarMonth
 import com.kizitonwose.calendar.core.DayPosition
 import java.time.LocalDate
 import java.time.YearMonth
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 private val primaryColor = Color.Black.copy(alpha = 0.9f)
 private val selectionColor = primaryColor
@@ -81,20 +78,6 @@ fun CalendarView(
                     Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val monthNames = listOf(
-                        "январь",
-                        "февраль",
-                        "март",
-                        "апрель",
-                        "май",
-                        "июнь",
-                        "июль",
-                        "август",
-                        "сентябрь",
-                        "октябрь",
-                        "ноябрь",
-                        "декабрь"
-                    )
                     Text(
                         text = "${monthNames[currentMonth.monthValue - 1]} ${currentMonth.year}".capitalize(),
                         fontWeight = FontWeight.Bold,
@@ -252,3 +235,6 @@ private fun CalendarBottom(
 private fun Example2Preview() {
     CalendarView()
 }
+
+
+val monthNames = listOf("январь", "февраль", "март", "апрель", "май", "июнь", "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь")
