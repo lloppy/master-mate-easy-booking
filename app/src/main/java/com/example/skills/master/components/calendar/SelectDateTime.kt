@@ -1,11 +1,14 @@
 package com.example.skills.master.components.calendar
 
+import android.graphics.drawable.GradientDrawable
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -21,11 +24,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.wear.compose.material.ExperimentalWearMaterialApi
+import androidx.wear.compose.material.FractionalThreshold
+import androidx.wear.compose.material.rememberSwipeableState
+import androidx.wear.compose.material.swipeable
 import com.example.skills.role.components.CustomButton
 import com.example.skills.role.components.CustomOutlinedTextField
 import java.time.LocalTime
@@ -42,15 +51,16 @@ fun SelectDateTime() {
     Column(
         modifier = Modifier
             .verticalScroll(scrollState)
+            .fillMaxSize()
             .padding(bottom = 110.dp, top = 10.dp),
         horizontalAlignment = Alignment.End,
         verticalArrangement = Arrangement.Bottom
     ) {
-        intervals.forEach { interval ->
+        intervals.forEachIndexed { index, interval ->
             Interval(
                 initialStartTime = interval.startTime,
                 initialEndTime = interval.endTime,
-                isEditable = inEditMode
+                isEditable = inEditMode,
             )
         }
 
@@ -63,16 +73,37 @@ fun SelectDateTime() {
             }
         }
         Spacer(modifier = Modifier.height(10.dp))
-        CustomButton(
-            navigateTo = {
-                inEditMode = !inEditMode
-            },
-            buttonText = if (inEditMode) "Сохранить" else "Изменить"
-        )
+
+        if (inEditMode) {
+            CustomButton(
+                navigateTo = { inEditMode = !inEditMode },
+                buttonText = "Сохранить"
+            )
+        }  else{
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 8.dp, end = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                CustomButton(
+                    { intervals = intervals.dropLast(1) },
+                    "Удалить",
+                    color = Color.Transparent,
+                    width = 0.5f
+                )
+
+                CustomButton(
+                    { inEditMode = !inEditMode },
+                    "Изменить"
+                )
+            }
+        }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalWearMaterialApi::class)
 @Composable
 fun Interval(
     initialStartTime: String,
@@ -143,8 +174,7 @@ fun Interval(
     }
 
     Row(
-        modifier = Modifier
-            .padding(start = 8.dp, end = 8.dp, top = 8.dp),
+        modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -162,7 +192,7 @@ fun Interval(
                         interactionSource.interactions.collect {
                             if (it is PressInteraction.Release) {
                                 focusManager.clearFocus()
-                                if(isEditable) showTimePickerStart = true
+                                if (isEditable) showTimePickerStart = true
                             }
                         }
                     }
@@ -182,7 +212,7 @@ fun Interval(
                         interactionSource.interactions.collect {
                             if (it is PressInteraction.Release) {
                                 focusManager.clearFocus()
-                                if(isEditable) showTimePickerEnd = true
+                                if (isEditable) showTimePickerEnd = true
                             }
                         }
                     }
