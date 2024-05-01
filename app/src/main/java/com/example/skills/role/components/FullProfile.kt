@@ -122,95 +122,100 @@ private fun AddMasterAccountInfo(
             .padding(
                 top = innerPadding
                     .calculateTopPadding(),
-                start = 16.dp,
-                end = 16.dp
+                start = 8.dp,
+                end = 8.dp
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
         ProfilePicturePicker()
         Spacer(modifier = Modifier.height(6.dp))
-
         Text(text = "Добавьте фото профиля", fontSize = 16.sp, color = Color.Gray)
         Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField.plus(12.dp)))
-        CustomOutlinedTextField(
-            value = firstName,
-            onValueChange = { firstName = it },
-            label = "Имя"
-        )
-        Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
-        CustomOutlinedTextField(
-            value = secondName,
-            onValueChange = { secondName = it },
-            label = "Фамилия"
-        )
-        Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
-        Email(emailState, onImeAction = { focusRequester.requestFocus() })
 
-        Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
-        OutlinedTextField(
-            value = phone,
-            onValueChange = { phone = it },
-            label = { Text(text = "Номер телефона") },
-            modifier = Modifier.fillMaxWidth(),
-            textStyle = MaterialTheme.typography.bodyMedium,
-            singleLine = true,
-            colors = OutlinedTextFieldDefaults.colors(
-                unfocusedLabelColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
+        Column (modifier = Modifier.padding(start = 8.dp, end = 8.dp)) {
+            CustomOutlinedTextField(
+                value = firstName,
+                onValueChange = { firstName = it },
+                label = "Имя"
             )
-        )
+            Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
+            CustomOutlinedTextField(
+                value = secondName,
+                onValueChange = { secondName = it },
+                label = "Фамилия"
+            )
+            Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
+            Email(emailState, onImeAction = { focusRequester.requestFocus() })
 
-        Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
-        OutlinedTextField(
-            value = profileDescription,
-            onValueChange = {
-                profileDescription = it
-            },
-            label = { Text(text = "Описание профиля") },
-            modifier = Modifier
+            Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
+            OutlinedTextField(
+                value = phone,
+                onValueChange = { phone = it },
+                label = { Text(text = "Номер телефона") },
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = MaterialTheme.typography.bodyMedium,
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedLabelColor = Color.Gray,
+                    unfocusedBorderColor = Color.Gray
+                )
+            )
+
+            Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
+            OutlinedTextField(
+                value = profileDescription,
+                onValueChange = {
+                    profileDescription = it
+                },
+                label = { Text(text = "Описание профиля") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp),
+                textStyle = MaterialTheme.typography.bodyMedium,
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedLabelColor = Color.Gray,
+                    unfocusedBorderColor = Color.Gray
+                )
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+
+            OutlinedTextField(
+                value = adress,
+                onValueChange = {
+                    adress = it
+                },
+                label = { Text(text = "Адрес") },
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = MaterialTheme.typography.bodyMedium,
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedLabelColor = Color.Gray,
+                    unfocusedBorderColor = Color.Gray
+                )
+            )
+
+            Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
+            OutlinedTextField(
+                value = link,
+                onValueChange = {
+                    link = it
+                },
+                label = { Text(text = "Ссылка") },
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = MaterialTheme.typography.bodyMedium,
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedLabelColor = Color.Gray,
+                    unfocusedBorderColor = Color.Gray
+                )
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+        Column(
+            Modifier
                 .fillMaxWidth()
-                .height(100.dp),
-            textStyle = MaterialTheme.typography.bodyMedium,
-            colors = OutlinedTextFieldDefaults.colors(
-                unfocusedLabelColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
-            )
-        )
-        Spacer(modifier = Modifier.height(6.dp))
-
-        OutlinedTextField(
-            value = adress,
-            onValueChange = {
-                adress = it
-            },
-            label = { Text(text = "Адрес") },
-            modifier = Modifier.fillMaxWidth(),
-            textStyle = MaterialTheme.typography.bodyMedium,
-            colors = OutlinedTextFieldDefaults.colors(
-                unfocusedLabelColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
-            )
-        )
-
-        Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
-        OutlinedTextField(
-            value = link,
-            onValueChange = {
-                link = it
-            },
-            label = { Text(text = "Ссылка") },
-            modifier = Modifier.fillMaxWidth(),
-            textStyle = MaterialTheme.typography.bodyMedium,
-            singleLine = true,
-            colors = OutlinedTextFieldDefaults.colors(
-                unfocusedLabelColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
-            )
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-        Column (Modifier.fillMaxWidth().height(60.dp)){
+                .height(60.dp)
+        ) {
             CustomButton(
                 navigateToDoneRegistration,
                 "Сохранить"

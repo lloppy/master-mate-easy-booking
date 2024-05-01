@@ -59,7 +59,7 @@ fun RoleScreen(navController: NavController) {
                 fontFamily = fontFamilyInter,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(start = 8.dp, end = 8.dp),
-                )
+            )
             Spacer(modifier = Modifier.padding(8.dp))
             Text(
                 text = "Как мастер, создавайте своё идеальное расписание, предлагайте услуги и управляйте записями клиентов. Как клиет, записывайтесь на услуги к разным специалистам и управляйте своими записями. Легко синхронизируйте свои данные и следите за своим расписанием в удобном Google Календаре.",
@@ -67,9 +67,9 @@ fun RoleScreen(navController: NavController) {
                 fontFamily = fontFamilyInter,
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(start = 8.dp, end = 8.dp),
+                modifier = Modifier.padding(start = 8.dp, end = 8.dp),
 
-            )
+                )
             Spacer(modifier = Modifier.padding(12.dp))
 
             CustomButton(

@@ -94,7 +94,11 @@ fun CodeVerificationScreen(
             )
         },
     ) { innerPadding ->
-        CodeVerificationComponents(innerPadding, navigateToDoneRegistration ?: navigateToCreateNewPassword!!, activationCode)
+        CodeVerificationComponents(
+            innerPadding,
+            navigateToDoneRegistration ?: navigateToCreateNewPassword!!,
+            activationCode
+        )
     }
 }
 
@@ -121,16 +125,27 @@ private fun CodeVerificationComponents(
                 top = innerPadding
                     .calculateTopPadding()
                     .plus(16.dp),
-                start = 16.dp,
-                end = 16.dp
+                start = 8.dp,
+                end = 8.dp
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        Text("На ваш Email был отправлен код, введите его ниже.", fontSize = 14.sp)
+        Text(
+            "На ваш Email был отправлен код, введите его ниже.",
+            fontSize = 14.sp,
+            modifier = Modifier.padding(
+                start = 8.dp,
+                end = 8.dp
+            )
+        )
         Spacer(modifier = Modifier.height(32.dp))
 
         OtpTextField(
+            modifier = Modifier.padding(
+                start = 8.dp,
+                end = 8.dp
+            ),
             otpText = code,
             onOtpTextChange = { value, otpInputFilled ->
                 code = value

@@ -66,7 +66,7 @@ fun DoneMasterInfoRegistrationScreen(navigateToMain: () -> Unit, navigateToSetUp
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 16.dp, end = 16.dp),
+                .padding(start = 8.dp, end = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {

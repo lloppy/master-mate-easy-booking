@@ -24,7 +24,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -140,63 +139,69 @@ fun ContentSingIn(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
-            CustomOutlinedTextField(
-                value = firstName,
-                onValueChange = { firstName = it },
-                label = "Имя"
-            )
-            Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
-            CustomOutlinedTextField(
-                value = secondName,
-                onValueChange = { secondName = it },
-                label = "Фамилия"
-            )
-
-            Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
-            Email(emailState, onImeAction = { focusRequester.requestFocus() })
-
-            Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
-            OutlinedTextField(
-                value = phone,
-                onValueChange = { phone = it },
-                label = { Text(text = "Номер телефона") },
-                modifier = Modifier.fillMaxWidth(),
-                textStyle = MaterialTheme.typography.bodyMedium,
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedLabelColor = Color.Gray,
-                    unfocusedBorderColor = Color.Gray
+            Column(
+                modifier = Modifier.padding(
+                    start = 8.dp,
+                    end = 8.dp
                 )
-            )
+            ) {
+                Spacer(modifier = Modifier.height(8.dp))
+                CustomOutlinedTextField(
+                    value = firstName,
+                    onValueChange = { firstName = it },
+                    label = "Имя"
+                )
+                Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
+                CustomOutlinedTextField(
+                    value = secondName,
+                    onValueChange = { secondName = it },
+                    label = "Фамилия"
+                )
 
-            Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
-            Password(
-                label = "Пароль",
-                passwordState = passwordState,
-                modifier = Modifier.focusRequester(focusRequester),
+                Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
+                Email(emailState, onImeAction = { focusRequester.requestFocus() })
+
+                Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
+                OutlinedTextField(
+                    value = phone,
+                    onValueChange = { phone = it },
+                    label = { Text(text = "Номер телефона") },
+                    modifier = Modifier.fillMaxWidth(),
+                    textStyle = MaterialTheme.typography.bodyMedium,
+                    singleLine = true,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        unfocusedLabelColor = Color.Gray,
+                        unfocusedBorderColor = Color.Gray
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
+                Password(
+                    label = "Пароль",
+                    passwordState = passwordState,
+                    modifier = Modifier.focusRequester(focusRequester),
 //                onImeAction = {
 //                    onSubmit()
 //                }
-            )
-            Password(
-                label = "Повторите пароль",
-                passwordState = passwordStateRepeat,
-                modifier = Modifier.focusRequester(focusRequester),
+                )
+                Password(
+                    label = "Повторите пароль",
+                    passwordState = passwordStateRepeat,
+                    modifier = Modifier.focusRequester(focusRequester),
 //                onImeAction = {
 //                    onSubmit()
 //                }
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
             CustomButton(
                 navigateTo = navigateToCodeVerification, //тут похоже переделать
                 buttonText = "Зарегистрироваться"
-               // action = onSubmit()
+                // action = onSubmit()
             )
         }
     }
