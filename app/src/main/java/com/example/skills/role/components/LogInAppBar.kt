@@ -177,9 +177,9 @@ fun ContentLogIn(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp),
+                    .padding(start = 14.dp, end = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
                     "У вас нет учетной записи?",
