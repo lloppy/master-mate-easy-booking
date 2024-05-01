@@ -1,7 +1,5 @@
 package com.example.skills.master.components.calendar
 
-import android.graphics.drawable.GradientDrawable
-import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
@@ -24,17 +22,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import androidx.wear.compose.material.ExperimentalWearMaterialApi
-import androidx.wear.compose.material.FractionalThreshold
-import androidx.wear.compose.material.rememberSwipeableState
-import androidx.wear.compose.material.swipeable
 import com.example.skills.role.components.CustomButton
 import com.example.skills.role.components.CustomOutlinedTextField
 import java.time.LocalTime
@@ -79,11 +72,9 @@ fun SelectDateTime() {
                 navigateTo = { inEditMode = !inEditMode },
                 buttonText = "Сохранить"
             )
-        }  else{
+        } else {
             Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 8.dp, end = 8.dp),
+                modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -93,7 +84,6 @@ fun SelectDateTime() {
                     color = Color.Transparent,
                     width = 0.5f
                 )
-
                 CustomButton(
                     { inEditMode = !inEditMode },
                     "Изменить"
@@ -103,7 +93,7 @@ fun SelectDateTime() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalWearMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Interval(
     initialStartTime: String,
