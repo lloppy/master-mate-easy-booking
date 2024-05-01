@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -28,7 +27,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -37,11 +35,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import com.example.skills.R
 import com.example.skills.ui.theme.paddingBetweenElements
-import androidx.compose.runtime.State
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -105,14 +100,18 @@ fun MasterMyServices(
             )
     ) {
         val scrollState = rememberScrollState()
-        val categories by remember { mutableStateOf(listOf<String>()) }
+        val categories by remember { mutableStateOf(listOf<String>(
+            "Категория 1",
+            "Категория 2",
+            "Категория 3"
+        )) }
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(45.dp)
                 .horizontalScroll(scrollState),
-            horizontalArrangement = Arrangement.spacedBy(15.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             categories.forEachIndexed { index, category ->
                 CategoryButton(
@@ -131,6 +130,8 @@ fun MasterMyServices(
                 color = Color.Gray,
                 modifier = Modifier.padding(start = 12.dp, top = 25.dp)
             )
+        } else{
+            // if (categories == cardcategoty) display cardcategoty
         }
     }
 }
