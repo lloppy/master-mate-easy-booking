@@ -219,7 +219,7 @@ fun MasterMyServices(
             if (selectedCategoryServices != null) {
                 LazyColumn(modifier = Modifier.padding(bottom = 100.dp)) {
                     items(selectedCategoryServices) { singleService ->
-                        SingleServiceCard(singleService)
+                        SingleServiceCard(singleService, navController)
                     }
                 }
             } else {
@@ -256,7 +256,7 @@ fun MasterMyServices(
 }
 
 @Composable
-fun SingleServiceCard(singleService: SingleService) {
+fun SingleServiceCard(singleService: SingleService, navController: NavHostController) {
     Column(
         modifier = Modifier
             .padding(top = 20.dp, start = 8.dp, end = 8.dp)
@@ -312,7 +312,18 @@ fun SingleServiceCard(singleService: SingleService) {
                             shape = RoundedCornerShape(10.dp)
                         )
                 ) {
-                    CustomButton(navigateTo = { /*TODO*/ }, buttonText = "Изменить", width = 0.6f)
+                    CustomButton(navigateTo = {
+                        try {
+                            val serviceId = singleService.name
+                            navController.navigate(
+                                ScreenRole.Master.EditServiceCard.route.replace(
+                                    "{serviceId}",
+                                    serviceId
+                                )
+                            )
+                        } catch (e: IllegalArgumentException) { // нужно блин выбрать категорию, а не тыкать в пустоту
+                        }
+                    }, buttonText = "Изменить", width = 0.6f)
                 }
                 Box(
                     modifier = Modifier

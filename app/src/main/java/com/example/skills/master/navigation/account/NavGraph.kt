@@ -11,6 +11,7 @@ import com.example.skills.master.components.CreateServiceCardScreen
 import com.example.skills.master.components.CreateServiceScreen
 import com.example.skills.master.components.EditPasswordScreen
 import com.example.skills.master.components.EditProfileScreen
+import com.example.skills.master.components.EditServiceCardScreen
 import com.example.skills.master.components.GoogleCalendarScreen
 import com.example.skills.master.components.MasterClientServicesScreen
 import com.example.skills.master.components.MasterMyServicesScreen
@@ -130,6 +131,14 @@ fun SetupMasterNavGraph(
         composable(ScreenRole.Master.CreateServiceCard.route) { backStackEntry ->
             val serviceId = backStackEntry.arguments?.getString("serviceId")
             CreateServiceCardScreen(
+                serviceId,
+                navController = navHostController
+            )
+        }
+
+        composable(ScreenRole.Master.EditServiceCard.route) { backStackEntry ->
+            val serviceId = backStackEntry.arguments?.getString("serviceId")
+            EditServiceCardScreen(
                 serviceId,
                 navController = navHostController
             )

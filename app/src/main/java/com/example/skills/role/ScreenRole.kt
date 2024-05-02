@@ -43,7 +43,7 @@ sealed class ScreenRole(val route: String) {
         object CreateService : Master("create_service_screen")
         object ChangeCategory: Master("change_category_screen")
         object CreateServiceCard: Master("create_service_card_screen/{serviceId}")
-        object EditServiceCard: Master("edit_service_card_screen")
+        object EditServiceCard: Master("edit_service_card_screen/{serviceId}")
 
 
     }
