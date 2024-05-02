@@ -1,8 +1,13 @@
 package com.example.skills.master.components
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.InteractionSource
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +35,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,6 +44,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -47,6 +56,8 @@ import androidx.compose.ui.unit.sp
 import com.example.skills.R
 import com.example.skills.role.components.CustomButton
 import com.example.skills.ui.theme.paddingBetweenElements
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -104,7 +115,7 @@ fun MasterMyServices(
     navigateToChangeCategory: () -> Unit
 ) {
     var selectedCategory by remember { mutableStateOf("") }
-    val categories by remember {
+    var categories by remember {
         mutableStateOf(
             listOf<Category>(
                 Category(
@@ -171,12 +182,37 @@ fun MasterMyServices(
         } else {
             LazyRow(Modifier.fillMaxWidth()) {
                 items(categories) { category ->
+                    val interactionSource = remember { MutableInteractionSource() }
+                    val viewConfiguration = LocalViewConfiguration.current
+
+                    LaunchedEffect(interactionSource) {
+                        var isLongClick = false
+                        interactionSource.interactions.collectLatest { interaction ->
+                            when (interaction) {
+                                is PressInteraction.Press -> {
+                                    isLongClick = false
+                                    delay(viewConfiguration.longPressTimeoutMillis)
+                                    isLongClick = true
+                                    // categories = categories.filter { it.name != category.name }
+                                    navigateToChangeCategory.invoke()
+                                    // Toast.makeText(context, "Long click", Toast.LENGTH_SHORT).show()
+                                }
+
+                                is PressInteraction.Release -> {
+                                    if (isLongClick.not()) {
+                                        // Toast.makeText(context, "click", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
+                        }
+                    }
                     CategoryButton(
                         text = category.name,
                         onClick = {
                             category.action.invoke()
                             selectedCategory = category.name
                         },
+                        interactionSource = interactionSource,
                         containerColor = if (category.name == selectedCategory) Color.Black else Color.White,
                         contentColor = if (category.name == selectedCategory) Color.White else Color.Gray
                     )
@@ -209,8 +245,8 @@ fun MasterMyServices(
 fun SingleServiceCard(singleService: SingleService) {
     Column(
         modifier = Modifier
-            .padding(top = 20.dp, start = 10.dp, end = 10.dp)
-            .width(500.dp)
+            .padding(top = 20.dp, start = 8.dp, end = 8.dp)
+            .fillMaxWidth()
             .height(250.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(Color.Black),
@@ -309,6 +345,7 @@ fun CategoryButton(
     onClick: () -> Unit,
     containerColor: Color,
     contentColor: Color,
+    interactionSource: MutableInteractionSource
 ) {
     Button(
         onClick = onClick,
@@ -316,6 +353,7 @@ fun CategoryButton(
             .height(45.dp)
             .padding(end = paddingBetweenElements),
         shape = RoundedCornerShape(40.dp),
+        interactionSource = interactionSource,
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,
             contentColor = contentColor
