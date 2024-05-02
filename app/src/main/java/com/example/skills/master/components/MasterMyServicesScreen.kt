@@ -1,12 +1,19 @@
 package com.example.skills.master.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,14 +35,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skills.R
+import com.example.skills.role.components.CustomButton
 import com.example.skills.ui.theme.paddingBetweenElements
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -97,8 +107,35 @@ fun MasterMyServices(
     val categories by remember {
         mutableStateOf(
             listOf<Category>(
-                Category("Категория 1", {}),
-                Category("Категория 2", {}),
+                Category(
+                    "Категория 1",
+                    {},
+                    singlesCategory = listOf(
+                        SingleService(
+                            "Маникюр классический",
+                            "Процесс включает в себя увлажнение и массаж рук, обработку кутикулы, подпиливание и придание им красивой формы, удаление кутикулы, нанесение крема для ухода за руками и масла для ухода за кутикулой.",
+                            800,
+                            45
+                        ),
+                        SingleService(
+                            "Маникюр европейский",
+                            "Кутикула аккуратно отодвигается специальным апельсиновым палочкой или мягким пушером. Чтобы размягчить грубую кутикулу, ее можно регулярно смазывать",
+                            1000,
+                            55
+                        )
+                    )
+                ),
+                Category(
+                    "Категория 2", {},
+                    singlesCategory = listOf(
+                        SingleService(
+                            "Педикюр",
+                            "Расслабляющая ванночка для ног, обработка кутикулы, коррекция формы ногтей, удаление огрубевшей кожи",
+                            1200,
+                            75
+                        )
+                    )
+                ),
                 Category("Категория 3", {}),
                 Category("Добавить категорию", navigateToCreateCategory)
             )
@@ -126,17 +163,129 @@ fun MasterMyServices(
                 modifier = Modifier.padding(start = 12.dp, top = 25.dp)
             )
         } else {
-            Row {
-                LazyRow(Modifier.weight(1f)) {
-                    items(categories) { category ->
-                        CategoryButton(
-                            text = category.name,
-                            onClick = {
-                                category.action.invoke()
-                                selectedCategory = category.name
-                            },
-                            containerColor = if (category.name == selectedCategory) Color.Black else Color.White,
-                            contentColor = if (category.name == selectedCategory) Color.White else Color.Gray
+            LazyRow(Modifier.fillMaxWidth()) {
+                items(categories) { category ->
+                    CategoryButton(
+                        text = category.name,
+                        onClick = {
+                            category.action.invoke()
+                            selectedCategory = category.name
+                        },
+                        containerColor = if (category.name == selectedCategory) Color.Black else Color.White,
+                        contentColor = if (category.name == selectedCategory) Color.White else Color.Gray
+                    )
+                }
+            }
+            val selectedCategoryServices =
+                categories.find { it.name == selectedCategory }?.singlesCategory
+
+            if (selectedCategoryServices != null) {
+                LazyColumn {
+                    items(selectedCategoryServices) { singleService ->
+                        SingleServiceCard(singleService)
+                    }
+                }
+            } else {
+                Text(
+                    text = "В этой категории пока нет услуг. Чтобы создать их, нажмите на иконку с плюсом в левом верхнем углу.",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.Gray,
+                    modifier = Modifier.padding(start = 12.dp, top = 25.dp)
+                )
+            }
+
+        }
+    }
+}
+
+@Composable
+fun SingleServiceCard(singleService: SingleService) {
+    Column(
+        modifier = Modifier
+            .padding(top = 20.dp, start = 10.dp, end = 10.dp)
+            .width(500.dp)
+            .height(250.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .background(Color.Black),
+    ) {
+        Column(modifier = Modifier.padding(20.dp)) {
+            Text(
+                text = singleService.name,
+                color = Color.White,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 14.sp,
+                maxLines = 1
+            )
+            Spacer(modifier = Modifier.height(paddingBetweenText))
+            Text(
+                text = singleService.price.toString() + " руб",
+                color = Color.White,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 16.sp,
+                maxLines = 1
+            )
+            Spacer(modifier = Modifier.height(paddingBetweenText))
+            Text(
+                text = singleService.duration.toString() + " мин",
+                color = Color.White,
+                fontWeight = FontWeight.Normal,
+                fontSize = 14.sp,
+                maxLines = 1
+            )
+            Spacer(modifier = Modifier.height(paddingBetweenText))
+            Text(
+                text = "Описание: " + singleService.description,
+                color = Color.LightGray,
+                fontWeight = FontWeight.Normal,
+                fontSize = 14.sp,
+                maxLines = 3,
+                lineHeight = lineHeight
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Box(
+                    modifier = Modifier
+                        .border(
+                            width = 1.dp,
+                            color = Color.White,
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                ) {
+                    CustomButton(navigateTo = { /*TODO*/ }, buttonText = "Изменить", width = 0.6f)
+                }
+                Box(
+                    modifier = Modifier
+                        .border(
+                            width = 1.dp,
+                            color = Color.White,
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                ) {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.archive),
+                            contentDescription = "archive",
+                            tint = Color.White,
+                        )
+                    }
+                }
+                Box(
+                    modifier = Modifier.border(
+                        width = 1.dp,
+                        color = Color.White,
+                        shape = RoundedCornerShape(10.dp)
+                    )
+                ) {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_bin),
+                            contentDescription = "bin",
+                            tint = Color.White
                         )
                     }
                 }
@@ -144,6 +293,9 @@ fun MasterMyServices(
         }
     }
 }
+
+val paddingBetweenText = 8.dp
+
 
 @Composable
 fun CategoryButton(
@@ -156,8 +308,7 @@ fun CategoryButton(
         onClick = onClick,
         modifier = Modifier
             .height(45.dp)
-            .padding(end = paddingBetweenElements)
-        ,
+            .padding(end = paddingBetweenElements),
         shape = RoundedCornerShape(40.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,
@@ -171,4 +322,16 @@ fun CategoryButton(
 }
 
 
-data class Category(val name: String, var action: () -> Unit)
+data class Category(
+    val name: String,
+    var action: () -> Unit,
+    val singlesCategory: List<SingleService>? = null
+)
+
+data class SingleService(
+    var name: String,
+    var description: String,
+    var price: Int,
+    var duration: Int
+)
+
