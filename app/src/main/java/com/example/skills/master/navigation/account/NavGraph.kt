@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.skills.client.account.CalendarScreen
 import com.example.skills.master.MainMasterScreen
+import com.example.skills.master.components.ChangeCategoryScreen
 import com.example.skills.master.components.CreateServiceScreen
 import com.example.skills.master.components.EditProfileScreen
 import com.example.skills.master.components.GoogleCalendarScreen
@@ -42,6 +43,9 @@ fun SetupMasterNavGraph(
             MasterMyServicesScreen(
                 navigateToCreateCategory = {
                     navHostController.navigate(ScreenRole.Master.CreateService.route)
+                },
+                navigateToChangeCategory = {
+                    navHostController.navigate(ScreenRole.Master.ChangeCategory.route)
                 }
             )
         }
@@ -109,11 +113,18 @@ fun SetupMasterNavGraph(
             )
         }
 
-
         composable(ScreenRole.Master.CreateService.route) {
             CreateServiceScreen(
                 navController = navHostController
             )
         }
+
+        composable(ScreenRole.Master.ChangeCategory.route) {
+            ChangeCategoryScreen(
+                navController = navHostController
+            )
+        }
+
+
     }
 }

@@ -1,6 +1,7 @@
 package com.example.skills.master.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -40,7 +41,8 @@ import com.example.skills.ui.theme.paddingBetweenElements
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MasterMyServicesScreen(
-    navigateToCreateCategory: () -> Unit
+    navigateToCreateCategory: () -> Unit,
+    navigateToChangeCategory: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -81,7 +83,7 @@ fun MasterMyServicesScreen(
             )
         },
     ) { innerPadding ->
-        MasterMyServices(innerPadding, navigateToCreateCategory)
+        MasterMyServices(innerPadding, navigateToCreateCategory, navigateToChangeCategory)
     }
 }
 
@@ -89,6 +91,7 @@ fun MasterMyServicesScreen(
 fun MasterMyServices(
     innerPadding: PaddingValues,
     navigateToCreateCategory: () -> Unit,
+    navigateToChangeCategory: () -> Unit
 ) {
     var selectedCategory by remember { mutableStateOf("") }
     val categories by remember {
@@ -143,12 +146,18 @@ fun MasterMyServices(
 }
 
 @Composable
-fun CategoryButton(text: String, onClick: () -> Unit, containerColor: Color, contentColor: Color) {
+fun CategoryButton(
+    text: String,
+    onClick: () -> Unit,
+    containerColor: Color,
+    contentColor: Color,
+) {
     Button(
         onClick = onClick,
         modifier = Modifier
             .height(45.dp)
-            .padding(end = paddingBetweenElements),
+            .padding(end = paddingBetweenElements)
+        ,
         shape = RoundedCornerShape(40.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,
