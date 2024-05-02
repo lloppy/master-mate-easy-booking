@@ -39,7 +39,7 @@ fun SetupClientNavGraph(
         // server
         composable(route = ScreenClient.ClientServerScreen.route) {
             MasterMyServicesScreen(
-                {}, {}
+                {}, {}, navHostController
             )
         }
 

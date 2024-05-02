@@ -7,12 +7,13 @@ import androidx.navigation.compose.composable
 import com.example.skills.client.account.CalendarScreen
 import com.example.skills.master.MainMasterScreen
 import com.example.skills.master.components.ChangeCategoryScreen
+import com.example.skills.master.components.CreateServiceCardScreen
 import com.example.skills.master.components.CreateServiceScreen
+import com.example.skills.master.components.EditPasswordScreen
 import com.example.skills.master.components.EditProfileScreen
 import com.example.skills.master.components.GoogleCalendarScreen
 import com.example.skills.master.components.MasterClientServicesScreen
 import com.example.skills.master.components.MasterMyServicesScreen
-import com.example.skills.master.components.EditPasswordScreen
 import com.example.skills.master.components.MasterSettingsScreen
 import com.example.skills.master.components.NotificationSettingsScreen
 import com.example.skills.master.creatingService.MainCreationLayout
@@ -46,7 +47,8 @@ fun SetupMasterNavGraph(
                 },
                 navigateToChangeCategory = {
                     navHostController.navigate(ScreenRole.Master.ChangeCategory.route)
-                }
+                },
+                navController = navHostController
             )
         }
 
@@ -124,6 +126,20 @@ fun SetupMasterNavGraph(
                 navController = navHostController
             )
         }
+
+        composable(ScreenRole.Master.CreateServiceCard.route) { backStackEntry ->
+            val serviceId = backStackEntry.arguments?.getString("serviceId")
+            CreateServiceCardScreen(
+                serviceId,
+                navController = navHostController
+            )
+        }
+
+//        composable(ScreenRole.Master.EditServiceCard.route) {
+//            EditServiceCardScreen(
+//                navController = navHostController
+//            )
+//        }
 
 
     }
