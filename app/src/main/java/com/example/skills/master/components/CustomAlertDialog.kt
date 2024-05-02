@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -44,7 +45,9 @@ fun CustomAlertDialog(onDismiss: () -> Unit, onExit: () -> Unit) {
         Card(
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier
-                .fillMaxWidth().padding(0.dp).height(IntrinsicSize.Min)
+                .fillMaxWidth()
+                .padding(0.dp)
+                .height(IntrinsicSize.Min)
         ) {
             Column(
                 Modifier
@@ -53,18 +56,25 @@ fun CustomAlertDialog(onDismiss: () -> Unit, onExit: () -> Unit) {
             ) {
                 Text(
                     text = "Удалить услугу",
-                    modifier = Modifier.padding(8.dp, 16.dp, 8.dp, 2.dp)
-                        .align(Alignment.CenterHorizontally).fillMaxWidth(), fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .padding(8.dp, 16.dp, 8.dp, 2.dp)
+                        .align(Alignment.CenterHorizontally)
+                        .fillMaxWidth(), fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium,
                     textAlign = TextAlign.Center
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "Услуга будет удалена навсегда без возможности восстановления",
-                    modifier = Modifier.padding(8.dp, 2.dp, 8.dp, 16.dp)
-                        .align(Alignment.CenterHorizontally).fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(8.dp, 2.dp, 8.dp, 16.dp)
+                        .align(Alignment.CenterHorizontally)
+                        .fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
-                Divider(color = Color.Gray, modifier = Modifier.fillMaxWidth().width(1.dp))
+                Divider(color = Color.Gray, modifier = Modifier
+                    .fillMaxWidth()
+                    .width(1.dp))
                 Row(Modifier.padding(top = 0.dp)) {
                     CompositionLocalProvider(
                         LocalMinimumTouchTargetEnforcement provides false,
@@ -80,11 +90,13 @@ fun CustomAlertDialog(onDismiss: () -> Unit, onExit: () -> Unit) {
                             shape = RoundedCornerShape(0.dp),
                             contentPadding = PaddingValues(0.dp)
                         ) {
-                            Text(text = "Отмена", color = Color.Red)
+                            Text(text = "Отмена", color = Color.Red, fontSize = 16.sp)
                         }
                     }
                     Divider(color = Color.Gray, modifier =
-                    Modifier.fillMaxHeight().width(1.dp))
+                    Modifier
+                        .fillMaxHeight()
+                        .width(1.dp))
                     CompositionLocalProvider(
                         LocalMinimumTouchTargetEnforcement provides false,
                     ) {
@@ -101,7 +113,7 @@ fun CustomAlertDialog(onDismiss: () -> Unit, onExit: () -> Unit) {
                             shape = RoundedCornerShape(0.dp),
                             contentPadding = PaddingValues()
                         ) {
-                            Text(text = "Подтвердить", color = Color.Blue)
+                            Text(text = "Подтвердить", color = Color.Blue, fontSize = 16.sp)
                         }
                     }
                 }
