@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.R
+import com.example.skills.master.components.calendar.clickable
 import com.example.skills.role.ScreenRole
 import com.example.skills.role.components.CustomButton
 import com.example.skills.ui.theme.paddingBetweenElements
@@ -257,6 +258,17 @@ fun MasterMyServices(
 
 @Composable
 fun SingleServiceCard(singleService: SingleService, navController: NavHostController) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    if (showDialog) {
+        CustomAlertDialog(
+            onDismiss = {
+                showDialog = false
+            },
+            onExit = {
+                showDialog = false
+            })
+    }
     Column(
         modifier = Modifier
             .padding(top = 20.dp, start = 8.dp, end = 8.dp)
@@ -348,7 +360,7 @@ fun SingleServiceCard(singleService: SingleService, navController: NavHostContro
                         shape = RoundedCornerShape(10.dp)
                     )
                 ) {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { showDialog = true }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_bin),
                             contentDescription = "bin",
