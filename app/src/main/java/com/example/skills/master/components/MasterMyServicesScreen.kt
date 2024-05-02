@@ -122,6 +122,12 @@ fun MasterMyServices(
                             "Кутикула аккуратно отодвигается специальным апельсиновым палочкой или мягким пушером. Чтобы размягчить грубую кутикулу, ее можно регулярно смазывать",
                             1000,
                             55
+                        ),
+                        SingleService(
+                            "Маникюр классический",
+                            "Процесс включает в себя увлажнение и массаж рук, обработку кутикулы, подпиливание и придание им красивой формы, удаление кутикулы, нанесение крема для ухода за руками и масла для ухода за кутикулой.",
+                            800,
+                            45
                         )
                     )
                 ),
@@ -180,7 +186,7 @@ fun MasterMyServices(
                 categories.find { it.name == selectedCategory }?.singlesCategory
 
             if (selectedCategoryServices != null) {
-                LazyColumn {
+                LazyColumn(modifier = Modifier.padding(bottom = 100.dp)) {
                     items(selectedCategoryServices) { singleService ->
                         SingleServiceCard(singleService)
                     }
