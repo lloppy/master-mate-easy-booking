@@ -92,6 +92,42 @@ fun MasterClientServices(
                         Status.ACTUAL
                     ),
                     BookingItem(
+                        "Маникюр класический",
+                        800,
+                        LocalDateTime.now(),
+                        60,
+                        "Анкудинова Полина",
+                        20,
+                        Status.ACTUAL
+                    ),
+                    BookingItem(
+                        "Маникюр класический",
+                        800,
+                        LocalDateTime.now(),
+                        60,
+                        "Анкудинова Полина",
+                        20,
+                        Status.ACTUAL
+                    ),
+                    BookingItem(
+                        "Маникюр класический",
+                        800,
+                        LocalDateTime.now(),
+                        60,
+                        "Анкудинова Полина",
+                        20,
+                        Status.ACTUAL
+                    ),
+                    BookingItem(
+                        "Маникюр класический",
+                        800,
+                        LocalDateTime.now(),
+                        60,
+                        "Анкудинова Полина",
+                        20,
+                        Status.ACTUAL
+                    ),
+                    BookingItem(
                         "Маникюр европейский",
                         1000,
                         LocalDateTime.now(),
@@ -105,11 +141,10 @@ fun MasterClientServices(
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
-        LazyColumn(Modifier.fillMaxWidth()) {
+        LazyColumn(Modifier.fillMaxWidth().padding(bottom = 100.dp)) {
             if (selectedTwoSegment == "Актуальные") {
                 items(bookingItems.filter { it.status == Status.ACTUAL }) { bookingItem ->
                     BookingItemCard(bookingItem, navController)
-
                 }
             } else {
                 items(bookingItems.filter { it.status == Status.ARCHIVE }) { bookingItem ->

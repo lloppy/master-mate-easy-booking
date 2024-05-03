@@ -3,6 +3,7 @@ package com.example.skills.master.components.c
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -52,15 +53,11 @@ fun BookingItemCard(bookingItem: BookingItem, navController: NavHostController) 
             .border(1.dp, Color.LightGray, RoundedCornerShape(20.dp))
             .background(Color.White)
     ) {
-        Column(modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 10.dp)) {
+        Column(modifier = Modifier.padding(start = 20.dp, end = 15.dp)) {
             Spacer(modifier = Modifier.height(paddingBetweenText.plus(paddingBetweenText)))
             val timeEnd = bookingItem.timeStart.plusMinutes(bookingItem.duration.toLong())
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Top
-            ) {
-                Column {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.padding(top = 10.dp)) {
                     Text(
                         text = "${String.format("%02d", bookingItem.timeStart.hour)}:${
                             String.format(
@@ -89,7 +86,7 @@ fun BookingItemCard(bookingItem: BookingItem, navController: NavHostController) 
                     )
                 }
 
-                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
+                Row(modifier = Modifier.height(40.dp).align(Alignment.TopEnd)) {
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
                             painter = painterResource(id = R.drawable.phone_circle),
@@ -97,7 +94,6 @@ fun BookingItemCard(bookingItem: BookingItem, navController: NavHostController) 
                             tint = Color.Unspecified
                         )
                     }
-
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
                             painter = painterResource(id = R.drawable.close_circle),
