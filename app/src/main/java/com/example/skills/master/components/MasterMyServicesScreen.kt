@@ -108,8 +108,6 @@ fun MasterMyServices(
     navigateToChangeCategory: () -> Unit,
     navController: NavHostController
 ) {
-    var selectedCategory by remember { mutableStateOf("") }
-
     var categories by remember {
         mutableStateOf(
             listOf<Category>(
@@ -153,6 +151,8 @@ fun MasterMyServices(
             )
         )
     }
+
+    var selectedCategory by remember { mutableStateOf(if (categories.isNotEmpty()) categories.first().name else "") }
 
     Column(
         modifier = Modifier
