@@ -97,14 +97,15 @@ fun EditProfileScreen(
             )
         },
     ) { innerPadding ->
-        AddMasterAccountInfo(innerPadding, navigateToMain)
+        AddMasterAccountInfo(innerPadding, navigateToMain, navController)
     }
 }
 
 @Composable
 private fun AddMasterAccountInfo(
     innerPadding: PaddingValues,
-    navigateToMain: () -> Unit
+    navigateToMain: () -> Unit,
+    navController: NavHostController
 ) {
     val scrollState = rememberScrollState()
 
@@ -223,6 +224,7 @@ private fun AddMasterAccountInfo(
                 .height(60.dp)
         ) {
             CustomButton(
+                // { navController.popBackStack() },
                 navigateToMain,
                 "Сохранить"
             )

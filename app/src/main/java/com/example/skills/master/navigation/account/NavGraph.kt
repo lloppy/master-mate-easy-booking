@@ -104,10 +104,7 @@ fun SetupMasterNavGraph(
 
         composable(ScreenRole.Master.Notifications.route) {
             NotificationSettingsScreen(
-                navController = navHostController,
-                navigateToMain = {
-                    navHostController.navigate(ScreenMaster.MasterHomeScreen.route)
-                }
+                navController = navHostController
             )
         }
 

@@ -93,10 +93,7 @@ fun SetupClientNavGraph(
 
         composable(ScreenRole.Client.Notifications.route) {
             NotificationSettingsScreen(
-                navController = navHostController,
-                navigateToMain = {
-                    navHostController.navigate(ScreenClient.ClientHomeScreen.route)
-                }
+                navController = navHostController
             )
         }
     }

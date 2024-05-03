@@ -76,14 +76,15 @@ fun EditPasswordScreen(
             )
         },
     ) { innerPadding ->
-        ContentNewPassword(innerPadding, navigateToMain)
+        ContentNewPassword(innerPadding, navigateToMain, navController)
     }
 }
 
 @Composable
 fun ContentNewPassword(
     innerPadding: PaddingValues,
-    navigateToMain: () -> Unit
+    navigateToMain: () -> Unit,
+    navController: NavHostController
 ) {
     val focusRequester = remember { FocusRequester() }
     val oldPasswordState = remember { PasswordState() }
@@ -92,7 +93,8 @@ fun ContentNewPassword(
     val onSubmit = {
         if (newPasswordState.isValid) {
             //onSignInSubmitted(emailState.text, passwordState.text)
-            navigateToMain
+            // navigateToMain
+            navController.popBackStack()
         }
     }
 
@@ -142,6 +144,7 @@ fun ContentNewPassword(
             Spacer(modifier = Modifier.height(16.dp))
 
             CustomButton(
+                // { navController.popBackStack() },
                 navigateToMain,
                 "Сохранить"
             )

@@ -43,7 +43,7 @@ import androidx.navigation.NavHostController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotificationSettingsScreen(navController: NavHostController, navigateToMain: () -> Unit) {
+fun NotificationSettingsScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -76,13 +76,13 @@ fun NotificationSettingsScreen(navController: NavHostController, navigateToMain:
             )
         }
     ) { innerPadding ->
-        ContentNotificationSettings(innerPadding, navigateToMain)
+        ContentNotificationSettings(innerPadding)
     }
 }
 
 
 @Composable
-fun ContentNotificationSettings(innerPadding: PaddingValues, navigateToMain: () -> Unit) {
+fun ContentNotificationSettings(innerPadding: PaddingValues) {
     var isNotificationEnabled by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager

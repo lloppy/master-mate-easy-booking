@@ -79,13 +79,17 @@ fun GoogleCalendarScreen(navController: NavHostController, navigateToMain: () ->
             )
         }
     ) { innerPadding ->
-        ContentGoogleCalendarInfo(innerPadding, navigateToMain)
+        ContentGoogleCalendarInfo(innerPadding, navigateToMain, navController)
     }
 }
 
 
 @Composable
-fun ContentGoogleCalendarInfo(innerPadding: PaddingValues, navigateToMain: () -> Unit) {
+fun ContentGoogleCalendarInfo(
+    innerPadding: PaddingValues,
+    navigateToMain: () -> Unit,
+    navController: NavHostController
+) {
     var calendarId by remember { mutableStateOf("") }
     val context = LocalContext.current
     val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -207,7 +211,8 @@ fun ContentGoogleCalendarInfo(innerPadding: PaddingValues, navigateToMain: () ->
             )
         }
         CustomButton(
-            navigateToMain,
+            // { navController.popBackStack() },
+             navigateToMain,
             "Сохранить"
         )
     }
