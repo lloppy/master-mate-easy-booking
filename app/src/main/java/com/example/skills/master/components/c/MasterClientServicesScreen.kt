@@ -26,8 +26,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -85,7 +88,7 @@ fun MasterClientServices(
                     BookingItem(
                         "Маникюр класический",
                         800,
-                        LocalDateTime.now(),
+                        LocalDateTime.now().minusDays(10L),
                         60,
                         "Анкудинова Полина",
                         20,
@@ -103,7 +106,7 @@ fun MasterClientServices(
                     BookingItem(
                         "Маникюр класический",
                         800,
-                        LocalDateTime.now(),
+                        LocalDateTime.now().plusDays(4L),
                         60,
                         "Анкудинова Полина",
                         20,
@@ -137,22 +140,51 @@ fun MasterClientServices(
                         Status.ARCHIVE,
                         isDone = true
                     ),
+                    BookingItem(
+                        "Маникюр европейский",
+                        1000,
+                        LocalDateTime.now(),
+                        75,
+                        "Гиязов Арсель",
+                        20,
+                        Status.ARCHIVE
+                    )
                 )
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
-        LazyColumn(Modifier.fillMaxWidth().padding(bottom = 100.dp)) {
-            if (selectedTwoSegment == "Актуальные") {
-                items(bookingItems.filter { it.status == Status.ACTUAL }) { bookingItem ->
-                    BookingItemCard(bookingItem, navController)
-                }
+
+        val formatter = DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))
+        LazyColumn(
+            Modifier
+                .fillMaxWidth()
+                .padding(bottom = 100.dp)) {
+            val groupedItems = if (selectedTwoSegment == "Актуальные") {
+                bookingItems.filter { it.status == Status.ACTUAL }.groupByDate()
             } else {
-                items(bookingItems.filter { it.status == Status.ARCHIVE }) { bookingItem ->
-                    BookingItemCard(bookingItem, navController)
+                bookingItems.filter { it.status == Status.ARCHIVE }.groupByDate()
+            }
+            groupedItems.forEach { (date, items) ->
+                item {
+                    Text(
+                        text = date.format(formatter),
+                        modifier = Modifier.padding(start = 10.dp, top = 20.dp),
+                        color = Color.Black,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 18.sp,
+                        maxLines = 1
+                    )
+                }
+                items.forEach { bookingItem ->
+                    item { BookingItemCard(bookingItem, navController) }
                 }
             }
         }
     }
+}
+
+fun List<BookingItem>.groupByDate(): Map<LocalDate, List<BookingItem>> {
+    return this.groupBy { it.timeStart.toLocalDate() }
 }
 
 data class BookingItem(

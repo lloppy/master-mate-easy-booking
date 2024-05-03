@@ -9,8 +9,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -24,6 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -47,9 +52,9 @@ fun BookingItemCard(bookingItem: BookingItem, navController: NavHostController) 
     }
     Column(
         modifier = Modifier
-            .padding(top = 20.dp, start = 8.dp, end = 8.dp)
+            .padding(bottom = 10.dp, top = 10.dp, start = 8.dp, end = 8.dp)
             .fillMaxWidth()
-            .height(164.dp)
+            .height(164.dp.plus(if (bookingItem.status == Status.ARCHIVE) 24.dp else 0.dp))
             .border(1.dp, Color.LightGray, RoundedCornerShape(20.dp))
             .background(Color.White)
     ) {
@@ -57,7 +62,14 @@ fun BookingItemCard(bookingItem: BookingItem, navController: NavHostController) 
             Spacer(modifier = Modifier.height(paddingBetweenText.plus(paddingBetweenText)))
             val timeEnd = bookingItem.timeStart.plusMinutes(bookingItem.duration.toLong())
             Box(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.padding(top = 10.dp)) {
+                Column {
+                    if (bookingItem.status == Status.ARCHIVE) {
+                       if (bookingItem.isDone!!){
+                           BadgeCard("Выполнена", Color(41, 174, 41))
+                       } else {
+                           BadgeCard("Отменена", Color(236, 19, 19))
+                       }
+                    }
                     Text(
                         text = "${String.format("%02d", bookingItem.timeStart.hour)}:${
                             String.format(
@@ -74,7 +86,9 @@ fun BookingItemCard(bookingItem: BookingItem, navController: NavHostController) 
                         fontWeight = FontWeight.Normal,
                         fontSize = 14.sp,
                         maxLines = 1,
-                        modifier = Modifier.fillMaxWidth(0.7f)
+                        modifier = Modifier
+                            .fillMaxWidth(0.7f)
+                            .padding(top = 10.dp)
                     )
                     Spacer(modifier = Modifier.height(paddingBetweenText))
                     Text(
@@ -86,7 +100,9 @@ fun BookingItemCard(bookingItem: BookingItem, navController: NavHostController) 
                     )
                 }
 
-                Row(modifier = Modifier.height(40.dp).align(Alignment.TopEnd)) {
+                Row(modifier = Modifier
+                    .height(40.dp)
+                    .align(Alignment.TopEnd)) {
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
                             painter = painterResource(id = R.drawable.phone_circle),
@@ -94,12 +110,14 @@ fun BookingItemCard(bookingItem: BookingItem, navController: NavHostController) 
                             tint = Color.Unspecified
                         )
                     }
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.close_circle),
-                            contentDescription = "close",
-                            tint = Color.Unspecified
-                        )
+                    if (bookingItem.status == Status.ACTUAL) {
+                        IconButton(onClick = { /*TODO*/ }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.close_circle),
+                                contentDescription = "close",
+                                tint = Color.Unspecified
+                            )
+                        }
                     }
                 }
             }
@@ -126,5 +144,29 @@ fun BookingItemCard(bookingItem: BookingItem, navController: NavHostController) 
     }
 }
 
-
+@Composable
+fun BadgeCard(text: String, color: Color) {
+    Box(
+        modifier = Modifier
+            .height(28.dp).offset(x = -10.dp)
+            .background(color.copy(0.1f), shape = RoundedCornerShape(20.dp)),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+            color = color,
+            fontSize = 14.sp,
+            modifier = Modifier.padding(start = 14.dp, end = 14.dp, top = 4.dp, bottom = 4.dp)
+        )
+    }
+}
 val paddingBetweenText = 9.dp
+
+
+@Preview
+@Composable
+fun prew(){
+    BadgeCard("Выполнена", Color(41, 174, 41))
+}

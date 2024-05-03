@@ -34,7 +34,7 @@ fun RoleScreen(navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.50f),
+                .fillMaxHeight(0.52f),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -49,7 +49,7 @@ fun RoleScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(start = 8.dp, end = 8.dp),
+                .padding(start = 8.dp, end = 8.dp, bottom = 6.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround
         ) {
@@ -67,6 +67,7 @@ fun RoleScreen(navController: NavController) {
                 fontFamily = fontFamilyInter,
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Center,
+                lineHeight = 22.sp,
                 modifier = Modifier.padding(start = 8.dp, end = 8.dp),
 
                 )
