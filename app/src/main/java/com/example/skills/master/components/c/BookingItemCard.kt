@@ -2,24 +2,31 @@ package com.example.skills.master.components.c
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.skills.R
 import com.example.skills.master.components.d.CustomAlertDialog
 import com.example.skills.master.components.e.lineHeight
 
@@ -48,32 +55,58 @@ fun BookingItemCard(bookingItem: BookingItem, navController: NavHostController) 
         Column(modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 10.dp)) {
             Spacer(modifier = Modifier.height(paddingBetweenText.plus(paddingBetweenText)))
             val timeEnd = bookingItem.timeStart.plusMinutes(bookingItem.duration.toLong())
-            Text(
-                text = "${String.format("%02d", bookingItem.timeStart.hour)}:${
-                    String.format(
-                        "%02d",
-                        bookingItem.timeStart.minute
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Top
+            ) {
+                Column {
+                    Text(
+                        text = "${String.format("%02d", bookingItem.timeStart.hour)}:${
+                            String.format(
+                                "%02d",
+                                bookingItem.timeStart.minute
+                            )
+                        } - ${String.format("%02d", timeEnd.hour)}:${
+                            String.format(
+                                "%02d",
+                                timeEnd.minute
+                            )
+                        }",
+                        color = Color.Black,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 14.sp,
+                        maxLines = 1,
+                        modifier = Modifier.fillMaxWidth(0.7f)
                     )
-                } - ${String.format("%02d", timeEnd.hour)}:${
-                    String.format(
-                        "%02d",
-                        timeEnd.minute
+                    Spacer(modifier = Modifier.height(paddingBetweenText))
+                    Text(
+                        text = bookingItem.serviceName,
+                        color = Color.Black,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 14.sp,
+                        maxLines = 1
                     )
-                }",
-                color = Color.Black,
-                fontWeight = FontWeight.Normal,
-                fontSize = 14.sp,
-                maxLines = 1
-            )
+                }
 
-            Spacer(modifier = Modifier.height(paddingBetweenText))
-            Text(
-                text = bookingItem.serviceName,
-                color = Color.Black,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 14.sp,
-                maxLines = 1
-            )
+                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.phone_circle),
+                            contentDescription = "phone",
+                            tint = Color.Unspecified
+                        )
+                    }
+
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.close_circle),
+                            contentDescription = "close",
+                            tint = Color.Unspecified
+                        )
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.height(paddingBetweenText))
             Text(
