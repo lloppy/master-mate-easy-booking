@@ -1,5 +1,5 @@
 # MasterMate [Google drive](https://drive.google.com/drive/folders/1u6M8L59bWF_lmf-P9Ckc-K3p9vyZkTzm?usp=sharing)
-## Launch online, without install [Appetize link](https://appetize.io/app/3m5hng6vrmjv5iwv3jwco4ahwe?device=pixel7&osVersion=13.0)
+## Launch online, without install [Appetize link](https://appetize.io/app/n25geyscx2d5lshgipjzwmalee?device=pixel7&osVersion=13.0)
 Attention: The application uses two languages. The language of the application is set automatically, make sure that your device uses the language you need
 
 
