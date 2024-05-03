@@ -108,7 +108,7 @@ fun MasterMyServices(
     navigateToChangeCategory: () -> Unit,
     navController: NavHostController
 ) {
-    var categories by remember {
+    val categories by remember {
         mutableStateOf(
             listOf<Category>(
                 Category(
