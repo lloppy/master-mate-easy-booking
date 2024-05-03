@@ -2,10 +2,11 @@ package com.example.skills.master.components.c
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,13 +25,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.skills.master.components.d.Category
-import java.time.LocalDate
+import androidx.navigation.NavHostController
 import java.time.LocalDateTime
+import java.time.LocalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MasterClientServicesScreen() {
+fun MasterClientServicesScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -51,13 +52,14 @@ fun MasterClientServicesScreen() {
             )
         }
     ) { innerPadding ->
-        MasterClientServices(innerPadding)
+        MasterClientServices(innerPadding, navController)
     }
 }
 
 @Composable
 fun MasterClientServices(
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    navController: NavHostController,
 ) {
     Column(
         modifier = Modifier.padding(
@@ -80,30 +82,42 @@ fun MasterClientServices(
         val bookingItems by remember {
             mutableStateOf(
                 listOf<BookingItem>(
-                    BookingItem("Маникюр класический", 800, LocalDateTime.now(), 60, "Анкудинова Полина", 20, Status.ACTUAL ),
-                    BookingItem("Маникюр европейский", 1000, LocalDateTime.now(), 75, "Гиязов Арсель", 20, Status.ARCHIVE, isDone = true ),
-
+                    BookingItem(
+                        "Маникюр класический",
+                        800,
+                        LocalDateTime.now(),
+                        60,
+                        "Анкудинова Полина",
+                        20,
+                        Status.ACTUAL
+                    ),
+                    BookingItem(
+                        "Маникюр европейский",
+                        1000,
+                        LocalDateTime.now(),
+                        75,
+                        "Гиязов Арсель",
+                        20,
+                        Status.ARCHIVE,
+                        isDone = true
+                    ),
                 )
             )
         }
-
-        LazyRow(Modifier.fillMaxWidth()) {
+        Spacer(modifier = Modifier.height(16.dp))
+        LazyColumn(Modifier.fillMaxWidth()) {
             if (selectedTwoSegment == "Актуальные") {
                 items(bookingItems.filter { it.status == Status.ACTUAL }) { bookingItem ->
-                    Text(text = bookingItem.serviceName)
-                    Text(text = bookingItem.isDone.toString())
+                    BookingItemCard(bookingItem, navController)
+
                 }
             } else {
                 items(bookingItems.filter { it.status == Status.ARCHIVE }) { bookingItem ->
-                    Text(text = bookingItem.serviceName)
-                    Text(text = bookingItem.isDone.toString())
-
+                    BookingItemCard(bookingItem, navController)
                 }
             }
         }
     }
-
-
 }
 
 data class BookingItem(

@@ -33,7 +33,7 @@ fun SetupClientNavGraph(
         }
         // done checkbox
         composable(route = ScreenClient.ClientCreateServiceScreen.route) {
-            MasterClientServicesScreen()
+            MasterClientServicesScreen(navHostController)
         }
         // server
         composable(route = ScreenClient.ClientServerScreen.route) {

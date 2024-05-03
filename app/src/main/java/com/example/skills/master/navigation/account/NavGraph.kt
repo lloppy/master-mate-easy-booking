@@ -37,7 +37,7 @@ fun SetupMasterNavGraph(
         }
         // done checkbox
         composable(route = ScreenMaster.MasterCreateServiceScreen.route) {
-            MasterClientServicesScreen()
+            MasterClientServicesScreen(navHostController)
         }
         // server
         composable(route = ScreenMaster.MasterServerScreen.route) {
