@@ -18,8 +18,4 @@ sealed class ScreenMaster(val route: String, val iconId: Int) {
         ScreenMaster(route = "master_settings_screen", iconId = R.drawable.settings)
 
 
-    object MainCreationLayout :
-        ScreenMaster(route = "master_create_service_layout", iconId = R.drawable.plus)
-
-
 }

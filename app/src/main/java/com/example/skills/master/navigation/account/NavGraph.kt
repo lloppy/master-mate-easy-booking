@@ -4,20 +4,19 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.skills.client.account.CalendarScreen
-import com.example.skills.master.MainMasterScreen
-import com.example.skills.master.components.ChangeCategoryScreen
-import com.example.skills.master.components.CreateServiceCardScreen
-import com.example.skills.master.components.CreateServiceScreen
-import com.example.skills.master.components.EditPasswordScreen
-import com.example.skills.master.components.EditProfileScreen
-import com.example.skills.master.components.EditServiceCardScreen
-import com.example.skills.master.components.GoogleCalendarScreen
-import com.example.skills.master.components.MasterClientServicesScreen
-import com.example.skills.master.components.MasterMyServicesScreen
-import com.example.skills.master.components.MasterSettingsScreen
-import com.example.skills.master.components.NotificationSettingsScreen
-import com.example.skills.master.creatingService.MainCreationLayout
+import com.example.skills.master.components.a.MainMasterScreen
+import com.example.skills.master.components.b.CalendarScreen
+import com.example.skills.master.components.c.MasterClientServicesScreen
+import com.example.skills.master.components.d.ChangeCategoryScreen
+import com.example.skills.master.components.d.CreateServiceCardScreen
+import com.example.skills.master.components.d.CreateServiceScreen
+import com.example.skills.master.components.d.EditServiceCardScreen
+import com.example.skills.master.components.d.MasterMyServicesScreen
+import com.example.skills.master.components.e.EditPasswordScreen
+import com.example.skills.master.components.e.EditProfileScreen
+import com.example.skills.master.components.e.GoogleCalendarScreen
+import com.example.skills.master.components.e.MasterSettingsScreen
+import com.example.skills.master.components.e.NotificationSettingsScreen
 import com.example.skills.role.ScreenRole
 
 @Composable
@@ -53,10 +52,6 @@ fun SetupMasterNavGraph(
             )
         }
 
-        // all layout, setup navigation
-        composable(route = ScreenMaster.MainCreationLayout.route) {
-            MainCreationLayout()
-        }
 
         // settings
         composable(route = ScreenMaster.MasterSettingsScreen.route) {

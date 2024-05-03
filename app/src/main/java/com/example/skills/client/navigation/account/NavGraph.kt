@@ -4,16 +4,15 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.skills.client.account.CalendarScreen
 import com.example.skills.client.account.MainClientScreen
 import com.example.skills.client.components.EditClientProfileScreen
-import com.example.skills.master.components.EditPasswordScreen
-import com.example.skills.master.components.GoogleCalendarScreen
-import com.example.skills.master.components.MasterClientServicesScreen
-import com.example.skills.master.components.MasterMyServicesScreen
-import com.example.skills.master.components.MasterSettingsScreen
-import com.example.skills.master.components.NotificationSettingsScreen
-import com.example.skills.master.creatingService.MainCreationLayout
+import com.example.skills.master.components.b.CalendarScreen
+import com.example.skills.master.components.c.MasterClientServicesScreen
+import com.example.skills.master.components.d.MasterMyServicesScreen
+import com.example.skills.master.components.e.EditPasswordScreen
+import com.example.skills.master.components.e.GoogleCalendarScreen
+import com.example.skills.master.components.e.MasterSettingsScreen
+import com.example.skills.master.components.e.NotificationSettingsScreen
 import com.example.skills.role.ScreenRole
 
 @Composable
@@ -41,11 +40,6 @@ fun SetupClientNavGraph(
             MasterMyServicesScreen(
                 {}, {}, navHostController
             )
-        }
-
-        // all layout, setup navigation
-        composable(route = ScreenClient.MainCreationLayout.route) {
-            MainCreationLayout()
         }
 
         // settings

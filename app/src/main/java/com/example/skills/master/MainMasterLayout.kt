@@ -5,7 +5,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.skills.master.navBar.MasterBottomNavigation
+import com.example.skills.master.navigation.navBar.MasterBottomNavigation
 import com.example.skills.master.navigation.account.ScreenMaster
 import com.example.skills.master.navigation.account.SetupMasterNavGraph
 import com.example.skills.role.ScreenRole
