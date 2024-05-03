@@ -2,7 +2,6 @@ package com.example.skills.master.components.c
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,9 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -28,7 +25,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -38,7 +34,7 @@ import com.example.skills.master.components.e.lineHeight
 
 
 @Composable
-fun BookingItemCard(bookingItem: BookingItem, navController: NavHostController) {
+fun BookingItemCard(bookingItem: BookingItem) {
     var showDialog by remember { mutableStateOf(false) }
 
     if (showDialog) {
@@ -48,7 +44,10 @@ fun BookingItemCard(bookingItem: BookingItem, navController: NavHostController) 
             },
             onExit = {
                 showDialog = false
-            })
+            },
+            "Отменить запись",
+            "Запись будет отменена, мы уведомим об этом клиента"
+        )
     }
     Column(
         modifier = Modifier
@@ -64,11 +63,11 @@ fun BookingItemCard(bookingItem: BookingItem, navController: NavHostController) 
             Box(modifier = Modifier.fillMaxWidth()) {
                 Column {
                     if (bookingItem.status == Status.ARCHIVE) {
-                       if (bookingItem.isDone!!){
-                           BadgeCard("Выполнена", Color(41, 174, 41))
-                       } else {
-                           BadgeCard("Отменена", Color(236, 19, 19))
-                       }
+                        if (bookingItem.isDone!!) {
+                            BadgeCard("Выполнена", Color(41, 174, 41))
+                        } else {
+                            BadgeCard("Отменена", Color(236, 19, 19))
+                        }
                     }
                     Text(
                         text = "${String.format("%02d", bookingItem.timeStart.hour)}:${
@@ -100,9 +99,11 @@ fun BookingItemCard(bookingItem: BookingItem, navController: NavHostController) 
                     )
                 }
 
-                Row(modifier = Modifier
-                    .height(40.dp)
-                    .align(Alignment.TopEnd)) {
+                Row(
+                    modifier = Modifier
+                        .height(40.dp)
+                        .align(Alignment.TopEnd)
+                ) {
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
                             painter = painterResource(id = R.drawable.phone_circle),
@@ -111,7 +112,7 @@ fun BookingItemCard(bookingItem: BookingItem, navController: NavHostController) 
                         )
                     }
                     if (bookingItem.status == Status.ACTUAL) {
-                        IconButton(onClick = { /*TODO*/ }) {
+                        IconButton(onClick = { showDialog = true }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.close_circle),
                                 contentDescription = "close",
@@ -148,7 +149,8 @@ fun BookingItemCard(bookingItem: BookingItem, navController: NavHostController) 
 fun BadgeCard(text: String, color: Color) {
     Box(
         modifier = Modifier
-            .height(28.dp).offset(x = -10.dp)
+            .height(28.dp)
+            .offset(x = -10.dp)
             .background(color.copy(0.1f), shape = RoundedCornerShape(20.dp)),
         contentAlignment = Alignment.Center
     ) {
@@ -162,11 +164,5 @@ fun BadgeCard(text: String, color: Color) {
         )
     }
 }
+
 val paddingBetweenText = 9.dp
-
-
-@Preview
-@Composable
-fun prew(){
-    BadgeCard("Выполнена", Color(41, 174, 41))
-}

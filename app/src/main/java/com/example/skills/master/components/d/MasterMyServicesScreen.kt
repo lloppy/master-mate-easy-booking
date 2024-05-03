@@ -267,7 +267,10 @@ fun SingleServiceCard(singleService: SingleService, navController: NavHostContro
             },
             onExit = {
                 showDialog = false
-            })
+            },
+            "Удалить услугу",
+            "Услуга будет удалена навсегда без возможности восстановления"
+        )
     }
     Column(
         modifier = Modifier

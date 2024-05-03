@@ -176,7 +176,7 @@ fun MasterClientServices(
                     )
                 }
                 items.forEach { bookingItem ->
-                    item { BookingItemCard(bookingItem, navController) }
+                    item { BookingItemCard(bookingItem) }
                 }
             }
         }
