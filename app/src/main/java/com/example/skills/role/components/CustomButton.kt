@@ -54,6 +54,7 @@ fun CustomButton(
     navigateTo: () -> Unit,
     buttonText: String,
     height: Dp = buttonHeight,
+    heightCoeff: Float = 1f,
     width: Float = 1f,
     color: Color = Color.Black
 ) {
@@ -61,7 +62,7 @@ fun CustomButton(
         onClick = navigateTo,
         modifier = Modifier
             .fillMaxWidth(width)
-            .height(height)
+            .height(height * heightCoeff)
             .padding(start = paddingBetweenElements, end = paddingBetweenElements),
         shape = RoundedCornerShape(buttonRoundedCorner),
         colors = ButtonDefaults.buttonColors(

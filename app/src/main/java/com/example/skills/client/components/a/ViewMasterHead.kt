@@ -86,10 +86,7 @@ fun ViewMasterHead(master: Master) {
                 color = Color.Gray,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
-                modifier = Modifier
-                    .clickable {
-                        expanded = !expanded
-                    })
+                modifier = Modifier.clickable { expanded = !expanded })
         }
         if (expanded) {
             Spacer(modifier = Modifier.height(paddingBetweenText))
