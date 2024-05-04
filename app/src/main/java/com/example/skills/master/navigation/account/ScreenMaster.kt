@@ -17,5 +17,4 @@ sealed class ScreenMaster(val route: String, val iconId: Int) {
     object MasterSettingsScreen :
         ScreenMaster(route = "master_settings_screen", iconId = R.drawable.settings)
 
-
 }

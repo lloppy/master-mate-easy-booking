@@ -19,7 +19,7 @@ sealed class ScreenRole(val route: String) {
         object EditProfile : Master("edit_profile_screen")
         object Notifications : Master("notifications_screen")
 
-
+        object ViewMaster : Client("view_master/{masterId}")
     }
 
     sealed class Master(val masterRoute: String) : ScreenRole("master/$masterRoute") {

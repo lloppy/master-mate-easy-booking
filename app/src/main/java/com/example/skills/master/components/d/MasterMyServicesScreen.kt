@@ -88,9 +88,9 @@ fun MasterMyServicesScreen(
                             contentDescription = "Localized description"
                         )
                     }
-                },
+                }
             )
-        },
+        }
     ) { innerPadding ->
         MasterMyServices(
             innerPadding,
@@ -226,7 +226,7 @@ fun MasterMyServices(
                 }
             } else {
                 Text(
-                    text = "В этой категории пока нет услуг. Чтобы создать их, нажмите на иконку с плюсом в левом верхнем углу.",
+                    text = "В этой категории пока нет услуг. \nЧтобы создать их, нажмите на иконку с плюсом в левом верхнем углу.",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Normal,
                     color = Color.Gray,

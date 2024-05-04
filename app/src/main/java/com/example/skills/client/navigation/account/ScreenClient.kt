@@ -12,6 +12,4 @@ sealed class ScreenClient(val route: String, val iconId: Int) {
 
     object ClientSettingsScreen :
         ScreenClient(route = "client_settings_screen", iconId = R.drawable.settings)
-
-
 }

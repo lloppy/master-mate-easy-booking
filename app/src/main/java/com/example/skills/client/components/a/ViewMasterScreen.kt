@@ -1,14 +1,18 @@
 package com.example.skills.client.components.a
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.rounded.DeleteOutline
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -19,15 +23,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.MainViewModel
-import com.example.skills.data.Master
+import com.example.skills.master.components.a.MasterGallery
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ClientMastersScreen(navController: NavHostController) {
+fun ViewMasterScreen(
+    masterId: Long,
+    navController: NavHostController
+) {
+    Log.e("ViewMasterScreen", "ViewMasterScreen masterId is $masterId")
+
+    val mainViewModel = MainViewModel()
+    val master = mainViewModel.getMaster(id = masterId)
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -37,51 +48,60 @@ fun ClientMastersScreen(navController: NavHostController) {
                 ),
                 title = {
                     Text(
-                        "Мастера",
+                        "${master.firstName} ${master.lastName}",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                     )
+                },
+                actions = {
+                    IconButton(onClick = {
+                        // удаляем из бдшки и обновляем :)
+                        val profileId = master.id
+                    }) {
+                        Icon(
+                            imageVector = Icons.Rounded.DeleteOutline,
+                            contentDescription = "Localized description"
+                        )
+                    }
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Outlined.ArrowBack,
+                            contentDescription = "Localized description"
+                        )
+                    }
                 }
             )
         }
     ) { innerPadding ->
-        ClientMastersContent(innerPadding, navController)
+        MasterHomeScreen(
+            innerPadding,
+            navController
+        )
     }
 }
 
 
 @Composable
-fun ClientMastersContent(innerPadding: PaddingValues, navController: NavHostController) {
-    val viewModel = MainViewModel()
-
-    val emptyMasters = emptyList<Master>()
-    val masters = viewModel.getMastersList()
+fun MasterHomeScreen(
+    innerPadding: PaddingValues,
+    navController: NavHostController
+) {
+    val mainViewModel = MainViewModel()
+    val master = mainViewModel.getMaster()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(innerPadding),
+            .padding(top = innerPadding.calculateTopPadding()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        if (masters.isEmpty()) {
-            Text(
-                text = "Здесь будут отображаться ваши мастера. Чтобы добавить нового мастера, используйте ссылку, которую он вам предоставит.",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Normal,
-                color = Color.Gray,
-                modifier = Modifier.padding(start = 18.dp, end = 12.dp)
-            )
-        } else {
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(masters) { master ->
-                    SimpleMasterCard(master, navController)
-                }
-            }
-        }
+        ViewMasterHead(master)
+        MasterGallery(master.images)
     }
 }
-
