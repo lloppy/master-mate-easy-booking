@@ -62,7 +62,7 @@ fun ProfileHead(master: Master) {
             Image(
                 painter = painter,
                 contentDescription = "Master image",
-                Modifier.height(140.dp),
+                Modifier.height(120.dp),
                 alignment = Alignment.TopCenter
             )
         }
