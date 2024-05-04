@@ -1,11 +1,11 @@
-package com.example.skills.client.account.navBar
+package com.example.skills.client.navigation.navBar
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Stable
 import com.example.skills.R
-import com.example.skills.client.account.navBar.BellColorButton
+import com.example.skills.client.navigation.navBar.BellColorButton
 
 @Stable
 data class Item(

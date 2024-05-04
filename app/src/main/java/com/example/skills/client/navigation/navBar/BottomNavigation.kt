@@ -1,4 +1,4 @@
-package com.example.skills.client.account.navBar
+package com.example.skills.client.navigation.navBar
 
 import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.LinearEasing
@@ -30,14 +30,12 @@ fun ClientBottomNavigation(
     navController: NavController
 ) {
     val dropletButtons = listOf(
-        ScreenClient.ClientHomeScreen,
-        ScreenClient.ClientCalendarScreen,
-        ScreenClient.ClientCreateServiceScreen,
-        ScreenClient.ClientServerScreen,
+        ScreenClient.ClientMastersScreen,
+        ScreenClient.ClientBookingsScreen,
         ScreenClient.ClientSettingsScreen,
     )
 
-    var selectedItem by remember { mutableStateOf(0) }
+    var selectedItem by remember { mutableStateOf(1) }
     AnimatedNavigationBar(
         modifier = Modifier
             .padding(bottom = 8.dp, start = 10.dp, end = 10.dp)
@@ -66,7 +64,7 @@ fun ClientBottomNavigation(
                 onClick = {
                     selectedItem = index
                     navController.navigate(item.route) {
-                        popUpTo(ScreenClient.ClientHomeScreen.route) {
+                        popUpTo(ScreenClient.ClientBookingsScreen.route) {
                             saveState = true
                         }
                         launchSingleTop = true

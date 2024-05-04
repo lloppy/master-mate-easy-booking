@@ -1,4 +1,4 @@
-package com.example.skills.client.account.navBar
+package com.example.skills.client.navigation.navBar
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.FiniteAnimationSpec

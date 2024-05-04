@@ -1,4 +1,4 @@
-package com.example.skills.client.components
+package com.example.skills.client.components.c
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

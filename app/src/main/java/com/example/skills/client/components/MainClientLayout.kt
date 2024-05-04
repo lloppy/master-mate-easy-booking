@@ -1,12 +1,12 @@
-package com.example.skills.client.account
+package com.example.skills.client.components
 
 import android.annotation.SuppressLint
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.skills.client.account.navBar.ClientBottomNavigation
 import com.example.skills.client.navigation.account.SetupClientNavGraph
+import com.example.skills.client.navigation.navBar.ClientBottomNavigation
 import com.example.skills.role.ScreenRole
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

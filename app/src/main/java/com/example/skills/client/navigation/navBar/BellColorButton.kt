@@ -1,4 +1,4 @@
-package com.example.skills.client.account.navBar
+package com.example.skills.client.navigation.navBar
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FiniteAnimationSpec
@@ -16,7 +16,7 @@ import kotlin.math.sin
 
 class BellColorButton(
     override val animationSpec: FiniteAnimationSpec<Float> = tween(),
-    override val background: com.example.skills.client.account.navBar.ButtonBackground,
+    override val background: ButtonBackground,
     private val maxDegrees: Float = 30f,
 ) : ColorButtonAnimation(animationSpec, background) {
 

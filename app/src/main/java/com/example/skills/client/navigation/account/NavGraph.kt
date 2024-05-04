@@ -4,11 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.skills.client.account.MainClientScreen
-import com.example.skills.client.components.EditClientProfileScreen
-import com.example.skills.master.components.b.CalendarScreen
-import com.example.skills.master.components.c.MasterClientServicesScreen
-import com.example.skills.master.components.d.MasterMyServicesScreen
+import com.example.skills.client.components.a.ClientMastersScreen
+import com.example.skills.client.components.b.ClientBookingsScreen
+import com.example.skills.client.components.c.EditClientProfileScreen
 import com.example.skills.master.components.e.EditPasswordScreen
 import com.example.skills.master.components.e.GoogleCalendarScreen
 import com.example.skills.master.components.e.MasterSettingsScreen
@@ -21,31 +19,25 @@ fun SetupClientNavGraph(
 ) {
     NavHost(
         navController = navHostController,
-        startDestination = ScreenClient.ClientHomeScreen.route
+        startDestination = ScreenClient.ClientBookingsScreen.route
     ) {
-        // person
-        composable(route = ScreenClient.ClientHomeScreen.route) {
-            MainClientScreen()
-        }
-        //calendar
-        composable(route = ScreenClient.ClientCalendarScreen.route) {
-            CalendarScreen()
-        }
-        // done checkbox
-        composable(route = ScreenClient.ClientCreateServiceScreen.route) {
-            MasterClientServicesScreen(navHostController)
-        }
         // server
-        composable(route = ScreenClient.ClientServerScreen.route) {
-            MasterMyServicesScreen(
-                {}, {}, navHostController
+        composable(route = ScreenClient.ClientMastersScreen.route) {
+            ClientMastersScreen(
             )
+        }
+
+        // done checkbox
+        composable(route = ScreenClient.ClientBookingsScreen.route) {
+            ClientBookingsScreen()
         }
 
         // settings
         composable(route = ScreenClient.ClientSettingsScreen.route) {
+            // reused component
             MasterSettingsScreen(
                 navigateToEditAccount = {
+                    // тут потом быть осторожнее, перепроверить что все норм
                     navHostController.navigate(ScreenRole.Master.EditProfile.route)
                 },
                 navigateToEditPassword = {
@@ -67,8 +59,9 @@ fun SetupClientNavGraph(
         composable(ScreenRole.Client.GoogleCalendar.route) {
             GoogleCalendarScreen(
                 navController = navHostController,
+                // no navigateToMain
                 navigateToMain = {
-                    navHostController.navigate(ScreenClient.ClientHomeScreen.route)
+                    navHostController.navigate(ScreenClient.ClientBookingsScreen.route)
                 }
             )
         }
@@ -77,7 +70,7 @@ fun SetupClientNavGraph(
             EditPasswordScreen(
                 navController = navHostController,
                 navigateToMain = {
-                    navHostController.navigate(ScreenClient.ClientHomeScreen.route)
+                    navHostController.navigate(ScreenClient.ClientBookingsScreen.route)
                 }
             )
         }
@@ -86,7 +79,7 @@ fun SetupClientNavGraph(
             EditClientProfileScreen(
                 navController = navHostController,
                 navigateToMain = {
-                    navHostController.navigate(ScreenClient.ClientHomeScreen.route)
+                    navHostController.navigate(ScreenClient.ClientBookingsScreen.route)
                 }
             )
         }

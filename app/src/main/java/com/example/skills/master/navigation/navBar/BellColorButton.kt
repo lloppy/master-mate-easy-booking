@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.res.painterResource
-import com.example.skills.client.account.navBar.ButtonBackground
-import com.example.skills.client.account.navBar.ColorButtonAnimation
+import com.example.skills.client.navigation.navBar.ButtonBackground
+import com.example.skills.client.navigation.navBar.ColorButtonAnimation
 import com.exyte.animatednavbar.utils.rotationWithTopCenterAnchor
 import kotlin.math.PI
 import kotlin.math.sin
