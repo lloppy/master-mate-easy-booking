@@ -6,7 +6,7 @@ open class User (
     open var firstName: String,
     open var lastName: String,
     open var phone: String,
-    open var imageId: String,
+    open var imageId: String? = null,
     open var password: String,
     open var role: Role
 )

@@ -29,7 +29,7 @@ fun SetupMasterNavGraph(
     ) {
         // person
         composable(route = ScreenMaster.MasterHomeScreen.route) {
-            MainMasterScreen()
+            MainMasterScreen(navHostController)
         }
         //calendar
         composable(route = ScreenMaster.MasterCalendarScreen.route) {

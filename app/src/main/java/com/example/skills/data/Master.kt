@@ -1,8 +1,8 @@
 package com.example.skills.data
 
-import java.time.LocalDate
+import android.net.Uri
 
-data class Client(
+data class Master(
     // default
     override val id: Long,
     override var email: String,
@@ -14,5 +14,8 @@ data class Client(
     override var role: Role = Role.CLIENT,
 
     // extended
-    var dateBirthday: LocalDate
+    var description: String,
+    var linkCode: String,
+    var address: String,
+    var images: List<Uri>
 ) : User(id, email, firstName, lastName, phone, imageId, password, role)
