@@ -20,6 +20,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -85,6 +87,17 @@ fun MasterMyServicesScreen(
                     IconButton(onClick = { /* do something */ }) {
                         Icon(
                             imageVector = ImageVector.vectorResource(id = R.drawable.archive),
+                            contentDescription = "Localized description"
+                        )
+                    }
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        // тут вопросики как прослеживать текущую выбранную категорию
+                        navController.navigate(ScreenRole.Master.CreateService.route)
+                    }) {
+                        Icon(
+                            imageVector = Icons.Outlined.Add,
                             contentDescription = "Localized description"
                         )
                     }
