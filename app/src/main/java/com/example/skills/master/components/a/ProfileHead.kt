@@ -50,7 +50,7 @@ fun ProfileHead(master: Master) {
     val intent = Intent(Intent.ACTION_VIEW, uri)
 
     Column(
-        modifier = Modifier.fillMaxWidth().padding(start = 12.dp, end = 12.dp, bottom = 12.dp),
+        modifier = Modifier.fillMaxWidth().padding(start = 12.dp, end = 12.dp, bottom = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
