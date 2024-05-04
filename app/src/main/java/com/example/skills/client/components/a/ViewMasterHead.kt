@@ -131,12 +131,17 @@ fun ViewMasterHead(master: Master) {
             )
         }
         Row(
-            modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp),
             verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            val intentPhone = Intent(Intent.ACTION_DIAL).apply {
+                data = Uri.parse("tel:${master.phone}")
+            }
             CustomButton(
-                navigateTo = {},
+                navigateTo = { context.startActivity(intentPhone) },
                 buttonText = "Позвонить",
                 color = Color.Transparent,
                 width = 0.5f
