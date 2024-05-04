@@ -1,4 +1,4 @@
-package com.example.skills.repository
+package com.example.skills.data.backend
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

@@ -1,9 +1,7 @@
 package com.example.skills.role
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import com.example.skills.repository.MainViewModel
+import com.example.skills.data.MainViewModel
 
 @Composable
 fun MainView(

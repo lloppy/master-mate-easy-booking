@@ -23,7 +23,7 @@ fun MasterGallery(images: List<Uri>) {
     LazyVerticalGrid(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 90.dp),
+            .padding(bottom = 95.dp),
         columns = GridCells.Fixed(3),
         contentPadding = PaddingValues(6.dp),
         content = {

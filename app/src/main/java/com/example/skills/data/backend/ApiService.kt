@@ -1,4 +1,4 @@
-package com.example.skills.backend
+package com.example.skills.data.backend
 
 import retrofit2.Response
 import retrofit2.http.Body
