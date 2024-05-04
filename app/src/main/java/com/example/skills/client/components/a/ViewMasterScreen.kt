@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.rounded.DeleteOutline
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -18,6 +19,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.MainViewModel
 import com.example.skills.master.components.a.MasterGallery
+import com.example.skills.master.components.d.CustomAlertDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,6 +44,8 @@ fun ViewMasterScreen(
 
     val mainViewModel = MainViewModel()
     val master = mainViewModel.getMaster(id = masterId)
+
+    var showDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -60,6 +68,8 @@ fun ViewMasterScreen(
                     IconButton(onClick = {
                         // удаляем из бдшки и обновляем :)
                         val profileId = master.id
+
+                        showDialog = true
                     }) {
                         Icon(
                             imageVector = Icons.Rounded.DeleteOutline,
@@ -82,6 +92,19 @@ fun ViewMasterScreen(
             innerPadding,
             navController
         )
+
+        if(showDialog) {
+            CustomAlertDialog(
+                onDismiss = {
+                    showDialog = false
+                },
+                onExit = {
+                    showDialog = false
+                },
+                title = "Удалить мастера",
+                description = "Мастер будет удален из списка мастеров"
+            )
+        }
     }
 }
 

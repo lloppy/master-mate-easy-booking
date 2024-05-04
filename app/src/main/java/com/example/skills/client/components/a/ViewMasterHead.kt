@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -34,6 +32,7 @@ import com.example.skills.data.Master
 import com.example.skills.data.Role
 import com.example.skills.master.components.b.calendar.clickable
 import com.example.skills.master.components.d.paddingBetweenText
+import com.example.skills.role.components.CustomButton
 import com.example.skills.ui.theme.fontFamilyInter
 
 @Composable
@@ -50,12 +49,16 @@ fun ViewMasterHead(master: Master) {
     val intent = Intent(Intent.ACTION_VIEW, uri)
 
     Column(
-        modifier = Modifier.fillMaxWidth().padding(start = 12.dp, end = 12.dp, bottom = 8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 12.dp, end = 12.dp, bottom = 6.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
@@ -125,6 +128,24 @@ fun ViewMasterHead(master: Master) {
                     .clickable {
                         context.startActivity(intent)
                     }
+            )
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            CustomButton(
+                navigateTo = {},
+                buttonText = "Позвонить",
+                color = Color.Transparent,
+                width = 0.5f
+            )
+
+            CustomButton(
+                navigateTo = {},
+                buttonText = "Записаться",
+                color = Color.Transparent,
             )
         }
     }
