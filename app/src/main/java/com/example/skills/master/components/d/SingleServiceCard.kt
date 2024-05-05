@@ -170,6 +170,7 @@ fun SingleServiceCard(singleService: SingleService, navController: NavHostContro
 val paddingBetweenText = 7.dp
 
 data class SingleService(
+    val serviceId: Long,
     var name: String,
     var description: String,
     var price: Int,

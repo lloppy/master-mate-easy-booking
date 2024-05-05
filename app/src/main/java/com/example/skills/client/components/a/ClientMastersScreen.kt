@@ -27,7 +27,7 @@ import com.example.skills.data.Master
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ClientMastersScreen(navController: NavHostController) {
+fun ClientMastersScreen(bookingViewModel: BookingViewModel, navigateToSelectedMasterProfile: () -> Unit) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -48,13 +48,13 @@ fun ClientMastersScreen(navController: NavHostController) {
             )
         }
     ) { innerPadding ->
-        ClientMastersContent(innerPadding, navController)
+        ClientMastersContent(innerPadding, navigateToSelectedMasterProfile)
     }
 }
 
 
 @Composable
-fun ClientMastersContent(innerPadding: PaddingValues, navController: NavHostController) {
+fun ClientMastersContent(innerPadding: PaddingValues, navigateToSelectedMasterProfile: () -> Unit) {
     val viewModel = MainViewModel()
 
     val emptyMasters = emptyList<Master>()
@@ -78,7 +78,7 @@ fun ClientMastersContent(innerPadding: PaddingValues, navController: NavHostCont
         } else {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(masters) { master ->
-                    SimpleMasterCard(master, navController)
+                    SimpleMasterCard(master, navigateToSelectedMasterProfile, bookingViewModel)
                 }
             }
         }

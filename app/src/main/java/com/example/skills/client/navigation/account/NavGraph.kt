@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.skills.client.components.a.BookingViewModel
 import com.example.skills.client.components.a.ClientMastersScreen
 import com.example.skills.client.components.a.MasterServicesScreen
 import com.example.skills.client.components.a.SelectDateScreen
@@ -22,20 +23,12 @@ import com.example.skills.role.ScreenRole
 fun SetupClientNavGraph(
     navHostController: NavHostController,
 ) {
+    val mainViewModel = MainViewModel()
+
     NavHost(
         navController = navHostController,
         startDestination = ScreenClient.ClientBookingsScreen.route
     ) {
-        // server
-        composable(route = ScreenClient.ClientMastersScreen.route) {
-            ClientMastersScreen(
-//                navigateTo = {
-//                    navHostController.navigate(ScreenRole.Client.ViewMaster.route)
-//                }
-                navController = navHostController
-            )
-        }
-
         // done checkbox
         composable(route = ScreenClient.ClientBookingsScreen.route) {
             ClientBookingsScreen()
@@ -74,36 +67,30 @@ fun SetupClientNavGraph(
                 }
             )
         }
+        // BookingViewModel
+        val bookingViewModel = BookingViewModel()
 
+        // выбираем мастера из списка мастеров
+        composable(route = ScreenClient.ClientMastersScreen.route) {
+            ClientMastersScreen(
+                bookingViewModel = bookingViewModel,
+                navigateToSelectedMasterProfile = {
+                    navHostController.navigate("${ScreenClient.ClientBookingsScreen.route}/${bookingViewModel.data1})
+                }
+            )
+        }
+
+        // нажимаем на кнопку записаться в профиле выбранного мастера
         composable(route = "${ScreenRole.Client.ViewMaster.route}/{masterId}") { backStackEntry ->
             val masterId = backStackEntry.arguments?.getString("masterId")?.toLong()
-
-            val mainViewModel = MainViewModel()
             val master = mainViewModel.getMaster(id = masterId!!)
 
             ViewMasterScreen(master = master, navHostController)
         }
 
-
-        composable(route = "${ScreenRole.Client.SelectDate.route}") { backStackEntry ->
-            SelectDateScreen(
-             //   selectedService = selectedService,
-                navHostController
-            )
-        }
-
-        composable(route = "${ScreenRole.Client.SelectTime.route}") { backStackEntry ->
-            SelectTimeScreen(
-                //   selectedService = selectedService,
-                navHostController
-            )
-        }
-
-
         composable(route = "${ScreenRole.Client.ViewMasterServices.route}/{masterServiceId}") { backStackEntry ->
             val masterServiceId = backStackEntry.arguments?.getString("masterServiceId")?.toLong()
 
-            val mainViewModel = MainViewModel()
             if (masterServiceId != null) {
                 val master = mainViewModel.getMaster(id = masterServiceId)
 
@@ -113,6 +100,29 @@ fun SetupClientNavGraph(
                 )
             }
         }
+
+        composable(route = "${ScreenRole.Client.SelectDate.route}}") { backStackEntry ->
+            SelectDateScreen(
+                // selectedService = selectedService,
+                navHostController
+            )
+        }
+
+        composable(route = "${ScreenRole.Client.SelectTime.route}/{selectedServiceId}") { backStackEntry ->
+            val selectedServiceId =
+                backStackEntry.arguments?.getString("selectedServiceId")?.toLong()
+
+            if (selectedServiceId != null) {
+                val selectedService = mainViewModel.findService(serviceId = selectedServiceId)
+                SelectTimeScreen(
+                    selectedService = selectedService,
+                    navHostController
+                )
+            }
+        }
+
+
+
 
         composable(ScreenRole.Client.PasswordSettings.route) {
             EditPasswordScreen(
@@ -138,5 +148,4 @@ fun SetupClientNavGraph(
             )
         }
     }
-
 }

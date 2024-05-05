@@ -46,7 +46,7 @@ fun ServiceCardClient(singleService: SingleService, navController: NavHostContro
     }
     Column(
         modifier = Modifier
-            .padding(top = 20.dp, start = 8.dp, end = 8.dp)
+            .padding(top = 20.dp, start = 4.dp, end = 4.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
             .background(Color.Black)

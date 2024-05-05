@@ -56,7 +56,8 @@ fun CustomButton(
     height: Dp = buttonHeight,
     heightCoeff: Float = 1f,
     width: Float = 1f,
-    color: Color = Color.Black
+    color: Color = Color.Black,
+    enabled: Boolean = true
 ) {
     Button(
         onClick = navigateTo,
@@ -67,10 +68,12 @@ fun CustomButton(
         shape = RoundedCornerShape(buttonRoundedCorner),
         colors = ButtonDefaults.buttonColors(
             containerColor = color,
-            contentColor = if (color == Color.Black) Color.White else Color.Black
+            contentColor = if (color == Color.Black) Color.White else Color.Black,
+            disabledContainerColor = Color.White ,
+            disabledContentColor = Color.Black
         ),
+        enabled = enabled,
         border = BorderStroke(1.dp, Color.Black)
-
     ) {
         Text(text = buttonText)
     }

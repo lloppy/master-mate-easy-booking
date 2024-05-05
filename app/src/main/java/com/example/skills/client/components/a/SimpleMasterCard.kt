@@ -1,6 +1,5 @@
 package com.example.skills.client.components.a
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.example.skills.R
 import com.example.skills.data.Master
@@ -30,7 +30,11 @@ import com.example.skills.role.ScreenRole
 
 
 @Composable
-fun SimpleMasterCard(master: Master, navController: NavHostController) {
+fun SimpleMasterCard(
+    master: Master,
+    navController: NavHostController,
+    bookingViewModel: BookingViewModel
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -66,6 +70,8 @@ fun SimpleMasterCard(master: Master, navController: NavHostController) {
             }
             IconButton(onClick = {
                 val masterId = master.id.toString()
+                bookingViewModel.data1 = MutableLiveData(masterId)
+
                 navController.navigate("${ScreenRole.Client.ViewMaster.route}/$masterId")
             }) {
                 Icon(Icons.Default.ArrowForwardIos, contentDescription = "icon")

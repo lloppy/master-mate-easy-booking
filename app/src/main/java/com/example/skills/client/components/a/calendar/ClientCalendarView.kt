@@ -1,5 +1,6 @@
 package com.example.skills.client.components.a.calendar
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -128,7 +129,9 @@ fun ClientCalendarView(
                 if (selection.daysBetween != null || selection.startDate != null) {
                     CustomButton(
                         navigateTo = {
-                            navController.navigate("${ScreenRole.Client.SelectTime.route}")
+                            val masterServiceId = master.id
+
+                            navController.navigate("${ScreenRole.Client.SelectTime.route}/${}")
                         },
                         buttonText = "Далее"
                     )
