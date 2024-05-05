@@ -2,6 +2,7 @@ package com.example.skills.client.components.a
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,16 +28,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.skills.R
 import com.example.skills.data.Master
 import com.example.skills.data.Role
 import com.example.skills.master.components.b.calendar.clickable
 import com.example.skills.master.components.d.paddingBetweenText
+import com.example.skills.role.ScreenRole
 import com.example.skills.role.components.CustomButton
 import com.example.skills.ui.theme.fontFamilyInter
 
 @Composable
-fun ViewMasterHead(master: Master) {
+fun ViewMasterHead(master: Master, navController: NavHostController) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
     val imageName = master.imageId ?: "master"
@@ -145,48 +148,15 @@ fun ViewMasterHead(master: Master) {
             )
 
             CustomButton(
-                navigateTo = {},
+                navigateTo = {
+                    val masterServiceId = master.id
+
+                    Log.e("ViewMasterServices","CustomButton id is $masterServiceId")
+                    navController.navigate("${ScreenRole.Client.ViewMasterServices.route}/$masterServiceId")
+                },
                 buttonText = "Записаться",
                 color = Color.Transparent,
             )
         }
     }
-}
-
-
-@Preview
-@Composable
-fun prev() {
-    val imageUrls = listOf(
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-    )
-
-
-    ViewMasterHead(
-        Master(
-            123,
-            "masterivan@gmail.com",
-            "Иван",
-            "Коссе",
-            "79503223232",
-            null,
-            "12345",
-            Role.MASTER,
-            "Ведущий мастер в области макияжа и стилистики с более чем десятилетним опытом. Сотрудничал с известными брендами, работала на крупнейших модных показах и обучала начинающих визажистов.",
-            "https://t.me/lloppy",
-            "г.Екатеринбург, ул.Фонвизина, д.6",
-            imageUrls
-        )
-    )
 }

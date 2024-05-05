@@ -1,14 +1,15 @@
 package com.example.skills.client.navigation.account
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.skills.client.components.a.ClientMastersScreen
+import com.example.skills.client.components.a.MasterServicesScreen
 import com.example.skills.client.components.a.ViewMasterScreen
 import com.example.skills.client.components.b.ClientBookingsScreen
 import com.example.skills.client.components.c.EditClientProfileScreen
+import com.example.skills.data.MainViewModel
 import com.example.skills.master.components.e.EditPasswordScreen
 import com.example.skills.master.components.e.GoogleCalendarScreen
 import com.example.skills.master.components.e.MasterSettingsScreen
@@ -74,8 +75,24 @@ fun SetupClientNavGraph(
 
         composable(route = "${ScreenRole.Client.ViewMaster.route}/{masterId}") { backStackEntry ->
             val masterId = backStackEntry.arguments?.getString("masterId")?.toLong()
-            if(masterId != null){
-                ViewMasterScreen(masterId = masterId, navHostController)
+
+            val mainViewModel = MainViewModel()
+            val master = mainViewModel.getMaster(id = masterId!!)
+
+            ViewMasterScreen(master = master, navHostController)
+        }
+
+        composable(route = "${ScreenRole.Client.ViewMasterServices.route}/{masterServiceId}") { backStackEntry ->
+            val masterServiceId = backStackEntry.arguments?.getString("masterServiceId")?.toLong()
+
+            val mainViewModel = MainViewModel()
+            if (masterServiceId != null) {
+                val master = mainViewModel.getMaster(id = masterServiceId)
+
+                MasterServicesScreen(
+                    master = master,
+                    navController = navHostController
+                )
             }
         }
 

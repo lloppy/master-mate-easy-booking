@@ -6,6 +6,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.example.skills.master.components.d.Category
+import com.example.skills.master.components.d.SingleService
 
 
 // 1
@@ -84,6 +86,44 @@ class MainViewModel : ViewModel() {
         context = activityContext
     }
 
+    val categories = listOf<Category>(
+        Category(
+            "Категория 1",
+            {},
+            singlesCategory = listOf(
+                SingleService(
+                    "Маникюр классический",
+                    "Кутикула аккуратно отодвигается специальным апельсиновым палочкой или мягким пушером, что позволяет избежать порезов и предотвратить возможное воспаление. Этот метод идеален для тех, кто стремится поддерживать ногти в отличном состоянии без риска инфекции.",
+                    800,
+                    45
+                ),
+                SingleService(
+                    "Маникюр европейский",
+                    "Кутикула аккуратно отодвигается специальным апельсиновым палочкой или мягким пушером. Чтобы размягчить грубую кутикулу, ее можно регулярно смазывать",
+                    1000,
+                    55
+                ),
+                SingleService(
+                    "Маникюр классический",
+                    "Процесс включает в себя увлажнение и массаж рук, обработку кутикулы, подпиливание и придание им красивой формы, удаление кутикулы, нанесение крема для ухода за руками и масла для ухода за кутикулой.",
+                    800,
+                    45
+                )
+            )
+        ),
+        Category(
+            "Категория 2", {},
+            singlesCategory = listOf(
+                SingleService(
+                    "Педикюр",
+                    "Расслабляющая ванночка для ног, обработка кутикулы, коррекция формы ногтей, удаление огрубевшей кожи",
+                    1200,
+                    75
+                )
+            )
+        ),
+        Category("Категория 3", {}),
+    )
 
     val imageUrls = listOf(
         Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
@@ -106,7 +146,8 @@ class MainViewModel : ViewModel() {
             "Ведущий мастер в области макияжа и стилистики с более чем десятилетним опытом. Сотрудничал с известными брендами, работала на крупнейших модных показах и обучала начинающих визажистов.",
             "https://t.me/lloppy",
             "г.Екатеринбург, ул.Фонвизина, д.6",
-            imageUrls
+            imageUrls,
+            categories
         ), Master(
             223,
             "Екатерина@gmail.com",
@@ -132,7 +173,8 @@ class MainViewModel : ViewModel() {
             "Ведущий мастер в области макияжа и стилистики с более чем десятилетним опытом. Сотрудничал с известными брендами, работала на крупнейших модных показах и обучала начинающих визажистов.",
             "https://t.me/lloppy",
             "г.Екатеринбург, ул.Фонвизина, д.6",
-            imageUrls
+            imageUrls,
+            categories
         ),
         Master(
             423,
@@ -146,8 +188,10 @@ class MainViewModel : ViewModel() {
             "Ведущий мастер в области макияжа и стилистики с более чем десятилетним опытом. Сотрудничал с известными брендами, работала на крупнейших модных показах и обучала начинающих визажистов.",
             "https://t.me/lloppy",
             "г.Екатеринбург, ул.Фонвизина, д.6",
-            imageUrls
+            imageUrls,
+            categories
         )
     )
 }
+
 

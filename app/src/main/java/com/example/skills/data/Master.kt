@@ -1,6 +1,7 @@
 package com.example.skills.data
 
 import android.net.Uri
+import com.example.skills.master.components.d.Category
 
 data class Master(
     // default
@@ -17,5 +18,6 @@ data class Master(
     var description: String,
     var linkCode: String,
     var address: String,
-    var images: List<Uri>
+    var images: List<Uri>,
+    var categories: List<Category> = emptyList()
 ) : User(id, email, firstName, lastName, phone, imageId, password, role)

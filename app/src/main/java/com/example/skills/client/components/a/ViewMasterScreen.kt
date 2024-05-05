@@ -1,6 +1,5 @@
 package com.example.skills.client.components.a
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,20 +29,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.MainViewModel
+import com.example.skills.data.Master
 import com.example.skills.master.components.a.MasterGallery
 import com.example.skills.master.components.d.CustomAlertDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ViewMasterScreen(
-    masterId: Long,
+    master: Master,
     navController: NavHostController
 ) {
-    Log.e("ViewMasterScreen", "ViewMasterScreen masterId is $masterId")
-
-    val mainViewModel = MainViewModel()
-    val master = mainViewModel.getMaster(id = masterId)
-
     var showDialog by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -87,8 +82,10 @@ fun ViewMasterScreen(
             )
         }
     ) { innerPadding ->
+
         MasterHomeScreen(
             innerPadding,
+            master,
             navController
         )
 
@@ -111,10 +108,9 @@ fun ViewMasterScreen(
 @Composable
 fun MasterHomeScreen(
     innerPadding: PaddingValues,
+    master: Master,
     navController: NavHostController
 ) {
-    val mainViewModel = MainViewModel()
-    val master = mainViewModel.getMaster()
 
     Column(
         modifier = Modifier
@@ -123,7 +119,7 @@ fun MasterHomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        ViewMasterHead(master)
+        ViewMasterHead(master, navController)
         MasterGallery(master.images)
     }
 }

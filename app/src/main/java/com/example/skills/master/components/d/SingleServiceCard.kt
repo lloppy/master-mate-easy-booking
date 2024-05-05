@@ -34,6 +34,7 @@ import com.example.skills.master.components.b.calendar.clickable
 import com.example.skills.master.components.e.lineHeight
 import com.example.skills.role.ScreenRole
 import com.example.skills.role.components.CustomButton
+import okhttp3.Address
 
 
 @Composable
@@ -171,5 +172,6 @@ data class SingleService(
     var name: String,
     var description: String,
     var price: Int,
-    var duration: Int
+    var duration: Int,
+    // var address: String? = null
 )

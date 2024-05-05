@@ -20,6 +20,9 @@ sealed class ScreenRole(val route: String) {
         object Notifications : Master("notifications_screen")
 
         object ViewMaster : Client("view_master/{masterId}")
+        object ViewMasterServices : Client("view_master_services/{masterServiceId}")
+
+
     }
 
     sealed class Master(val masterRoute: String) : ScreenRole("master/$masterRoute") {
