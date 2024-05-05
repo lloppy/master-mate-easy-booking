@@ -1,15 +1,11 @@
 package com.example.skills.master.components.d
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,9 +15,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -40,11 +34,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalViewConfiguration
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -52,7 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.R
-import com.example.skills.master.components.e.lineHeight
 import com.example.skills.role.ScreenRole
 import com.example.skills.role.components.CustomButton
 import com.example.skills.ui.theme.paddingBetweenElements
@@ -87,17 +78,6 @@ fun MasterMyServicesScreen(
                     IconButton(onClick = { /* do something */ }) {
                         Icon(
                             imageVector = ImageVector.vectorResource(id = R.drawable.archive),
-                            contentDescription = "Localized description"
-                        )
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        // тут вопросики как прослеживать текущую выбранную категорию
-                        navController.navigate(ScreenRole.Master.CreateService.route)
-                    }) {
-                        Icon(
-                            imageVector = Icons.Outlined.Add,
                             contentDescription = "Localized description"
                         )
                     }
@@ -175,102 +155,109 @@ fun MasterMyServices(
     Column(
         modifier = Modifier
             .padding(
-                start = 16.dp,
-                end = 16.dp,
-                top = innerPadding.calculateTopPadding().plus(12.dp)
+                top = innerPadding.calculateTopPadding().plus(12.dp),
+                bottom = 100.dp
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        if (categories.size <= 1) {
-            Button(onClick = navigateToCreateCategory, Modifier.weight(1f)) {
-                Text("Добавить категорию")
-            }
-            Text(
-                text = "В вашем списке отсутствуют категории услуг. Чтобы добавить категорию, воспользуйтесь кнопкой выше.",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Normal,
-                color = Color.Gray,
-                modifier = Modifier.padding(start = 12.dp, top = 25.dp)
-            )
-        } else {
-            LazyRow(Modifier.fillMaxWidth()) {
-                items(categories) { category ->
-                    val interactionSource = remember { MutableInteractionSource() }
-                    val viewConfiguration = LocalViewConfiguration.current
-
-                    LaunchedEffect(interactionSource) {
-                        var isLongClick = false
-                        interactionSource.interactions.collectLatest { interaction ->
-                            when (interaction) {
-                                is PressInteraction.Press -> {
-                                    isLongClick = false
-                                    delay(viewConfiguration.longPressTimeoutMillis)
-                                    isLongClick = true
-                                    // categories = categories.filter { it.name != category.name }
-                                    navigateToChangeCategory.invoke()
-                                    // Toast.makeText(context, "Long click", Toast.LENGTH_SHORT).show()
-                                }
-
-                                is PressInteraction.Release -> {
-                                    if (isLongClick.not()) {
-                                        // Toast.makeText(context, "click", Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    CategoryButton(
-                        text = category.name,
-                        onClick = {
-                            category.action.invoke()
-                            selectedCategory = category.name
-                        },
-                        interactionSource = interactionSource,
-                        containerColor = if (category.name == selectedCategory) Color.Black else Color.White,
-                        contentColor = if (category.name == selectedCategory) Color.White else Color.Gray
-                    )
+        Column(
+            Modifier
+                .weight(1f)
+                .padding(
+                    start = 16.dp,
+                    end = 16.dp
+                )
+        ) {
+            if (categories.size <= 1) {
+                Button(onClick = navigateToCreateCategory, Modifier.weight(1f)) {
+                    Text("Добавить категорию")
                 }
-            }
-            val selectedCategoryServices =
-                categories.find { it.name == selectedCategory }?.singlesCategory
-
-            if (selectedCategoryServices != null) {
-                LazyColumn(modifier = Modifier.padding(bottom = 100.dp)) {
-                    items(selectedCategoryServices) { singleService ->
-                        SingleServiceCard(singleService, navController)
-                    }
-                }
-            } else {
                 Text(
-                    text = "В этой категории пока нет услуг. \nЧтобы создать их, нажмите на иконку с плюсом в левом верхнем углу.",
+                    text = "В вашем списке отсутствуют категории услуг. Чтобы добавить категорию, воспользуйтесь кнопкой выше.",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Normal,
                     color = Color.Gray,
                     modifier = Modifier.padding(start = 12.dp, top = 25.dp)
                 )
-            }
-            IconButton(
-                onClick = {
-                    try {
-                        val serviceId = selectedCategory
-                        navController.navigate(
-                            ScreenRole.Master.CreateServiceCard.route.replace(
-                                "{serviceId}",
-                                serviceId
-                            )
+            } else {
+                LazyRow(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 12.dp)) {
+                    items(categories) { category ->
+                        val interactionSource = remember { MutableInteractionSource() }
+                        val viewConfiguration = LocalViewConfiguration.current
+
+                        LaunchedEffect(interactionSource) {
+                            var isLongClick = false
+                            interactionSource.interactions.collectLatest { interaction ->
+                                when (interaction) {
+                                    is PressInteraction.Press -> {
+                                        isLongClick = false
+                                        delay(viewConfiguration.longPressTimeoutMillis)
+                                        isLongClick = true
+                                        // categories = categories.filter { it.name != category.name }
+                                        navigateToChangeCategory.invoke()
+                                        // Toast.makeText(context, "Long click", Toast.LENGTH_SHORT).show()
+                                    }
+
+                                    is PressInteraction.Release -> {
+                                        if (isLongClick.not()) {
+                                            // Toast.makeText(context, "click", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        CategoryButton(
+                            text = category.name,
+                            onClick = {
+                                category.action.invoke()
+                                selectedCategory = category.name
+                            },
+                            interactionSource = interactionSource,
+                            containerColor = if (category.name == selectedCategory) Color.Black else Color.White,
+                            contentColor = if (category.name == selectedCategory) Color.White else Color.Gray
                         )
-                    } catch (e: IllegalArgumentException) { // нужно блин выбрать категорию, а не тыкать в пустоту
                     }
-                },
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    tint = Color.Black,
-                    contentDescription = "Localized description",
-                )
+                }
+                val selectedCategoryServices =
+                    categories.find { it.name == selectedCategory }?.singlesCategory
+
+                if (selectedCategoryServices != null) {
+                    LazyColumn {
+                        items(selectedCategoryServices) { singleService ->
+                            SingleServiceCard(singleService, navController)
+                        }
+                    }
+                } else {
+                    Text(
+                        text = "В этой категории пока нет услуг. \nЧтобы создать их, нажмите на иконку с плюсом в левом верхнем углу.",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color.Gray,
+                        modifier = Modifier.padding(start = 12.dp, top = 25.dp)
+                    )
+                }
             }
         }
+        Spacer(modifier = Modifier.height(12.dp))
+        CustomButton(
+            navigateTo = {
+                try {
+                    val serviceId = selectedCategory
+                    navController.navigate(
+                        ScreenRole.Master.CreateServiceCard.route.replace(
+                            "{serviceId}",
+                            serviceId
+                        )
+                    )
+                } catch (e: IllegalArgumentException) { // нужно блин выбрать категорию, а не тыкать в пустоту
+                }
+            },
+            buttonText = "Добавить услугу"
+        )
     }
 }
 

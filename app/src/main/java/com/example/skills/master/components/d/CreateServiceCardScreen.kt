@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -137,7 +138,8 @@ fun ContentCreateServiceCard(
                         unfocusedLabelColor = Color.Gray,
                         unfocusedBorderColor = Color.Gray
                     ),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    shape = RoundedCornerShape(16.dp)
                 )
                 Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
 
@@ -152,7 +154,8 @@ fun ContentCreateServiceCard(
                         unfocusedLabelColor = Color.Gray,
                         unfocusedBorderColor = Color.Gray
                     ),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    shape = RoundedCornerShape(16.dp)
                 )
                 Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
 
@@ -167,7 +170,8 @@ fun ContentCreateServiceCard(
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedLabelColor = Color.Gray,
                         unfocusedBorderColor = Color.Gray
-                    )
+                    ),
+                    shape = RoundedCornerShape(16.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
