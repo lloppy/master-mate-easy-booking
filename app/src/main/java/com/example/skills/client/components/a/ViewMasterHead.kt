@@ -39,7 +39,7 @@ import com.example.skills.role.components.CustomButton
 import com.example.skills.ui.theme.fontFamilyInter
 
 @Composable
-fun ViewMasterHead(master: Master, navController: NavHostController) {
+fun ViewMasterHead(master: Master, navigateToServices: () -> Unit) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
     val imageName = master.imageId ?: "master"
@@ -149,10 +149,7 @@ fun ViewMasterHead(master: Master, navController: NavHostController) {
 
             CustomButton(
                 navigateTo = {
-                    val masterServiceId = master.id
-
-                    Log.e("ViewMasterServices","CustomButton id is $masterServiceId")
-                    navController.navigate("${ScreenRole.Client.ViewMasterServices.route}/$masterServiceId")
+                    navigateToServices.invoke()
                 },
                 buttonText = "Записаться",
                 color = Color.Transparent,

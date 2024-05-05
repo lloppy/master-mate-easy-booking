@@ -1,5 +1,6 @@
 package com.example.skills.client.components.a
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -36,10 +37,12 @@ import com.example.skills.master.components.d.CustomAlertDialog
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ViewMasterScreen(
-    master: Master,
-    navController: NavHostController
+    bookingViewModel: BookingViewModel,
+    navController: NavHostController,
+    navigateToServices: () -> Unit
 ) {
     var showDialog by remember { mutableStateOf(false) }
+    val master = bookingViewModel.data1.value!!
 
     Scaffold(
         topBar = {
@@ -86,7 +89,7 @@ fun ViewMasterScreen(
         MasterHomeScreen(
             innerPadding,
             master,
-            navController
+            navigateToServices
         )
 
         if (showDialog) {
@@ -109,7 +112,7 @@ fun ViewMasterScreen(
 fun MasterHomeScreen(
     innerPadding: PaddingValues,
     master: Master,
-    navController: NavHostController
+    navigateToServices: () -> Unit
 ) {
 
     Column(
@@ -119,7 +122,7 @@ fun MasterHomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        ViewMasterHead(master, navController)
+        ViewMasterHead(master, navigateToServices)
         MasterGallery(master.images)
     }
 }

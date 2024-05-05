@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.example.skills.data.Master
 import com.example.skills.master.components.b.calendar.clickable
@@ -28,7 +29,12 @@ import com.example.skills.role.ScreenRole
 
 
 @Composable
-fun ServiceCardClient(singleService: SingleService, navController: NavHostController, master: Master) {
+fun ServiceCardClient(
+    singleService: SingleService,
+    navigateToSelectDate: () -> Unit,
+    master: Master,
+    bookingViewModel: BookingViewModel
+) {
     var showDialog by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
 
@@ -51,7 +57,8 @@ fun ServiceCardClient(singleService: SingleService, navController: NavHostContro
             .clip(RoundedCornerShape(20.dp))
             .background(Color.Black)
             .clickable {
-                navController.navigate("${ScreenRole.Client.SelectDate.route}")
+                bookingViewModel.data2 = MutableLiveData(singleService)
+                navigateToSelectDate.invoke()
             },
     ) {
         Column(modifier = Modifier.padding(20.dp)) {

@@ -21,13 +21,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.example.skills.data.MainViewModel
 import com.example.skills.data.Master
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ClientMastersScreen(bookingViewModel: BookingViewModel, navigateToSelectedMasterProfile: () -> Unit) {
+fun ClientMastersScreen(
+    bookingViewModel: BookingViewModel,
+    navigateToSelectedMasterProfile: () -> Unit
+) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -48,13 +50,17 @@ fun ClientMastersScreen(bookingViewModel: BookingViewModel, navigateToSelectedMa
             )
         }
     ) { innerPadding ->
-        ClientMastersContent(innerPadding, navigateToSelectedMasterProfile)
+        ClientMastersContent(innerPadding, navigateToSelectedMasterProfile, bookingViewModel)
     }
 }
 
 
 @Composable
-fun ClientMastersContent(innerPadding: PaddingValues, navigateToSelectedMasterProfile: () -> Unit) {
+fun ClientMastersContent(
+    innerPadding: PaddingValues,
+    navigateToSelectedMasterProfile: () -> Unit,
+    bookingViewModel: BookingViewModel
+) {
     val viewModel = MainViewModel()
 
     val emptyMasters = emptyList<Master>()

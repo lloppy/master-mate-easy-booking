@@ -51,8 +51,9 @@ import kotlinx.coroutines.flow.collectLatest
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MasterServicesScreen(
-    master: Master,
-    navController: NavHostController
+    bookingViewModel: BookingViewModel,
+    navController: NavHostController,
+    navigateToSelectDate: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -84,8 +85,8 @@ fun MasterServicesScreen(
     ) { innerPadding ->
         MasterMyServices(
             innerPadding,
-            master,
-            navController
+            bookingViewModel,
+            navigateToSelectDate
         )
     }
 }
@@ -94,9 +95,10 @@ fun MasterServicesScreen(
 @Composable
 fun MasterMyServices(
     innerPadding: PaddingValues,
-    master: Master,
-    navController: NavHostController
+    bookingViewModel: BookingViewModel,
+    navigateToSelectDate: () -> Unit
 ) {
+    val master = bookingViewModel.data1.value!!
     val categories by remember { mutableStateOf(master.categories) }
 
     var selectedCategory by remember { mutableStateOf(if (categories.isNotEmpty()) categories.first().name else "") }
@@ -142,7 +144,7 @@ fun MasterMyServices(
             if (selectedCategoryServices != null) {
                 LazyColumn(modifier = Modifier.padding(bottom = 100.dp)) {
                     items(selectedCategoryServices) { singleService ->
-                        ServiceCardClient(singleService, navController, master)
+                        ServiceCardClient(singleService, navigateToSelectDate, master, bookingViewModel)
                     }
                 }
             } else {

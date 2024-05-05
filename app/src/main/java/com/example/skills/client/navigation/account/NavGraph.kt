@@ -1,6 +1,8 @@
 package com.example.skills.client.navigation.account
 
+import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -24,6 +26,9 @@ fun SetupClientNavGraph(
     navHostController: NavHostController,
 ) {
     val mainViewModel = MainViewModel()
+
+    // BookingViewModel
+    val bookingViewModel: BookingViewModel = viewModel()
 
     NavHost(
         navController = navHostController,
@@ -67,41 +72,40 @@ fun SetupClientNavGraph(
                 }
             )
         }
-        // BookingViewModel
-        val bookingViewModel = BookingViewModel()
 
         // выбираем мастера из списка мастеров
         composable(route = ScreenClient.ClientMastersScreen.route) {
             ClientMastersScreen(
                 bookingViewModel = bookingViewModel,
                 navigateToSelectedMasterProfile = {
-                    navHostController.navigate("${ScreenClient.ClientBookingsScreen.route}/${bookingViewModel.data1})
+                    navHostController.navigate(ScreenRole.Client.ViewMaster.route)
                 }
             )
         }
 
         // нажимаем на кнопку записаться в профиле выбранного мастера
-        composable(route = "${ScreenRole.Client.ViewMaster.route}/{masterId}") { backStackEntry ->
-            val masterId = backStackEntry.arguments?.getString("masterId")?.toLong()
-            val master = mainViewModel.getMaster(id = masterId!!)
-
-            ViewMasterScreen(master = master, navHostController)
+        composable(route = ScreenRole.Client.ViewMaster.route) {
+            ViewMasterScreen(
+                bookingViewModel,
+                navHostController,
+                navigateToServices = {
+                    navHostController.navigate(ScreenRole.Client.ViewMasterServices.route)
+                }
+            )
         }
 
-        composable(route = "${ScreenRole.Client.ViewMasterServices.route}/{masterServiceId}") { backStackEntry ->
-            val masterServiceId = backStackEntry.arguments?.getString("masterServiceId")?.toLong()
-
-            if (masterServiceId != null) {
-                val master = mainViewModel.getMaster(id = masterServiceId)
-
-                MasterServicesScreen(
-                    master = master,
-                    navController = navHostController
-                )
-            }
+        // экран с категориями и карточками Services
+        composable(route = ScreenRole.Client.ViewMasterServices.route) {
+            MasterServicesScreen(
+                bookingViewModel = bookingViewModel,
+                navController = navHostController,
+                navigateToSelectDate = {
+                    navHostController.navigate(ScreenRole.Client.SelectDate.route)
+                }
+            )
         }
 
-        composable(route = "${ScreenRole.Client.SelectDate.route}}") { backStackEntry ->
+        composable(route = ScreenRole.Client.SelectDate.route) {
             SelectDateScreen(
                 // selectedService = selectedService,
                 navHostController

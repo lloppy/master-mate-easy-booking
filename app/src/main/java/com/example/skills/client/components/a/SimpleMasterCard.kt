@@ -1,5 +1,6 @@
 package com.example.skills.client.components.a
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,7 +33,7 @@ import com.example.skills.role.ScreenRole
 @Composable
 fun SimpleMasterCard(
     master: Master,
-    navController: NavHostController,
+    navigateToSelectedMasterProfile: () -> Unit,
     bookingViewModel: BookingViewModel
 ) {
     Column(
@@ -69,10 +70,10 @@ fun SimpleMasterCard(
                 )
             }
             IconButton(onClick = {
-                val masterId = master.id.toString()
-                bookingViewModel.data1 = MutableLiveData(masterId)
+                bookingViewModel.data1 = MutableLiveData(master)
+                Log.e("bookingViewModel", "SimpleMasterCard bookingViewModel masterId is ${bookingViewModel.data1.value!!.id}")
 
-                navController.navigate("${ScreenRole.Client.ViewMaster.route}/$masterId")
+                navigateToSelectedMasterProfile.invoke()
             }) {
                 Icon(Icons.Default.ArrowForwardIos, contentDescription = "icon")
             }

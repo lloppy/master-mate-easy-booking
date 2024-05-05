@@ -7,7 +7,7 @@ sealed class ScreenClient(val route: String, val iconId: Int) {
         ScreenClient(route = "client_masters_screen", iconId = R.drawable.server)
 
     object ClientBookingsScreen :
-        ScreenClient(route = "client_bookings_screen", iconId = R.drawable.check_square)
+        ScreenClient(route = "all_client_bookings_screen", iconId = R.drawable.check_square)
 
 
     object ClientSettingsScreen :

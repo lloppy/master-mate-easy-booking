@@ -129,9 +129,9 @@ fun ClientCalendarView(
                 if (selection.daysBetween != null || selection.startDate != null) {
                     CustomButton(
                         navigateTo = {
-                            val masterServiceId = master.id
+                         //   val masterServiceId = master.id
 
-                            navController.navigate("${ScreenRole.Client.SelectTime.route}/${}")
+                           // navController.navigate("${ScreenRole.Client.SelectTime.route}/${}")
                         },
                         buttonText = "Далее"
                     )

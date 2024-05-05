@@ -19,10 +19,10 @@ sealed class ScreenRole(val route: String) {
         object EditProfile : Master("edit_profile_screen")
         object Notifications : Master("notifications_screen")
 
-        object ViewMaster : Client("view_master/{masterId}")
-        object ViewMasterServices : Client("view_master_services/{masterServiceId}")
+        object ViewMaster : Client("view_master")
+        object ViewMasterServices : Client("view_master_services")
         object SelectDate : Client("select_date_screen")
-        object SelectTime : Client("select_time_screen/{selectedServiceId}")
+        object SelectTime : Client("select_time_screen")
 
 
     }
