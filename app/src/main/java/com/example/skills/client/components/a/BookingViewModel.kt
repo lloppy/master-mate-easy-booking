@@ -10,7 +10,7 @@ import java.time.LocalTime
 class BookingViewModel: ViewModel() {
     var data1: MutableLiveData<Master> = MutableLiveData() // selected master
     var data2: MutableLiveData<SingleService> = MutableLiveData() // service id
-    val data3: MutableLiveData<LocalDate> = MutableLiveData() // date
-    val data4: MutableLiveData<LocalTime> = MutableLiveData() // time
-    val data5: MutableLiveData<String> = MutableLiveData() // comment (confirm)
+    var data3: MutableLiveData<LocalDate> = MutableLiveData() // date
+    var data4: MutableLiveData<LocalTime> = MutableLiveData() // time
+    var data5: MutableLiveData<String> = MutableLiveData() // comment (confirm)
 }

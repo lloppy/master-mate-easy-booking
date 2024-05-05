@@ -35,21 +35,8 @@ fun ServiceCardClient(
     master: Master,
     bookingViewModel: BookingViewModel
 ) {
-    var showDialog by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
 
-    if (showDialog) {
-        CustomAlertDialog(
-            onDismiss = {
-                showDialog = false
-            },
-            onExit = {
-                showDialog = false
-            },
-            "Удалить услугу",
-            "Услуга будет удалена навсегда без возможности восстановления"
-        )
-    }
     Column(
         modifier = Modifier
             .padding(top = 20.dp, start = 4.dp, end = 4.dp)

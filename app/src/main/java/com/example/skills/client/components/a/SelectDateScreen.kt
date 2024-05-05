@@ -22,13 +22,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.client.components.a.calendar.ClientCalendarView
-import com.example.skills.master.components.d.SingleService
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectDateScreen(
-   // selectedService: SingleService,
-    navController: NavHostController
+    bookingViewModel: BookingViewModel,
+    navController: NavHostController,
+    navigateToSelectTime: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -58,24 +58,25 @@ fun SelectDateScreen(
             )
         }
     ) { innerPadding ->
-        CustomCalendarView(innerPadding, navController)
+        CustomCalendarView(innerPadding, navController, bookingViewModel, navigateToSelectTime)
     }
 }
 
 @Composable
 fun CustomCalendarView(
     innerPadding: PaddingValues,
-    navController: NavHostController
-    // selectedService: SingleService
+    navController: NavHostController,
+    bookingViewModel: BookingViewModel,
+    navigateToSelectTime: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(innerPadding)
+            .padding(top = innerPadding.calculateTopPadding())
     ) {
         ClientCalendarView(
-            // selectedService
-            navController = navController
+            bookingViewModel = bookingViewModel,
+            navigateToSelectTime = navigateToSelectTime
         )
     }
 }

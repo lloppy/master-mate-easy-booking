@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -159,7 +160,8 @@ private fun AddMasterAccountInfo(
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedLabelColor = Color.Gray,
                     unfocusedBorderColor = Color.Gray
-                )
+                ),
+                shape = RoundedCornerShape(16.dp)
             )
 
             Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
@@ -176,7 +178,8 @@ private fun AddMasterAccountInfo(
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedLabelColor = Color.Gray,
                     unfocusedBorderColor = Color.Gray
-                )
+                ),
+                shape = RoundedCornerShape(16.dp)
             )
             Spacer(modifier = Modifier.height(6.dp))
 
@@ -191,7 +194,8 @@ private fun AddMasterAccountInfo(
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedLabelColor = Color.Gray,
                     unfocusedBorderColor = Color.Gray
-                )
+                ),
+                shape = RoundedCornerShape(16.dp)
             )
 
             Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
@@ -207,7 +211,8 @@ private fun AddMasterAccountInfo(
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedLabelColor = Color.Gray,
                     unfocusedBorderColor = Color.Gray
-                )
+                ),
+                shape = RoundedCornerShape(16.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
         }

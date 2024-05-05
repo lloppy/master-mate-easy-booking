@@ -8,6 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.skills.client.components.a.BookingViewModel
 import com.example.skills.client.components.a.ClientMastersScreen
+import com.example.skills.client.components.a.ConfirmClientBookingScreen
+import com.example.skills.client.components.a.DoneClientBookingScreen
 import com.example.skills.client.components.a.MasterServicesScreen
 import com.example.skills.client.components.a.SelectDateScreen
 import com.example.skills.client.components.a.ViewMasterScreen
@@ -105,28 +107,47 @@ fun SetupClientNavGraph(
             )
         }
 
+        // экран с календарем
         composable(route = ScreenRole.Client.SelectDate.route) {
             SelectDateScreen(
-                // selectedService = selectedService,
-                navHostController
+                bookingViewModel = bookingViewModel,
+                navController = navHostController,
+                navigateToSelectTime = {
+                    navHostController.navigate(ScreenRole.Client.SelectTime.route)
+                }
             )
         }
 
-        composable(route = "${ScreenRole.Client.SelectTime.route}/{selectedServiceId}") { backStackEntry ->
-            val selectedServiceId =
-                backStackEntry.arguments?.getString("selectedServiceId")?.toLong()
-
-            if (selectedServiceId != null) {
-                val selectedService = mainViewModel.findService(serviceId = selectedServiceId)
-                SelectTimeScreen(
-                    selectedService = selectedService,
-                    navHostController
-                )
-            }
+        // экран с кружочками временных слотов
+        composable(route = ScreenRole.Client.SelectTime.route) { backStackEntry ->
+            SelectTimeScreen(
+                bookingViewModel = bookingViewModel,
+                navController = navHostController,
+                navigateToConfirmBooking = {
+                    navHostController.navigate(ScreenRole.Client.ConfirmClientBooking.route)
+                }
+            )
         }
 
+        // экран подтверждения и оставления комментария
+        composable(ScreenRole.Client.ConfirmClientBooking.route) {
+            ConfirmClientBookingScreen(
+                navController = navHostController,
+                bookingViewModel = bookingViewModel,
+                navigateToDoneBooking = {
+                    navHostController.navigate(ScreenRole.Client.DoneClientBooking.route)
+                }
+            )
+        }
 
-
+        // экран успешной регистрации
+        composable(ScreenRole.Client.DoneClientBooking.route) {
+            DoneClientBookingScreen(
+                navigateToBookings = {
+                    navHostController.navigate(ScreenClient.ClientBookingsScreen.route)
+                }
+            )
+        }
 
         composable(ScreenRole.Client.PasswordSettings.route) {
             EditPasswordScreen(

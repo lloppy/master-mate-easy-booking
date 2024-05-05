@@ -44,8 +44,7 @@ fun CustomButton(
     }
 }
 
-
-const val buttonRoundedCorner = 16
+val buttonRoundedCorner = 16.dp
 
 
 

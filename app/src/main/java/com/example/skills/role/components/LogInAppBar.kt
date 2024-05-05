@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -116,7 +117,7 @@ fun ContentLogIn(
     navigateToForgotPassword: () -> Unit,
     navigateToMain: () -> Unit
 ) {
-    var email by remember { mutableStateOf("") }
+    val email by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -233,7 +234,8 @@ fun Email(
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedLabelColor = Color.Gray,
             unfocusedBorderColor = Color.Gray
-        )
+        ),
+        shape = RoundedCornerShape(16.dp)
     )
 
     emailState.getError()?.let { error -> TextFieldError(textError = error) }
@@ -313,7 +315,8 @@ fun Password(
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedLabelColor = Color.Gray,
             unfocusedBorderColor = Color.Gray
-        )
+        ),
+        shape = RoundedCornerShape(16.dp)
     )
 }
 

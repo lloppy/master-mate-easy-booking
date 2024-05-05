@@ -1,16 +1,14 @@
-package com.example.skills.client.components.a.calendar
+package com.example.skills.client.components.a
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -24,7 +22,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -34,16 +31,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
-import com.example.skills.client.components.a.BookingViewModel
-import com.example.skills.master.components.d.SingleService
 import com.example.skills.role.components.CustomButton
-import java.time.LocalTime
+import com.example.skills.role.components.CustomOutlinedTextField
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SelectTimeScreen(bookingViewModel: BookingViewModel, navController: NavHostController, navigateToConfirmBooking: () -> Unit) {
+fun ConfirmClientBookingScreen(
+    navController: NavHostController,
+    bookingViewModel: BookingViewModel,
+    navigateToDoneBooking: () -> Unit
+) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -53,7 +52,7 @@ fun SelectTimeScreen(bookingViewModel: BookingViewModel, navController: NavHostC
                 ),
                 title = {
                     Text(
-                        "Выберите время",
+                        "Подтвердите запись",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
@@ -72,80 +71,63 @@ fun SelectTimeScreen(bookingViewModel: BookingViewModel, navController: NavHostC
             )
         }
     ) { innerPadding ->
-        SelectTimeContent(
+        ConfirmClientBookingContent(
             innerPadding,
             bookingViewModel,
-            navigateToConfirmBooking
+            navigateToDoneBooking
         )
     }
 }
 
 
 @Composable
-fun SelectTimeContent(
+fun ConfirmClientBookingContent(
     innerPadding: PaddingValues,
     bookingViewModel: BookingViewModel,
-    navigateToConfirmBooking: () -> Unit
+    navigateToDoneBooking: () -> Unit
 ) {
-    val timeSlots = List(24) {
-        String.format("%02d:%02d", it / 2, (it % 2) * 30)
-    }
-    var selectedTime by remember { mutableStateOf("") }
+    val master = bookingViewModel.data1.value!!
+    val singleService = bookingViewModel.data2.value!!
+    val date = bookingViewModel.data3.value!!
+    val time = bookingViewModel.data4.value!!
+
+    var comment by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(
-                top = innerPadding
-                    .calculateTopPadding()
-                    .plus(16.dp), bottom = 100.dp
-            ),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .padding(top = innerPadding.calculateTopPadding().plus(16.dp), bottom = 100.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column {
+        Column (modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
             Text(
-                text = bookingViewModel.data3.value!!.format(DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))),
+                text = date.format(DateTimeFormatter.ofPattern("d MMMM", Locale("ru")))
+                        + " в " + time.format(DateTimeFormatter.ofPattern("HH:mm")),
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 fontSize = 18.sp,
-                modifier = Modifier.padding(start = 24.dp)
+                modifier = Modifier.padding(start = 8.dp)
             )
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(4),
-                modifier = Modifier.padding(
-                    bottom = 100.dp,
-                    start = 16.dp,
-                    end = 16.dp,
-                    top = 16.dp
+
+            ServiceCardClient(
+                singleService, { }, master, bookingViewModel
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Column (modifier = Modifier.padding(start = 6.dp, end = 6.dp)) {
+                CustomOutlinedTextField(
+                    value = comment,
+                    onValueChange = { comment = it },
+                    label = "Комментарий"
                 )
-            ) {
-                items(timeSlots.size) { index ->
-                    val isSelected = timeSlots[index] == selectedTime
-                    Button(
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isSelected) Color.Black else Color.LightGray,
-                            contentColor = if (isSelected) Color.White else Color.Black
-                        ),
-                        modifier = Modifier.padding(2.dp),
-                        onClick = { selectedTime = timeSlots[index] }
-                    ) {
-                        Text(
-                            text = timeSlots[index],
-                        )
-                    }
-                }
             }
         }
         CustomButton(
             navigateTo = {
-                val parsedTime = LocalTime.parse(selectedTime, DateTimeFormatter.ofPattern("HH:mm"))
-                bookingViewModel.data4 = MutableLiveData(parsedTime)
-
-                navigateToConfirmBooking.invoke()
+                bookingViewModel.data5 = MutableLiveData(comment)
+                navigateToDoneBooking.invoke()
             },
-            buttonText = "Далее",
-            enabled = if (selectedTime.isNotEmpty()) true else false
+            buttonText = "Подтвердить"
         )
     }
 }
