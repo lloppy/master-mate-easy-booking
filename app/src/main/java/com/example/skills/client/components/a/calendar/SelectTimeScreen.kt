@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.example.skills.client.components.a.BookingViewModel
-import com.example.skills.master.components.d.SingleService
 import com.example.skills.role.components.CustomButton
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -43,7 +42,11 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SelectTimeScreen(bookingViewModel: BookingViewModel, navController: NavHostController, navigateToConfirmBooking: () -> Unit) {
+fun SelectTimeScreen(
+    bookingViewModel: BookingViewModel,
+    navController: NavHostController,
+    navigateToConfirmBooking: () -> Unit
+) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -103,9 +106,22 @@ fun SelectTimeContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 16.dp
+                ), verticalArrangement = Arrangement.Top
+        ) {
             Text(
-                text = bookingViewModel.data3.value!!.format(DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))),
+                text = bookingViewModel.data3.value!!.format(
+                    DateTimeFormatter.ofPattern(
+                        "d MMMM",
+                        Locale("ru")
+                    )
+                ),
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 fontSize = 18.sp,
@@ -113,18 +129,15 @@ fun SelectTimeContent(
             )
             LazyVerticalGrid(
                 columns = GridCells.Fixed(4),
-                modifier = Modifier.padding(
-                    bottom = 100.dp,
-                    start = 16.dp,
-                    end = 16.dp,
-                    top = 16.dp
-                )
             ) {
                 items(timeSlots.size) { index ->
                     val isSelected = timeSlots[index] == selectedTime
                     Button(
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isSelected) Color.Black else Color.LightGray,
+                            containerColor = if (isSelected) Color.Black else if (alreadyBooking.contains(
+                                    timeSlots[index]
+                                )
+                            ) Color.Gray else Color.LightGray,
                             contentColor = if (isSelected) Color.White else Color.Black
                         ),
                         modifier = Modifier.padding(2.dp),
@@ -136,6 +149,14 @@ fun SelectTimeContent(
                     }
                 }
             }
+            if (alreadyBooking.contains(selectedTime)) {
+                Text(
+                    text = "Вы выбрали время, которое уже занято другим клиентом, если он отменит запись, вы получете уведомление и сможете подтвердить свою бронь или отказаться",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.LightGray
+                )
+            }
         }
         CustomButton(
             navigateTo = {
@@ -145,7 +166,9 @@ fun SelectTimeContent(
                 navigateToConfirmBooking.invoke()
             },
             buttonText = "Далее",
-            enabled = if (selectedTime.isNotEmpty()) true else false
+            enabled = if (selectedTime.isNotEmpty() && !alreadyBooking.contains(selectedTime)) true else false
         )
     }
 }
+
+val alreadyBooking = listOf("00:00", "07:30", "10:00")
