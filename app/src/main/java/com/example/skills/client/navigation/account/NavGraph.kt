@@ -1,6 +1,5 @@
 package com.example.skills.client.navigation.account
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -38,7 +37,7 @@ fun SetupClientNavGraph(
     ) {
         // done checkbox
         composable(route = ScreenClient.ClientBookingsScreen.route) {
-            ClientBookingsScreen()
+            ClientBookingsScreen(navController = navHostController)
         }
 
         // settings

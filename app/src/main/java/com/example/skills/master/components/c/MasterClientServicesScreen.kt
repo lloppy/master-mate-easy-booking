@@ -158,7 +158,8 @@ fun MasterClientServices(
         LazyColumn(
             Modifier
                 .fillMaxWidth()
-                .padding(bottom = 100.dp)) {
+                .padding(bottom = 100.dp)
+        ) {
             val groupedItems = if (selectedTwoSegment == "Актуальные") {
                 bookingItems.filter { it.status == Status.ACTUAL }.groupByDate()
             } else {
@@ -195,7 +196,8 @@ data class BookingItem(
     val clientName: String,
     val clientAge: Int,
     val status: Status,
-    val isDone: Boolean? = if (status == Status.ACTUAL) null else false
+    val isDone: Boolean? = if (status == Status.ACTUAL) null else false,
+    val comment: String? = null
 )
 
 enum class Status { ACTUAL, ARCHIVE }

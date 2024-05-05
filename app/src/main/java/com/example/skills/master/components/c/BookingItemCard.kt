@@ -27,14 +27,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.example.skills.R
 import com.example.skills.master.components.d.CustomAlertDialog
 import com.example.skills.master.components.e.lineHeight
 
 
 @Composable
-fun BookingItemCard(bookingItem: BookingItem) {
+fun BookingItemCard(bookingItem: BookingItem, isClient: Boolean = false) {
     var showDialog by remember { mutableStateOf(false) }
 
     if (showDialog) {
@@ -46,14 +45,14 @@ fun BookingItemCard(bookingItem: BookingItem) {
                 showDialog = false
             },
             "Отменить запись",
-            "Запись будет отменена, мы уведомим об этом клиента"
+            "Запись будет отменена, мы уведомим об этом " + if (isClient) "мастера" else "клиента"
         )
     }
     Column(
         modifier = Modifier
             .padding(bottom = 10.dp, top = 10.dp, start = 8.dp, end = 8.dp)
             .fillMaxWidth()
-            .height(164.dp.plus(if (bookingItem.status == Status.ARCHIVE) 24.dp else 0.dp))
+            .height(164.dp.plus(if (bookingItem.status == Status.ARCHIVE) 24.dp else 0.dp).minus(if (isClient && bookingItem.comment == null) 24.dp else 0.dp))
             .border(1.dp, Color.LightGray, RoundedCornerShape(20.dp))
             .background(Color.White)
     ) {
@@ -104,10 +103,16 @@ fun BookingItemCard(bookingItem: BookingItem) {
                         .height(40.dp)
                         .align(Alignment.TopEnd)
                 ) {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = {
+                        if (isClient) {
+
+                        }
+                    }) {
                         Icon(
-                            painter = painterResource(id = R.drawable.phone_circle),
-                            contentDescription = "phone",
+                            painter = if (isClient) painterResource(id = R.drawable.edit) else painterResource(
+                                id = R.drawable.phone_circle
+                            ),
+                            contentDescription = "edit/phone",
                             tint = Color.Unspecified
                         )
                     }
@@ -132,15 +137,17 @@ fun BookingItemCard(bookingItem: BookingItem) {
                 maxLines = 1
             )
 
-            Spacer(modifier = Modifier.height(paddingBetweenText))
-            Text(
-                text = "Клиент: ${bookingItem.clientName} ${bookingItem.clientAge} лет  ",
-                color = Color.LightGray,
-                fontWeight = FontWeight.Normal,
-                fontSize = 14.sp,
-                maxLines = 3,
-                lineHeight = lineHeight
-            )
+            if (!(isClient && bookingItem.comment == null)) {
+                Spacer(modifier = Modifier.height(paddingBetweenText))
+                Text(
+                    text = if (!isClient) "Клиент: ${bookingItem.clientName} ${bookingItem.clientAge} лет  " else "Коментарий: ${bookingItem.comment}",
+                    color = Color.LightGray,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp,
+                    maxLines = 3,
+                    lineHeight = lineHeight
+                )
+            }
         }
     }
 }
