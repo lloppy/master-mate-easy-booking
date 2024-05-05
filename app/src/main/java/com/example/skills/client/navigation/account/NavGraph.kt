@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.skills.client.components.a.ClientMastersScreen
 import com.example.skills.client.components.a.MasterServicesScreen
+import com.example.skills.client.components.a.SelectDateScreen
 import com.example.skills.client.components.a.ViewMasterScreen
 import com.example.skills.client.components.b.ClientBookingsScreen
 import com.example.skills.client.components.c.EditClientProfileScreen
@@ -81,6 +82,15 @@ fun SetupClientNavGraph(
 
             ViewMasterScreen(master = master, navHostController)
         }
+
+
+        composable(route = "${ScreenRole.Client.SelectDate.route}") { backStackEntry ->
+            SelectDateScreen(
+             //   selectedService = selectedService,
+                navHostController
+            )
+        }
+
 
         composable(route = "${ScreenRole.Client.ViewMasterServices.route}/{masterServiceId}") { backStackEntry ->
             val masterServiceId = backStackEntry.arguments?.getString("masterServiceId")?.toLong()

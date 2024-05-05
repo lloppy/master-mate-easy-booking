@@ -1,23 +1,17 @@
-package com.example.skills.master.components.b.calendar
+package com.example.skills.client.components.a.calendar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,10 +26,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skills.master.components.b.calendar.ContinuousSelectionHelper.getSelection
+import com.example.skills.master.components.b.calendar.DateSelection
+import com.example.skills.master.components.b.calendar.backgroundHighlight
+import com.example.skills.master.components.b.calendar.clickable
+import com.example.skills.role.components.CustomButton
 import com.kizitonwose.calendar.compose.VerticalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.CalendarDay
@@ -49,7 +46,7 @@ private val selectionColor = primaryColor
 private val continuousSelectionColor = Color.LightGray.copy(alpha = 0.3f)
 
 @Composable
-fun CalendarView(
+fun ClientCalendarView(
     close: () -> Unit = {},
     dateSelected: (startDate: LocalDate, endDate: LocalDate) -> Unit = { _, _ -> },
 ) {
@@ -69,74 +66,66 @@ fun CalendarView(
                 .fillMaxSize()
                 .background(Color.White),
         ) {
-            Column {
-                val calendarState = rememberCalendarState(currentMonth)
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "${monthNames[currentMonth.monthValue - 1]} ${currentMonth.year}".capitalize(),
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        fontSize = 18.sp,
-                        modifier = Modifier.padding(start = 16.dp)
-                    )
-                    Row {
-                        IconButton(onClick = {
-                            currentMonth = currentMonth.minusMonths(1)
-                        }) {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = "Назад")
-                        }
-                        IconButton(onClick = {
-                            currentMonth = currentMonth.plusMonths(1)
-                        }) {
-                            Icon(Icons.Filled.ArrowForward, contentDescription = "Вперед")
-                        }
-                    }
-                }
-                VerticalCalendar(
-                    state = calendarState,
-                    dayContent = { value ->
-                        Day(
-                            value,
-                            today = today,
-                            selection = selection
-                        ) { day ->
-                            if (day.position == DayPosition.MonthDate &&
-                                (day.date == today || day.date.isAfter(today))
-                            ) {
-                                selection = getSelection(
-                                    clickedDate = day.date,
-                                    dateSelection = selection,
-                                )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 100.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    val calendarState = rememberCalendarState(currentMonth)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "${monthNames[currentMonth.monthValue - 1]} ${currentMonth.year}".capitalize(),
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            fontSize = 18.sp,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                        Row {
+                            IconButton(onClick = {
+                                currentMonth = currentMonth.minusMonths(1)
+                            }) {
+                                Icon(Icons.Filled.ArrowBack, contentDescription = "Назад")
+                            }
+                            IconButton(onClick = {
+                                currentMonth = currentMonth.plusMonths(1)
+                            }) {
+                                Icon(Icons.Filled.ArrowForward, contentDescription = "Вперед")
                             }
                         }
-                    },
-                    monthHeader = { month -> MonthHeader(month) },
-                )
-                if (selection.daysBetween != null || selection.startDate != null) {
-                    SelectDateTime(
-                        //onDismissRequest = { dateTimeDialogOpen = false }
+                    }
+                    VerticalCalendar(
+                        state = calendarState,
+                        dayContent = { value ->
+                            Day(
+                                value,
+                                today = today,
+                                selection = selection
+                            ) { day ->
+                                if (day.position == DayPosition.MonthDate &&
+                                    (day.date == today || day.date.isAfter(today))
+                                ) {
+                                    selection = getSelection(
+                                        clickedDate = day.date,
+                                        dateSelection = selection,
+                                    )
+                                }
+                            }
+                        },
+                        monthHeader = { month -> MonthHeader(month) },
                     )
                 }
-            }
-            CalendarBottom(
-                modifier = Modifier
-                    .wrapContentHeight()
-                    .fillMaxWidth()
-                    .background(Color.White)
-                    .align(Alignment.BottomCenter),
-                selection = selection,
-                save = {
-                    val (startDate, endDate) = selection
-                    if (startDate != null && endDate != null) {
-                        dateSelected(startDate, endDate)
-                    }
+                if (selection.daysBetween != null || selection.startDate != null) {
+                    CustomButton(navigateTo = { /*TODO*/ }, buttonText = "Далее")
                 }
-            )
+            }
         }
     }
 }
@@ -198,43 +187,6 @@ private fun MonthHeader(calendarMonth: CalendarMonth) {
         }
     }
 }
-
-@Composable
-private fun CalendarBottom(
-    modifier: Modifier = Modifier,
-    selection: DateSelection,
-    save: () -> Unit,
-) {
-    Column(modifier.fillMaxWidth()) {
-        Divider()
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "Выбрать дни",
-                fontWeight = FontWeight.Bold,
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Button(
-                modifier = Modifier
-                    .height(40.dp)
-                    .width(100.dp),
-                onClick = save,
-                enabled = selection.daysBetween != null,
-            ) {
-                Text(text = "Сохранить")
-            }
-        }
-    }
-}
-
-@Preview(heightDp = 800)
-@Composable
-private fun Example2Preview() {
-    CalendarView()
-}
-
 
 val monthNames = listOf(
     "январь",

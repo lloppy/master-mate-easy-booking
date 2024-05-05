@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.R
+import com.example.skills.data.Master
 import com.example.skills.master.components.b.calendar.clickable
 import com.example.skills.master.components.e.lineHeight
 import com.example.skills.role.ScreenRole

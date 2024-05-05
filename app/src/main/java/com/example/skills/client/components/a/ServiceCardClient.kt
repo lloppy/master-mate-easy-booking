@@ -24,6 +24,7 @@ import com.example.skills.data.Master
 import com.example.skills.master.components.b.calendar.clickable
 import com.example.skills.master.components.d.CustomAlertDialog
 import com.example.skills.master.components.d.SingleService
+import com.example.skills.role.ScreenRole
 
 
 @Composable
@@ -48,7 +49,10 @@ fun ServiceCardClient(singleService: SingleService, navController: NavHostContro
             .padding(top = 20.dp, start = 8.dp, end = 8.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
-            .background(Color.Black),
+            .background(Color.Black)
+            .clickable {
+                navController.navigate("${ScreenRole.Client.SelectDate.route}")
+            },
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Text(
