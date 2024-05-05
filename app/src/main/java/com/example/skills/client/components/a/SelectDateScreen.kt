@@ -22,8 +22,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.client.components.a.calendar.ClientCalendarView
-import com.example.skills.master.components.b.calendar.CalendarView
-import com.example.skills.master.components.d.SingleService
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,19 +57,24 @@ fun SelectDateScreen(
             )
         }
     ) { innerPadding ->
-        CustomCalendarView(innerPadding)
+        CustomCalendarView(innerPadding, navController)
     }
 }
 
 @Composable
 fun CustomCalendarView(
     innerPadding: PaddingValues,
-   // selectedService: SingleService
+    navController: NavHostController
+    // selectedService: SingleService
 ) {
-    Column (modifier = Modifier
-        .fillMaxSize()
-        .padding(innerPadding)){
-        ClientCalendarView(//selectedService
-     )
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+    ) {
+        ClientCalendarView(
+            // selectedService
+            navController = navController
+        )
     }
 }

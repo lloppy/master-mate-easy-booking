@@ -28,10 +28,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.skills.master.components.b.calendar.ContinuousSelectionHelper.getSelection
 import com.example.skills.master.components.b.calendar.DateSelection
 import com.example.skills.master.components.b.calendar.backgroundHighlight
 import com.example.skills.master.components.b.calendar.clickable
+import com.example.skills.role.ScreenRole
 import com.example.skills.role.components.CustomButton
 import com.kizitonwose.calendar.compose.VerticalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
@@ -47,6 +49,7 @@ private val continuousSelectionColor = Color.LightGray.copy(alpha = 0.3f)
 
 @Composable
 fun ClientCalendarView(
+    navController: NavHostController,
     close: () -> Unit = {},
     dateSelected: (startDate: LocalDate, endDate: LocalDate) -> Unit = { _, _ -> },
 ) {
@@ -123,7 +126,12 @@ fun ClientCalendarView(
                     )
                 }
                 if (selection.daysBetween != null || selection.startDate != null) {
-                    CustomButton(navigateTo = { /*TODO*/ }, buttonText = "Далее")
+                    CustomButton(
+                        navigateTo = {
+                            navController.navigate("${ScreenRole.Client.SelectTime.route}")
+                        },
+                        buttonText = "Далее"
+                    )
                 }
             }
         }

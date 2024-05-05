@@ -8,6 +8,7 @@ import com.example.skills.client.components.a.ClientMastersScreen
 import com.example.skills.client.components.a.MasterServicesScreen
 import com.example.skills.client.components.a.SelectDateScreen
 import com.example.skills.client.components.a.ViewMasterScreen
+import com.example.skills.client.components.a.calendar.SelectTimeScreen
 import com.example.skills.client.components.b.ClientBookingsScreen
 import com.example.skills.client.components.c.EditClientProfileScreen
 import com.example.skills.data.MainViewModel
@@ -87,6 +88,13 @@ fun SetupClientNavGraph(
         composable(route = "${ScreenRole.Client.SelectDate.route}") { backStackEntry ->
             SelectDateScreen(
              //   selectedService = selectedService,
+                navHostController
+            )
+        }
+
+        composable(route = "${ScreenRole.Client.SelectTime.route}") { backStackEntry ->
+            SelectTimeScreen(
+                //   selectedService = selectedService,
                 navHostController
             )
         }
