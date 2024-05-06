@@ -1,7 +1,7 @@
 package com.example.skills.role
 
 import androidx.compose.runtime.Composable
-import com.example.skills.data.MainViewModel
+import com.example.skills.data.viewmodel.MainViewModel
 
 @Composable
 fun MainView(

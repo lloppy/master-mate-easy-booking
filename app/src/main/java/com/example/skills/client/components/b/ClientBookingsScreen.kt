@@ -1,20 +1,13 @@
 package com.example.skills.client.components.b
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -26,33 +19,28 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
+import com.example.skills.data.viewmodel.EditBookingViewModel
+import com.example.skills.data.viewmodel.getMaster
 import com.example.skills.master.components.c.BookingItem
 import com.example.skills.master.components.c.BookingItemCard
 import com.example.skills.master.components.c.SegmentText
 import com.example.skills.master.components.c.SegmentedControl
 import com.example.skills.master.components.c.Status
 import com.example.skills.master.components.c.groupByDate
-import com.example.skills.ui.theme.backgroundMaterial
-import com.example.skills.ui.theme.blackMaterial
-import com.example.skills.ui.theme.greenMaterial
-import com.example.skills.ui.theme.orangeMaterial
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ClientBookingsScreen(navController: NavHostController) {
+fun ClientBookingsScreen(navController: NavHostController, editBookingViewModel: EditBookingViewModel) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -73,7 +61,7 @@ fun ClientBookingsScreen(navController: NavHostController) {
             )
         }
     ) { innerPadding ->
-        MasterClientServices(innerPadding, navController)
+        MasterClientServices(innerPadding, navController, editBookingViewModel)
     }
 }
 
@@ -81,6 +69,7 @@ fun ClientBookingsScreen(navController: NavHostController) {
 fun MasterClientServices(
     innerPadding: PaddingValues,
     navController: NavHostController,
+    editBookingViewModel: EditBookingViewModel?
 ) {
     Column(
         modifier = Modifier.padding(
@@ -111,7 +100,8 @@ fun MasterClientServices(
                         "Анкудинова Полина",
                         20,
                         Status.ACTUAL,
-                        comment = "Опоздаю на 10 минут"
+                        comment = "Опоздаю на 10 минут",
+                        masterId = 123
                     ),
                     BookingItem(
                         "Маникюр класический",
@@ -120,7 +110,8 @@ fun MasterClientServices(
                         60,
                         "Анкудинова Полина",
                         20,
-                        Status.ACTUAL
+                        Status.ACTUAL,
+                        masterId = 123
                     ),
                     BookingItem(
                         "Маникюр класический",
@@ -196,7 +187,12 @@ fun MasterClientServices(
                     )
                 }
                 items.forEach { bookingItem ->
-                    item { BookingItemCard(bookingItem, true) }
+                    item {
+                        editBookingViewModel!!.data1 = MutableLiveData(getMaster(bookingItem.masterId))
+                        editBookingViewModel!!.data2 = bookingItem.serviceId
+                        val singleService = editBookingViewModel.data2.value!!
+                        BookingItemCard(bookingItem, true, navController, editBookingViewModel)
+                    }
                 }
             }
         }

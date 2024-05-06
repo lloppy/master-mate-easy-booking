@@ -3,11 +3,12 @@ package com.example.skills.client.components.a
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material.icons.rounded.DeleteOutline
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -21,28 +22,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
-import com.example.skills.data.Master
-import com.example.skills.data.viewmodel.BookingViewModel
-import com.example.skills.master.components.a.MasterGallery
-import com.example.skills.master.components.d.CustomAlertDialog
+import com.example.skills.data.viewmodel.EditBookingViewModel
+import com.example.skills.role.components.CustomButton
+import com.example.skills.role.components.CustomOutlinedTextField
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ViewMasterScreen(
-    bookingViewModel: BookingViewModel,
+fun EditConfirmClientBookingScreen(
     navController: NavHostController,
-    navigateToServices: () -> Unit
+    editBookingViewModel: EditBookingViewModel,
+    navigateToDoneBooking: () -> Unit
 ) {
-    var showDialog by remember { mutableStateOf(false) }
-    val master = bookingViewModel.data1.value!!
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -52,26 +53,13 @@ fun ViewMasterScreen(
                 ),
                 title = {
                     Text(
-                        "${master.firstName} ${master.lastName}",
+                        "Подтвердите изменения",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                     )
-                },
-                actions = {
-                    IconButton(onClick = {
-                        // удаляем из бдшки и обновляем :)
-                        val profileId = master.id
-
-                        showDialog = true
-                    }) {
-                        Icon(
-                            imageVector = Icons.Rounded.DeleteOutline,
-                            contentDescription = "Localized description"
-                        )
-                    }
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
@@ -84,44 +72,63 @@ fun ViewMasterScreen(
             )
         }
     ) { innerPadding ->
-
-        MasterHomeScreen(
+        ConfirmClientBookingContent(
             innerPadding,
-            master,
-            navigateToServices
+            editBookingViewModel,
+            navigateToDoneBooking
         )
-
-        if (showDialog) {
-            CustomAlertDialog(
-                onDismiss = {
-                    showDialog = false
-                },
-                onExit = {
-                    showDialog = false
-                },
-                title = "Удалить мастера",
-                description = "Мастер будет удален из списка мастеров"
-            )
-        }
     }
 }
 
 
 @Composable
-fun MasterHomeScreen(
+fun ConfirmClientBookingContent(
     innerPadding: PaddingValues,
-    master: Master,
-    navigateToServices: () -> Unit
+    editBookingViewModel: EditBookingViewModel,
+    navigateToDoneBooking: () -> Unit
 ) {
+    val master = editBookingViewModel.data1.value!!
+    val singleService = editBookingViewModel.data2.value!!
+    val date = editBookingViewModel.data3.value!!
+    val time = editBookingViewModel.data4.value!!
+
+    var comment by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = innerPadding.calculateTopPadding()),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+            .padding(top = innerPadding.calculateTopPadding().plus(16.dp), bottom = 100.dp),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        ViewMasterHead(master, navigateToServices)
-        MasterGallery(master.images)
+        Column (modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
+            Text(
+                text = date.format(DateTimeFormatter.ofPattern("d MMMM", Locale("ru")))
+                        + " в " + time.format(DateTimeFormatter.ofPattern("HH:mm")),
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(start = 8.dp)
+            )
+
+            ServiceEditCardClient(
+                singleService, { }, master, editBookingViewModel
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Column (modifier = Modifier.padding(start = 6.dp, end = 6.dp)) {
+                CustomOutlinedTextField(
+                    value = comment,
+                    onValueChange = { comment = it },
+                    label = "Комментарий"
+                )
+            }
+        }
+        CustomButton(
+            navigateTo = {
+                editBookingViewModel.data5 = MutableLiveData(comment)
+                navigateToDoneBooking.invoke()
+            },
+            buttonText = "Подтвердить"
+        )
     }
 }

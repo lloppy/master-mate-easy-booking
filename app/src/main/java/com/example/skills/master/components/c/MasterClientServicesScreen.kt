@@ -197,7 +197,10 @@ data class BookingItem(
     val clientAge: Int,
     val status: Status,
     val isDone: Boolean? = if (status == Status.ACTUAL) null else false,
-    val comment: String? = null
+    val comment: String? = null,
+    val clientId: Long? = null,
+    val masterId: Long = 123,
+    val serviceId: Long = 123
 )
 
 enum class Status { ACTUAL, ARCHIVE }

@@ -40,7 +40,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.skills.data.backend.ApiService
 import com.example.skills.data.backend.AuthRequest
 import com.example.skills.role.components.tools.EmailState
 import com.example.skills.role.components.tools.EmailStateSaver

@@ -29,7 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
-import com.example.skills.data.viewmodel.BookingViewModel
+import com.example.skills.data.viewmodel.EditBookingViewModel
 import com.example.skills.master.components.b.calendar.ContinuousSelectionHelper.getSelection
 import com.example.skills.master.components.b.calendar.DateSelection
 import com.example.skills.master.components.b.calendar.backgroundHighlight
@@ -48,8 +48,8 @@ private val selectionColor = primaryColor
 private val continuousSelectionColor = Color.LightGray.copy(alpha = 0.3f)
 
 @Composable
-fun ClientCalendarView(
-    bookingViewModel: BookingViewModel,
+fun ClientCalendarEditView(
+    editBookingViewModel: EditBookingViewModel,
     navigateToSelectTime: () -> Unit,
     close: () -> Unit = {},
     dateSelected: (startDate: LocalDate, endDate: LocalDate) -> Unit = { _, _ -> },
@@ -130,7 +130,7 @@ fun ClientCalendarView(
                 if (selection.daysBetween != null || selection.startDate != null) {
                     CustomButton(
                         navigateTo = {
-                            bookingViewModel.data3 = MutableLiveData(selection.startDate)
+                            editBookingViewModel.data3 = MutableLiveData(selection.startDate)
                             navigateToSelectTime.invoke()
                         },
                         buttonText = "Далее"
@@ -198,18 +198,3 @@ private fun MonthHeader(calendarMonth: CalendarMonth) {
         }
     }
 }
-
-val monthNames = listOf(
-    "январь",
-    "февраль",
-    "март",
-    "апрель",
-    "май",
-    "июнь",
-    "июль",
-    "август",
-    "сентябрь",
-    "октябрь",
-    "ноябрь",
-    "декабрь"
-)

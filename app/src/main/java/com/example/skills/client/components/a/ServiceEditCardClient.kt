@@ -21,17 +21,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import com.example.skills.data.Master
-import com.example.skills.data.viewmodel.BookingViewModel
+import com.example.skills.data.viewmodel.EditBookingViewModel
 import com.example.skills.data.viewmodel.SingleService
 import com.example.skills.master.components.b.calendar.clickable
 
 
 @Composable
-fun ServiceCardClient(
+fun ServiceEditCardClient(
     singleService: SingleService,
     navigateToSelectDate: () -> Unit,
     master: Master,
-    bookingViewModel: BookingViewModel
+    editBookingViewModel: EditBookingViewModel
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -42,7 +42,7 @@ fun ServiceCardClient(
             .clip(RoundedCornerShape(20.dp))
             .background(Color.Black)
             .clickable {
-                bookingViewModel.data2 = MutableLiveData(singleService)
+                editBookingViewModel.data2 = MutableLiveData(singleService)
                 navigateToSelectDate.invoke()
             },
     ) {
@@ -100,5 +100,3 @@ fun ServiceCardClient(
         }
     }
 }
-
-val paddingBetweenText = 7.dp

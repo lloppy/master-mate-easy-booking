@@ -27,13 +27,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.skills.R
+import com.example.skills.data.viewmodel.EditBookingViewModel
 import com.example.skills.master.components.d.CustomAlertDialog
 import com.example.skills.master.components.e.lineHeight
+import com.example.skills.role.ScreenRole
 
 
 @Composable
-fun BookingItemCard(bookingItem: BookingItem, isClient: Boolean = false) {
+fun BookingItemCard(bookingItem: BookingItem, isClient: Boolean = false, navController: NavHostController? = null, editBookingViewMode: EditBookingViewModel? = null) {
+                                                                            // возможны нул значения для мастера, для клиента всегда не нул
     var showDialog by remember { mutableStateOf(false) }
 
     if (showDialog) {
@@ -105,7 +109,7 @@ fun BookingItemCard(bookingItem: BookingItem, isClient: Boolean = false) {
                 ) {
                     IconButton(onClick = {
                         if (isClient) {
-
+                            navController!!.navigate(ScreenRole.Client.EditDate.route)
                         }
                     }) {
                         Icon(

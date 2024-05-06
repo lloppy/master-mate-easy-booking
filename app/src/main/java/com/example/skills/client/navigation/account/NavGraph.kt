@@ -5,17 +5,21 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.skills.client.components.a.BookingViewModel
+import com.example.skills.data.viewmodel.BookingViewModel
 import com.example.skills.client.components.a.ClientMastersScreen
 import com.example.skills.client.components.a.ConfirmClientBookingScreen
 import com.example.skills.client.components.a.DoneClientBookingScreen
+import com.example.skills.data.viewmodel.EditBookingViewModel
+import com.example.skills.client.components.a.EditConfirmClientBookingScreen
+import com.example.skills.client.components.a.EditDateScreen
 import com.example.skills.client.components.a.MasterServicesScreen
 import com.example.skills.client.components.a.SelectDateScreen
 import com.example.skills.client.components.a.ViewMasterScreen
+import com.example.skills.client.components.a.calendar.EditTimeScreen
 import com.example.skills.client.components.a.calendar.SelectTimeScreen
 import com.example.skills.client.components.b.ClientBookingsScreen
 import com.example.skills.client.components.c.EditClientProfileScreen
-import com.example.skills.data.MainViewModel
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.master.components.e.EditPasswordScreen
 import com.example.skills.master.components.e.GoogleCalendarScreen
 import com.example.skills.master.components.e.MasterSettingsScreen
@@ -30,6 +34,7 @@ fun SetupClientNavGraph(
 
     // BookingViewModel
     val bookingViewModel: BookingViewModel = viewModel()
+    val editBookingViewModel: EditBookingViewModel = viewModel()
 
     NavHost(
         navController = navHostController,
@@ -37,7 +42,7 @@ fun SetupClientNavGraph(
     ) {
         // done checkbox
         composable(route = ScreenClient.ClientBookingsScreen.route) {
-            ClientBookingsScreen(navController = navHostController)
+            ClientBookingsScreen(navController = navHostController, editBookingViewModel)
         }
 
         // settings
@@ -117,10 +122,32 @@ fun SetupClientNavGraph(
             )
         }
 
+        // экран с календарем
+        composable(route = ScreenRole.Client.EditDate.route) {
+            EditDateScreen(
+                editBookingViewModel = editBookingViewModel,
+                navController = navHostController,
+                navigateToSelectTime = {
+                    navHostController.navigate(ScreenRole.Client.EditTime.route)
+                }
+            )
+        }
+
         // экран с кружочками временных слотов
         composable(route = ScreenRole.Client.SelectTime.route) { backStackEntry ->
             SelectTimeScreen(
                 bookingViewModel = bookingViewModel,
+                navController = navHostController,
+                navigateToConfirmBooking = {
+                    navHostController.navigate(ScreenRole.Client.ConfirmClientBooking.route)
+                }
+            )
+        }
+
+        // экран с кружочками временных слотов
+        composable(route = ScreenRole.Client.EditTime.route) { backStackEntry ->
+            EditTimeScreen(
+                editBookingViewModel = editBookingViewModel,
                 navController = navHostController,
                 navigateToConfirmBooking = {
                     navHostController.navigate(ScreenRole.Client.ConfirmClientBooking.route)
@@ -133,6 +160,17 @@ fun SetupClientNavGraph(
             ConfirmClientBookingScreen(
                 navController = navHostController,
                 bookingViewModel = bookingViewModel,
+                navigateToDoneBooking = {
+                    navHostController.navigate(ScreenRole.Client.DoneClientBooking.route)
+                }
+            )
+        }
+
+        // экран подтверждения и оставления комментария
+        composable(ScreenRole.Client.EditConfirmClientBooking.route) {
+            EditConfirmClientBookingScreen(
+                navController = navHostController,
+                editBookingViewModel = editBookingViewModel,
                 navigateToDoneBooking = {
                     navHostController.navigate(ScreenRole.Client.DoneClientBooking.route)
                 }

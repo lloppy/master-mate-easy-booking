@@ -1,13 +1,11 @@
 package com.example.skills.client.components.a
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material.icons.rounded.DeleteOutline
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -17,32 +15,22 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.skills.data.Master
-import com.example.skills.data.viewmodel.BookingViewModel
-import com.example.skills.master.components.a.MasterGallery
-import com.example.skills.master.components.d.CustomAlertDialog
+import com.example.skills.client.components.a.calendar.ClientCalendarEditView
+import com.example.skills.data.viewmodel.EditBookingViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ViewMasterScreen(
-    bookingViewModel: BookingViewModel,
+fun EditDateScreen(
+    editBookingViewModel: EditBookingViewModel,
     navController: NavHostController,
-    navigateToServices: () -> Unit
+    navigateToSelectTime: () -> Unit
 ) {
-    var showDialog by remember { mutableStateOf(false) }
-    val master = bookingViewModel.data1.value!!
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -52,26 +40,13 @@ fun ViewMasterScreen(
                 ),
                 title = {
                     Text(
-                        "${master.firstName} ${master.lastName}",
+                        "Измените дату",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                     )
-                },
-                actions = {
-                    IconButton(onClick = {
-                        // удаляем из бдшки и обновляем :)
-                        val profileId = master.id
-
-                        showDialog = true
-                    }) {
-                        Icon(
-                            imageVector = Icons.Rounded.DeleteOutline,
-                            contentDescription = "Localized description"
-                        )
-                    }
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
@@ -84,44 +59,25 @@ fun ViewMasterScreen(
             )
         }
     ) { innerPadding ->
-
-        MasterHomeScreen(
-            innerPadding,
-            master,
-            navigateToServices
-        )
-
-        if (showDialog) {
-            CustomAlertDialog(
-                onDismiss = {
-                    showDialog = false
-                },
-                onExit = {
-                    showDialog = false
-                },
-                title = "Удалить мастера",
-                description = "Мастер будет удален из списка мастеров"
-            )
-        }
+        CustomCalendarView(innerPadding, navController, editBookingViewModel, navigateToSelectTime)
     }
 }
 
-
 @Composable
-fun MasterHomeScreen(
+fun CustomCalendarView(
     innerPadding: PaddingValues,
-    master: Master,
-    navigateToServices: () -> Unit
+    navController: NavHostController,
+    editBookingViewModel: EditBookingViewModel,
+    navigateToSelectTime: () -> Unit
 ) {
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = innerPadding.calculateTopPadding()),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+            .padding(top = innerPadding.calculateTopPadding())
     ) {
-        ViewMasterHead(master, navigateToServices)
-        MasterGallery(master.images)
+        ClientCalendarEditView(
+            editBookingViewModel = editBookingViewModel,
+            navigateToSelectTime = navigateToSelectTime
+        )
     }
 }

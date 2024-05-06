@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
-import com.example.skills.data.viewmodel.BookingViewModel
+import com.example.skills.data.viewmodel.EditBookingViewModel
 import com.example.skills.role.components.CustomButton
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -42,8 +42,8 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SelectTimeScreen(
-    bookingViewModel: BookingViewModel,
+fun EditTimeScreen(
+    editBookingViewModel: EditBookingViewModel,
     navController: NavHostController,
     navigateToConfirmBooking: () -> Unit
 ) {
@@ -56,7 +56,7 @@ fun SelectTimeScreen(
                 ),
                 title = {
                     Text(
-                        "Выберите время",
+                        "Измените время",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
@@ -77,7 +77,7 @@ fun SelectTimeScreen(
     ) { innerPadding ->
         SelectTimeContent(
             innerPadding,
-            bookingViewModel,
+            editBookingViewModel,
             navigateToConfirmBooking
         )
     }
@@ -87,7 +87,7 @@ fun SelectTimeScreen(
 @Composable
 fun SelectTimeContent(
     innerPadding: PaddingValues,
-    bookingViewModel: BookingViewModel,
+    editBookingViewModel: EditBookingViewModel,
     navigateToConfirmBooking: () -> Unit
 ) {
     val timeSlots = List(24) {
@@ -116,7 +116,7 @@ fun SelectTimeContent(
                 ), verticalArrangement = Arrangement.Top
         ) {
             Text(
-                text = bookingViewModel.data3.value!!.format(
+                text = editBookingViewModel.data3.value!!.format(
                     DateTimeFormatter.ofPattern(
                         "d MMMM",
                         Locale("ru")
@@ -161,7 +161,7 @@ fun SelectTimeContent(
         CustomButton(
             navigateTo = {
                 val parsedTime = LocalTime.parse(selectedTime, DateTimeFormatter.ofPattern("HH:mm"))
-                bookingViewModel.data4 = MutableLiveData(parsedTime)
+                editBookingViewModel.data4 = MutableLiveData(parsedTime)
 
                 navigateToConfirmBooking.invoke()
             },
@@ -170,5 +170,3 @@ fun SelectTimeContent(
         )
     }
 }
-
-val alreadyBooking = listOf("00:00", "07:30", "10:00")

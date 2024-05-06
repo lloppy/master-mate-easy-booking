@@ -24,10 +24,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
-import androidx.navigation.NavHostController
 import com.example.skills.R
 import com.example.skills.data.Master
-import com.example.skills.role.ScreenRole
+import com.example.skills.data.viewmodel.BookingViewModel
 
 
 @Composable

@@ -1,9 +1,8 @@
-package com.example.skills.client.components.a
+package com.example.skills.data.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.skills.data.Master
-import com.example.skills.master.components.d.SingleService
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -14,3 +13,12 @@ class BookingViewModel: ViewModel() {
     var data4: MutableLiveData<LocalTime> = MutableLiveData() // time
     var data5: MutableLiveData<String> = MutableLiveData() // comment (confirm)
 }
+
+data class SingleService(
+    val serviceId: Long,
+    var name: String,
+    var description: String,
+    var price: Int,
+    var duration: Int,
+    // var address: String? = null
+)
