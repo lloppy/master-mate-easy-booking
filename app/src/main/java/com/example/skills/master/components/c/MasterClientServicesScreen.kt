@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.models.RecordItem
 import com.example.skills.data.models.Status
-import com.example.skills.data.viewmodel.recordsItemList
+import com.example.skills.data.viewmodel.MyRepository.getRecordsItemList
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -64,7 +64,7 @@ fun MasterClientServices(
     innerPadding: PaddingValues,
     navController: NavHostController,
 ) {
-    val recordItems by remember { mutableStateOf(recordsItemList) }
+    val recordItems by remember { mutableStateOf(getRecordsItemList()) }
 
     val twoSegments = remember { listOf("Актуальные", "История") }
     var selectedTwoSegment by remember { mutableStateOf(twoSegments.first()) }

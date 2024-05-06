@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.viewmodel.BookingViewModel
+import com.example.skills.data.viewmodel.MyRepository
 import com.example.skills.ui.theme.paddingBetweenElements
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -93,7 +94,8 @@ fun MasterMyServices(
     val master = bookingViewModel.data1.value!!
 
     val categories by remember(master) {
-        mutableStateOf(master.services.map { it.category }.toSet().toList())
+        val servicesBelongingToMaster = MyRepository.getServices().filter { it.master == master }
+        mutableStateOf(servicesBelongingToMaster.map { it.category }.toSet().toList())
     }
 
     var selectedCategory by remember { mutableStateOf(if (categories.isNotEmpty()) categories.first().name else "") }
@@ -134,7 +136,8 @@ fun MasterMyServices(
                 }
             }
 
-            val selectedServicesByCategory = master.services.filter { it.category.name == selectedCategory }
+            val selectedServicesByCategory = MyRepository.getServices()
+                .filter { it.master == master && it.category.name == selectedCategory }
 
             if (selectedServicesByCategory != null) {
                 LazyColumn(modifier = Modifier.padding(bottom = 100.dp)) {

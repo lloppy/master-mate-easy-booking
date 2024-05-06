@@ -14,8 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -44,8 +42,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.R
-import com.example.skills.data.viewmodel.categories
-import com.example.skills.data.viewmodel.services
+import com.example.skills.data.viewmodel.MyRepository.getCategories
+import com.example.skills.data.viewmodel.MyRepository.getServices
 import com.example.skills.role.ScreenRole
 import com.example.skills.role.components.CustomButton
 import com.example.skills.ui.theme.paddingBetweenElements
@@ -105,9 +103,8 @@ fun MasterMyServices(
     navController: NavHostController
 ) {
 
-//                Category("Добавить категорию", navigateToCreateCategory)
-
-    var selectedCategory by remember { mutableStateOf(if (categories.isNotEmpty()) categories.first().name else "") }
+//  Category("Добавить категорию", navigateToCreateCategory)
+    var selectedCategory by remember { mutableStateOf(if (getCategories().isNotEmpty()) getCategories().first().name else "") }
 
     Column(
         modifier = Modifier
@@ -126,7 +123,7 @@ fun MasterMyServices(
                     end = 16.dp
                 )
         ) {
-            if (categories.size <= 1) {
+            if (getCategories().size <= 1) {
                 Button(onClick = navigateToCreateCategory, Modifier.weight(1f)) {
                     Text("Добавить категорию")
                 }
@@ -141,8 +138,9 @@ fun MasterMyServices(
                 LazyRow(
                     Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 12.dp)) {
-                    items(categories) { category ->
+                        .padding(bottom = 12.dp)
+                ) {
+                    items(getCategories()) { category ->
                         val interactionSource = remember { MutableInteractionSource() }
                         val viewConfiguration = LocalViewConfiguration.current
 
@@ -180,7 +178,8 @@ fun MasterMyServices(
                     }
                 }
 
-                val selectedServicesByCategory = services.filter { it.category.name == selectedCategory }
+                val selectedServicesByCategory =
+                    getServices().filter { it.category.name == selectedCategory }
 
                 if (selectedServicesByCategory != null) {
                     LazyColumn {

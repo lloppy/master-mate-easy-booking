@@ -24,7 +24,8 @@ import androidx.compose.ui.unit.sp
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.Master
 import com.example.skills.data.viewmodel.BookingViewModel
-import com.example.skills.data.viewmodel.getMastersList
+import com.example.skills.data.viewmodel.MyRepository
+import com.example.skills.data.viewmodel.MyRepository.getMastersList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
