@@ -21,9 +21,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.Master
 import com.example.skills.data.viewmodel.BookingViewModel
+import com.example.skills.data.viewmodel.MainViewModel
+import com.example.skills.data.viewmodel.MyRepository.getMastersList
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,9 +65,7 @@ fun ClientMastersContent(
     bookingViewModel: BookingViewModel
 ) {
     val emptyMasters = emptyList<Master>()
-
-    val mainViewModel = MainViewModel()
-    val masters = mainViewModel.getMastersList()
+    val masters = getMastersList()
 
     Column(
         modifier = Modifier

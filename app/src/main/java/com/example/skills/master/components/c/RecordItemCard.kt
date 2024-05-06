@@ -67,7 +67,7 @@ fun RecordItemCard(
             .fillMaxWidth()
             .height(
                 164.dp
-                    .plus(if (recordItem.status == RecordStatus.ARCHIVE) 24.dp else 0.dp)
+                    .plus(if (recordItem.recordStatus == RecordStatus.ARCHIVE) 24.dp else 0.dp)
                     .minus(if (isClient && recordItem.comment == null) 24.dp else 0.dp)
             )
             .border(1.dp, Color.LightGray, RoundedCornerShape(20.dp))
@@ -78,7 +78,7 @@ fun RecordItemCard(
             val timeEnd = recordItem.timeFrom.plusMinutes(recordItem.duration.toLong())
             Box(modifier = Modifier.fillMaxWidth()) {
                 Column {
-                    if (recordItem.status == RecordStatus.ARCHIVE) {
+                    if (recordItem.recordStatus == RecordStatus.ARCHIVE) {
                         if (recordItem.isDone!!) {
                             BadgeCard("Выполнена", Color(41, 174, 41))
                         } else {
@@ -127,7 +127,7 @@ fun RecordItemCard(
                             tint = Color.Unspecified
                         )
                     }
-                    if (recordItem.status == RecordStatus.ACTUAL) {
+                    if (recordItem.recordStatus == RecordStatus.ACTUAL) {
                         IconButton(onClick = { showDialog = true }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.close_circle),

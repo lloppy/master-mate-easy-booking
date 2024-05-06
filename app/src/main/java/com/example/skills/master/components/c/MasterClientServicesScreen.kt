@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.models.RecordItem
 import com.example.skills.data.models.RecordStatus
-import com.example.skills.data.viewmodel.MainViewModel
+import com.example.skills.data.viewmodel.MyRepository.getRecordsItemList
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -64,8 +64,7 @@ fun MasterClientServices(
     innerPadding: PaddingValues,
     navController: NavHostController,
 ) {
-    val mainViewModel = MainViewModel()
-    val recordItems by remember { mutableStateOf(mainViewModel.recordsItemList) }
+    val recordItems by remember { mutableStateOf(getRecordsItemList()) }
 
     val twoSegments = remember { listOf("Актуальные", "История") }
     var selectedTwoSegment by remember { mutableStateOf(twoSegments.first()) }
@@ -92,9 +91,9 @@ fun MasterClientServices(
                 .padding(bottom = 100.dp)
         ) {
             val groupedItems = if (selectedTwoSegment == "Актуальные") {
-                recordItems.filter { it.status == RecordStatus.ACTUAL }.groupByDate()
+                recordItems.filter { it.recordStatus == RecordStatus.ACTUAL }.groupByDate()
             } else {
-                recordItems.filter { it.status == RecordStatus.ARCHIVE }.groupByDate()
+                recordItems.filter { it.recordStatus == RecordStatus.ARCHIVE }.groupByDate()
             }
             groupedItems.forEach { (date, items) ->
                 item {

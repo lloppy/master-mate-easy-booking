@@ -19,5 +19,4 @@ data class Master(
     var linkCode: String,
     var address: String,
     var images: List<Uri>,
-    var services: List<Service> = emptyList()
 ) : User(id, email, firstName, lastName, phone, imageId, password, role)

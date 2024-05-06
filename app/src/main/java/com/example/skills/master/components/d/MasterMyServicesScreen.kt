@@ -42,7 +42,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.R
-import com.example.skills.data.viewmodel.MainViewModel
+import com.example.skills.data.viewmodel.MyRepository.getCategories
+import com.example.skills.data.viewmodel.MyRepository.getServices
 import com.example.skills.role.ScreenRole
 import com.example.skills.role.components.CustomButton
 import com.example.skills.ui.theme.paddingBetweenElements
@@ -101,10 +102,8 @@ fun MasterMyServices(
     navigateToChangeCategory: () -> Unit,
     navController: NavHostController
 ) {
-
-//                Category("Добавить категорию", navigateToCreateCategory)
-    val mainViewModel = MainViewModel()
-    var selectedCategory by remember { mutableStateOf(if (mainViewModel.categories.isNotEmpty()) mainViewModel.categories.first().name else "") }
+//  Category("Добавить категорию", navigateToCreateCategory)
+    var selectedCategory by remember { mutableStateOf(if (getCategories().isNotEmpty()) getCategories().first().name else "") }
 
     Column(
         modifier = Modifier
@@ -123,7 +122,7 @@ fun MasterMyServices(
                     end = 16.dp
                 )
         ) {
-            if (mainViewModel.categories.size <= 1) {
+            if (getCategories().size <= 1) {
                 Button(onClick = navigateToCreateCategory, Modifier.weight(1f)) {
                     Text("Добавить категорию")
                 }
@@ -140,7 +139,7 @@ fun MasterMyServices(
                         .fillMaxWidth()
                         .padding(bottom = 12.dp)
                 ) {
-                    items(mainViewModel.categories) { category ->
+                    items(getCategories()) { category ->
                         val interactionSource = remember { MutableInteractionSource() }
                         val viewConfiguration = LocalViewConfiguration.current
 
@@ -179,7 +178,7 @@ fun MasterMyServices(
                 }
 
                 val selectedServicesByCategory =
-                    mainViewModel.services.filter { it.category.name == selectedCategory }
+                    getServices().filter { it.category.name == selectedCategory }
 
                 if (selectedServicesByCategory != null) {
                     LazyColumn {

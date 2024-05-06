@@ -25,15 +25,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.Master
-import com.example.skills.data.viewmodel.MainViewModel
+import com.example.skills.data.viewmodel.MyRepository.getMaster
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainMasterScreen(
     navController: NavHostController
 ) {
-    val mainViewModel = MainViewModel()
-    val master = mainViewModel.getMaster()
+    val master = getMaster()
 
     Scaffold(
         topBar = {

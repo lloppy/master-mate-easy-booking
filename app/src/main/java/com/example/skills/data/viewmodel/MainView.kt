@@ -1,4 +1,4 @@
-package com.example.skills.role
+package com.example.skills.data.viewmodel
 
 import androidx.compose.runtime.Composable
 import com.example.skills.data.viewmodel.MainViewModel

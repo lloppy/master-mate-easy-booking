@@ -1,5 +1,6 @@
 package com.example.skills.client.components.b
 
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -24,11 +25,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.example.skills.data.models.RecordStatus
 import com.example.skills.data.viewmodel.EditBookingViewModel
-import com.example.skills.data.viewmodel.MainViewModel
+import com.example.skills.data.viewmodel.MyRepository.getRecordsItemList
 import com.example.skills.master.components.c.RecordItemCard
 import com.example.skills.master.components.c.SegmentText
 import com.example.skills.master.components.c.SegmentedControl
@@ -79,8 +79,7 @@ fun MasterClientServices(
             end = 16.dp
         )
     ) {
-        val mainViewModel = MainViewModel()
-        val records by remember { mutableStateOf(mainViewModel.recordsItemList) }
+        val records by remember { mutableStateOf(getRecordsItemList()) }
 
         val twoSegments = remember { listOf("Актуальные", "История") }
         var selectedTwoSegment by remember { mutableStateOf(twoSegments.first()) }
@@ -101,9 +100,9 @@ fun MasterClientServices(
                 .padding(bottom = 100.dp)
         ) {
             val groupedItems = if (selectedTwoSegment == "Актуальные") {
-                records.filter { it.status == RecordStatus.ACTUAL }.groupByDate()
+                records.filter { it.recordStatus == RecordStatus.ACTUAL }.groupByDate()
             } else {
-                records.filter { it.status == RecordStatus.ARCHIVE }.groupByDate()
+                records.filter { it.recordStatus == RecordStatus.ARCHIVE }.groupByDate()
             }
             groupedItems.forEach { (date, items) ->
                 item {
@@ -118,10 +117,9 @@ fun MasterClientServices(
                 }
                 items.forEach { recordItem ->
                     item {
-                        editBookingViewModel!!.data1 =
-                            MutableLiveData(mainViewModel.getMaster(recordItem.masterId))
-                        editBookingViewModel.data2 =
-                            MutableLiveData(mainViewModel.getService(recordItem.serviceId))
+
+                        //  editBookingViewModel!!.data1 = MutableLiveData(getMaster(recordItem.masterId))
+                        //  editBookingViewModel.data2 = MutableLiveData(getService(recordItem.serviceId))
 
                         RecordItemCard(recordItem, true, navController, editBookingViewModel)
                     }
