@@ -286,10 +286,3 @@ fun CategoryButton(
         Text(text = text, fontSize = 14.sp, fontWeight = FontWeight.Normal)
     }
 }
-
-
-data class Category(
-    val name: String,
-    var action: () -> Unit,
-    val singlesCategory: List<SingleService>? = null
-)

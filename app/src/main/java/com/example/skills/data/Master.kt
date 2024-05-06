@@ -1,7 +1,7 @@
 package com.example.skills.data
 
 import android.net.Uri
-import com.example.skills.master.components.d.Category
+import com.example.skills.data.models.Service
 
 data class Master(
     // default
@@ -12,12 +12,12 @@ data class Master(
     override var phone: String,
     override var imageId: String?,
     override var password: String,
-    override var role: Role = Role.CLIENT,
+    override var role: Role = Role.MASTER,
 
     // extended
     var description: String,
     var linkCode: String,
     var address: String,
     var images: List<Uri>,
-    var categories: List<Category> = emptyList()
+    var services: List<Service> = emptyList()
 ) : User(id, email, firstName, lastName, phone, imageId, password, role)
