@@ -12,6 +12,7 @@ import com.example.skills.client.components.a.DoneClientBookingScreen
 import com.example.skills.data.viewmodel.EditBookingViewModel
 import com.example.skills.client.components.a.EditConfirmClientBookingScreen
 import com.example.skills.client.components.a.EditDateScreen
+import com.example.skills.client.components.a.EditDoneClientBookingScreen
 import com.example.skills.client.components.a.MasterServicesScreen
 import com.example.skills.client.components.a.SelectDateScreen
 import com.example.skills.client.components.a.ViewMasterScreen
@@ -150,7 +151,7 @@ fun SetupClientNavGraph(
                 editBookingViewModel = editBookingViewModel,
                 navController = navHostController,
                 navigateToConfirmBooking = {
-                    navHostController.navigate(ScreenRole.Client.ConfirmClientBooking.route)
+                    navHostController.navigate(ScreenRole.Client.EditConfirmClientBooking.route)
                 }
             )
         }
@@ -172,7 +173,7 @@ fun SetupClientNavGraph(
                 navController = navHostController,
                 editBookingViewModel = editBookingViewModel,
                 navigateToDoneBooking = {
-                    navHostController.navigate(ScreenRole.Client.DoneClientBooking.route)
+                    navHostController.navigate(ScreenRole.Client.EditDoneClientBooking.route)
                 }
             )
         }
@@ -180,6 +181,15 @@ fun SetupClientNavGraph(
         // экран успешной регистрации
         composable(ScreenRole.Client.DoneClientBooking.route) {
             DoneClientBookingScreen(
+                navigateToBookings = {
+                    navHostController.navigate(ScreenClient.ClientBookingsScreen.route)
+                }
+            )
+        }
+
+        // экран успешной регистрации после изменения
+        composable(ScreenRole.Client.EditDoneClientBooking.route) {
+            EditDoneClientBookingScreen(
                 navigateToBookings = {
                     navHostController.navigate(ScreenClient.ClientBookingsScreen.route)
                 }

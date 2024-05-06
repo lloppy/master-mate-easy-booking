@@ -28,11 +28,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.example.skills.R
 import com.example.skills.data.models.RecordItem
 import com.example.skills.data.models.RecordStatus
 import com.example.skills.data.viewmodel.EditBookingViewModel
+import com.example.skills.data.viewmodel.MyRepository.getMaster
+import com.example.skills.data.viewmodel.MyRepository.getService
 import com.example.skills.master.components.d.CustomAlertDialog
 import com.example.skills.master.components.e.lineHeight
 import com.example.skills.role.ScreenRole
@@ -116,11 +119,21 @@ fun RecordItemCard(
                 ) {
                     IconButton(onClick = {
                         if (isClient) {
-                            navController!!.navigate(ScreenRole.Client.EditDate.route)
+                            try {
+                                editBookingViewModel!!.data1 =
+                                    MutableLiveData(getMaster(recordItem.masterId))
+                                editBookingViewModel.data2 =
+                                    MutableLiveData(getService(recordItem.serviceId))
+
+                                navController!!.navigate(ScreenRole.Client.EditDate.route)
+                            } catch (e: NullPointerException) {
+                            }
                         }
                     }) {
                         Icon(
-                            painter = if (isClient) painterResource(id = R.drawable.edit) else painterResource(
+                            painter = if (isClient) {
+                                painterResource(id = R.drawable.edit)
+                            } else painterResource(
                                 id = R.drawable.phone_circle
                             ),
                             contentDescription = "edit/phone",

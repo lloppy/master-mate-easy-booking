@@ -28,6 +28,7 @@ sealed class ScreenRole(val route: String) {
         object ConfirmClientBooking : Client("confirm_client_booking_screen")
         object EditConfirmClientBooking : Client("edit_confirm_client_booking_screen")
         object DoneClientBooking : Client("done_client_booking_screen")
+        object EditDoneClientBooking : Client("edit_done_client_booking_screen")
 
 
     }

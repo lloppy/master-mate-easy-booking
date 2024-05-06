@@ -25,10 +25,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.example.skills.data.models.RecordStatus
 import com.example.skills.data.viewmodel.EditBookingViewModel
+import com.example.skills.data.viewmodel.MyRepository.getMaster
 import com.example.skills.data.viewmodel.MyRepository.getRecordsItemList
+import com.example.skills.data.viewmodel.MyRepository.getService
 import com.example.skills.master.components.c.RecordItemCard
 import com.example.skills.master.components.c.SegmentText
 import com.example.skills.master.components.c.SegmentedControl
@@ -117,10 +120,6 @@ fun MasterClientServices(
                 }
                 items.forEach { recordItem ->
                     item {
-
-                        //  editBookingViewModel!!.data1 = MutableLiveData(getMaster(recordItem.masterId))
-                        //  editBookingViewModel.data2 = MutableLiveData(getService(recordItem.serviceId))
-
                         RecordItemCard(recordItem, true, navController, editBookingViewModel)
                     }
                 }
