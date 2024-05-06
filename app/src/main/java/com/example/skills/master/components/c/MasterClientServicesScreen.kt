@@ -26,8 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.models.RecordItem
-import com.example.skills.data.models.Status
-import com.example.skills.data.viewmodel.recordsItemList
+import com.example.skills.data.models.RecordStatus
+import com.example.skills.data.viewmodel.MainViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -64,7 +64,8 @@ fun MasterClientServices(
     innerPadding: PaddingValues,
     navController: NavHostController,
 ) {
-    val recordItems by remember { mutableStateOf(recordsItemList) }
+    val mainViewModel = MainViewModel()
+    val recordItems by remember { mutableStateOf(mainViewModel.recordsItemList) }
 
     val twoSegments = remember { listOf("Актуальные", "История") }
     var selectedTwoSegment by remember { mutableStateOf(twoSegments.first()) }
@@ -91,9 +92,9 @@ fun MasterClientServices(
                 .padding(bottom = 100.dp)
         ) {
             val groupedItems = if (selectedTwoSegment == "Актуальные") {
-                recordItems.filter { it.status == Status.ACTUAL }.groupByDate()
+                recordItems.filter { it.status == RecordStatus.ACTUAL }.groupByDate()
             } else {
-                recordItems.filter { it.status == Status.ARCHIVE }.groupByDate()
+                recordItems.filter { it.status == RecordStatus.ARCHIVE }.groupByDate()
             }
             groupedItems.forEach { (date, items) ->
                 item {
@@ -115,6 +116,6 @@ fun MasterClientServices(
 }
 
 fun List<RecordItem>.groupByDate(): Map<LocalDate, List<RecordItem>> {
-    return this.groupBy { it.timeStart.toLocalDate() }
+    return this.groupBy { it.timeFrom.toLocalDate() }
 }
 

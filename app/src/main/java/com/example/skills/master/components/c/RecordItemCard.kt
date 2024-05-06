@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.R
 import com.example.skills.data.models.RecordItem
-import com.example.skills.data.models.Status
+import com.example.skills.data.models.RecordStatus
 import com.example.skills.data.viewmodel.EditBookingViewModel
 import com.example.skills.master.components.d.CustomAlertDialog
 import com.example.skills.master.components.e.lineHeight
@@ -67,7 +67,7 @@ fun RecordItemCard(
             .fillMaxWidth()
             .height(
                 164.dp
-                    .plus(if (recordItem.status == Status.ARCHIVE) 24.dp else 0.dp)
+                    .plus(if (recordItem.status == RecordStatus.ARCHIVE) 24.dp else 0.dp)
                     .minus(if (isClient && recordItem.comment == null) 24.dp else 0.dp)
             )
             .border(1.dp, Color.LightGray, RoundedCornerShape(20.dp))
@@ -75,10 +75,10 @@ fun RecordItemCard(
     ) {
         Column(modifier = Modifier.padding(start = 20.dp, end = 15.dp)) {
             Spacer(modifier = Modifier.height(paddingBetweenText.plus(paddingBetweenText)))
-            val timeEnd = recordItem.timeStart.plusMinutes(recordItem.duration.toLong())
+            val timeEnd = recordItem.timeFrom.plusMinutes(recordItem.duration.toLong())
             Box(modifier = Modifier.fillMaxWidth()) {
                 Column {
-                    if (recordItem.status == Status.ARCHIVE) {
+                    if (recordItem.status == RecordStatus.ARCHIVE) {
                         if (recordItem.isDone!!) {
                             BadgeCard("Выполнена", Color(41, 174, 41))
                         } else {
@@ -86,8 +86,8 @@ fun RecordItemCard(
                         }
                     }
                     Text(
-                        text = "${String.format("%02d", recordItem.timeStart.hour)}:${
-                            String.format("%02d", recordItem.timeStart.minute)
+                        text = "${String.format("%02d", recordItem.timeFrom.hour)}:${
+                            String.format("%02d", recordItem.timeFrom.minute)
                         } - ${String.format("%02d", timeEnd.hour)}:${
                             String.format("%02d", timeEnd.minute)
                         }",
@@ -127,7 +127,7 @@ fun RecordItemCard(
                             tint = Color.Unspecified
                         )
                     }
-                    if (recordItem.status == Status.ACTUAL) {
+                    if (recordItem.status == RecordStatus.ACTUAL) {
                         IconButton(onClick = { showDialog = true }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.close_circle),

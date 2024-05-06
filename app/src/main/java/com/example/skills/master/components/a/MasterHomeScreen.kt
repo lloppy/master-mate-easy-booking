@@ -26,14 +26,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.Master
 import com.example.skills.data.viewmodel.MainViewModel
-import com.example.skills.data.viewmodel.getMaster
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainMasterScreen(
     navController: NavHostController
 ) {
-    val master = getMaster()
+    val mainViewModel = MainViewModel()
+    val master = mainViewModel.getMaster()
 
     Scaffold(
         topBar = {
