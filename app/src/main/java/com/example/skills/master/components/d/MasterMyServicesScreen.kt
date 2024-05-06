@@ -14,6 +14,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -35,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalViewConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -42,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.R
+import com.example.skills.data.models.Category
 import com.example.skills.data.viewmodel.MyRepository.getCategories
 import com.example.skills.data.viewmodel.MyRepository.getServices
 import com.example.skills.role.ScreenRole
@@ -102,8 +107,9 @@ fun MasterMyServices(
     navigateToChangeCategory: () -> Unit,
     navController: NavHostController
 ) {
-//  Category("Добавить категорию", navigateToCreateCategory)
     var selectedCategory by remember { mutableStateOf(if (getCategories().isNotEmpty()) getCategories().first().name else "") }
+    var categories =
+        getCategories() + Category("Добавить категорию", action = navigateToCreateCategory)
 
     Column(
         modifier = Modifier
@@ -122,7 +128,7 @@ fun MasterMyServices(
                     end = 16.dp
                 )
         ) {
-            if (getCategories().size <= 1) {
+            if (categories.size <= 1) {
                 Button(onClick = navigateToCreateCategory, Modifier.weight(1f)) {
                     Text("Добавить категорию")
                 }
@@ -139,7 +145,7 @@ fun MasterMyServices(
                         .fillMaxWidth()
                         .padding(bottom = 12.dp)
                 ) {
-                    items(getCategories()) { category ->
+                    items(categories) { category ->
                         val interactionSource = remember { MutableInteractionSource() }
                         val viewConfiguration = LocalViewConfiguration.current
 
@@ -236,8 +242,10 @@ fun CategoryButton(
             contentColor = contentColor
         ),
         border = BorderStroke(1.dp, Color.Gray)
-
     ) {
+        if (text == "Добавить категорию") {
+            Icon(imageVector = Icons.Outlined.Add, contentDescription = "", tint = Color.Gray, modifier = Modifier.padding(end = 6.dp))
+        }
         Text(text = text, fontSize = 14.sp, fontWeight = FontWeight.Normal)
     }
 }

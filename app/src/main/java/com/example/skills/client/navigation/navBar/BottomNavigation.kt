@@ -43,6 +43,7 @@ fun ClientBottomNavigation(
             .height(80.dp),
         selectedIndex = selectedItem,
         ballColor = blackMaterial,
+        barColor = blackMaterial,
         // barColor = Color.White, Ваня хочет этот цвет, а я не хочу
         cornerRadius = shapeCornerRadius(25.dp),
         ballAnimation = Parabolic(tween(Duration, easing = LinearOutSlowInEasing)),
