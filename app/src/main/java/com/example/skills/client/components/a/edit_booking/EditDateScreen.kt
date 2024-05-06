@@ -1,4 +1,4 @@
-package com.example.skills.client.components.a
+package com.example.skills.client.components.a.edit_booking
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,13 +21,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.skills.client.components.a.calendar.ClientCalendarView
-import com.example.skills.data.viewmodel.BookingViewModel
+import com.example.skills.data.viewmodel.EditBookingViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SelectDateScreen(
-    bookingViewModel: BookingViewModel,
+fun EditDateScreen(
+    editBookingViewModel: EditBookingViewModel,
     navController: NavHostController,
     navigateToSelectTime: () -> Unit
 ) {
@@ -40,7 +39,7 @@ fun SelectDateScreen(
                 ),
                 title = {
                     Text(
-                        "Выберите дату",
+                        "Измените дату",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
@@ -59,7 +58,7 @@ fun SelectDateScreen(
             )
         }
     ) { innerPadding ->
-        CustomCalendarView(innerPadding, navController, bookingViewModel, navigateToSelectTime)
+        CustomCalendarView(innerPadding, navController, editBookingViewModel, navigateToSelectTime)
     }
 }
 
@@ -67,7 +66,7 @@ fun SelectDateScreen(
 fun CustomCalendarView(
     innerPadding: PaddingValues,
     navController: NavHostController,
-    bookingViewModel: BookingViewModel,
+    editBookingViewModel: EditBookingViewModel,
     navigateToSelectTime: () -> Unit
 ) {
     Column(
@@ -75,8 +74,8 @@ fun CustomCalendarView(
             .fillMaxSize()
             .padding(top = innerPadding.calculateTopPadding())
     ) {
-        ClientCalendarView(
-            bookingViewModel = bookingViewModel,
+        EditClientCalendarView(
+            editBookingViewModel = editBookingViewModel,
             navigateToSelectTime = navigateToSelectTime
         )
     }

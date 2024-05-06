@@ -1,4 +1,4 @@
-package com.example.skills.client.components.a
+package com.example.skills.client.components.a.edit_booking
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
+import com.example.skills.client.components.a.new_booking.paddingBetweenText
 import com.example.skills.data.Master
 import com.example.skills.data.models.Service
 import com.example.skills.data.viewmodel.EditBookingViewModel
@@ -27,7 +28,7 @@ import com.example.skills.master.components.b.calendar.clickable
 
 
 @Composable
-fun ServiceEditCardClient(
+fun EditServiceCardClient(
     singleService: Service,
     navigateToSelectDate: () -> Unit,
     master: Master,

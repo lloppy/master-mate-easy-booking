@@ -1,4 +1,4 @@
-package com.example.skills.client.components.a.calendar
+package com.example.skills.client.components.a.edit_booking
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
+import com.example.skills.client.components.a.new_booking.alreadyBooking
 import com.example.skills.data.viewmodel.EditBookingViewModel
 import com.example.skills.role.components.CustomButton
 import java.time.LocalTime

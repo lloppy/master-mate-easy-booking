@@ -1,4 +1,4 @@
-package com.example.skills.client.components.a.calendar
+package com.example.skills.client.components.a.edit_booking
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
+import com.example.skills.client.components.a.new_booking.monthNames
 import com.example.skills.data.viewmodel.EditBookingViewModel
 import com.example.skills.master.components.b.calendar.ContinuousSelectionHelper.getSelection
 import com.example.skills.master.components.b.calendar.DateSelection
@@ -48,7 +49,7 @@ private val selectionColor = primaryColor
 private val continuousSelectionColor = Color.LightGray.copy(alpha = 0.3f)
 
 @Composable
-fun ClientCalendarEditView(
+fun EditClientCalendarView(
     editBookingViewModel: EditBookingViewModel,
     navigateToSelectTime: () -> Unit,
     close: () -> Unit = {},

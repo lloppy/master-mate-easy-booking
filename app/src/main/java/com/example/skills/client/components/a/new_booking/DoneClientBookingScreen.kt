@@ -1,4 +1,4 @@
-package com.example.skills.client.components.a
+package com.example.skills.client.components.a.new_booking
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +22,7 @@ import com.example.skills.role.components.CustomButton
 import com.example.skills.ui.theme.fontFamilyInter
 
 @Composable
-fun EditDoneClientBookingScreen(navigateToBookings: () -> Unit) {
+fun DoneClientBookingScreen(navigateToBookings: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Column(
             modifier = Modifier
@@ -54,7 +54,7 @@ fun EditDoneClientBookingScreen(navigateToBookings: () -> Unit) {
             )
             Spacer(modifier = Modifier.padding(8.dp))
             Text(
-                text = "Вы успешно изменили запись.",
+                text = "Вы успешно записались к мастеру.",
                 fontSize = 14.sp,
                 fontFamily = fontFamilyInter,
                 fontWeight = FontWeight.Normal,

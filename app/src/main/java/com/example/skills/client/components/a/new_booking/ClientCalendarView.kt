@@ -1,4 +1,4 @@
-package com.example.skills.client.components.a.calendar
+package com.example.skills.client.components.a.new_booking
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

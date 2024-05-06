@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.skills.client.navigation.account.ScreenClient
@@ -42,13 +43,15 @@ fun ClientBottomNavigation(
             .height(80.dp),
         selectedIndex = selectedItem,
         ballColor = blackMaterial,
-        barColor = blackMaterial,
+        // barColor = Color.White, Ваня хочет этот цвет, а я не хочу
         cornerRadius = shapeCornerRadius(25.dp),
         ballAnimation = Parabolic(tween(Duration, easing = LinearOutSlowInEasing)),
         indentAnimation = Height(
             indentWidth = 56.dp,
             indentHeight = 15.dp,
-            animationSpec = tween(DoubleDuration, easing = { OvershootInterpolator().getInterpolation(it) })
+            animationSpec = tween(
+                DoubleDuration,
+                easing = { OvershootInterpolator().getInterpolation(it) })
         )
     ) {
         dropletButtons.forEachIndexed { index, item ->

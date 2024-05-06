@@ -1,4 +1,4 @@
-package com.example.skills.client.components.a
+package com.example.skills.client.components.a.edit_booking
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
-import com.example.skills.data.viewmodel.BookingViewModel
+import com.example.skills.data.viewmodel.EditBookingViewModel
 import com.example.skills.role.components.CustomButton
 import com.example.skills.role.components.CustomOutlinedTextField
 import java.time.format.DateTimeFormatter
@@ -39,9 +39,9 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConfirmClientBookingScreen(
+fun EditConfirmClientBookingScreen(
     navController: NavHostController,
-    bookingViewModel: BookingViewModel,
+    editBookingViewModel: EditBookingViewModel,
     navigateToDoneBooking: () -> Unit
 ) {
     Scaffold(
@@ -53,7 +53,7 @@ fun ConfirmClientBookingScreen(
                 ),
                 title = {
                     Text(
-                        "Подтвердите запись",
+                        "Подтвердите изменения",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
@@ -74,7 +74,7 @@ fun ConfirmClientBookingScreen(
     ) { innerPadding ->
         ConfirmClientBookingContent(
             innerPadding,
-            bookingViewModel,
+            editBookingViewModel,
             navigateToDoneBooking
         )
     }
@@ -84,13 +84,13 @@ fun ConfirmClientBookingScreen(
 @Composable
 fun ConfirmClientBookingContent(
     innerPadding: PaddingValues,
-    bookingViewModel: BookingViewModel,
+    editBookingViewModel: EditBookingViewModel,
     navigateToDoneBooking: () -> Unit
 ) {
-    val master = bookingViewModel.data1.value!!
-    val singleService = bookingViewModel.data2.value!!
-    val date = bookingViewModel.data3.value!!
-    val time = bookingViewModel.data4.value!!
+    val master = editBookingViewModel.data1.value!!
+    val singleService = editBookingViewModel.data2.value!!
+    val date = editBookingViewModel.data3.value!!
+    val time = editBookingViewModel.data4.value!!
 
     var comment by remember { mutableStateOf("") }
 
@@ -110,8 +110,8 @@ fun ConfirmClientBookingContent(
                 modifier = Modifier.padding(start = 8.dp)
             )
 
-            ServiceCardClient(
-                singleService, { }, master, bookingViewModel
+            EditServiceCardClient(
+                singleService, { }, master, editBookingViewModel
             )
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -125,7 +125,7 @@ fun ConfirmClientBookingContent(
         }
         CustomButton(
             navigateTo = {
-                bookingViewModel.data5 = MutableLiveData(comment)
+                editBookingViewModel.data5 = MutableLiveData(comment)
                 navigateToDoneBooking.invoke()
             },
             buttonText = "Подтвердить"
