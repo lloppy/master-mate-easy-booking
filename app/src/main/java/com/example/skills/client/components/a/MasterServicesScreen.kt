@@ -91,7 +91,10 @@ fun MasterMyServices(
     navigateToSelectDate: () -> Unit
 ) {
     val master = bookingViewModel.data1.value!!
-    val categories by remember { mutableStateOf(master.categories) }
+
+    val categories by remember(master) {
+        mutableStateOf(master.services.map { it.category }.toSet().toList())
+    }
 
     var selectedCategory by remember { mutableStateOf(if (categories.isNotEmpty()) categories.first().name else "") }
 
@@ -130,12 +133,12 @@ fun MasterMyServices(
                     )
                 }
             }
-            val selectedCategoryServices =
-                categories.find { it.name == selectedCategory }?.singlesCategory
 
-            if (selectedCategoryServices != null) {
+            val selectedServicesByCategory = master.services.filter { it.category.name == selectedCategory }
+
+            if (selectedServicesByCategory != null) {
                 LazyColumn(modifier = Modifier.padding(bottom = 100.dp)) {
-                    items(selectedCategoryServices) { singleService ->
+                    items(selectedServicesByCategory) { singleService ->
                         ServiceCardClient(singleService, navigateToSelectDate, master, bookingViewModel)
                     }
                 }

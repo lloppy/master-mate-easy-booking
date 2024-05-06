@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -30,16 +29,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.R
-import com.example.skills.data.Master
+import com.example.skills.data.models.Service
 import com.example.skills.master.components.b.calendar.clickable
-import com.example.skills.master.components.e.lineHeight
 import com.example.skills.role.ScreenRole
 import com.example.skills.role.components.CustomButton
-import okhttp3.Address
 
 
 @Composable
-fun SingleServiceCard(singleService: SingleService, navController: NavHostController) {
+fun SingleServiceCard(singleService: Service, navController: NavHostController) {
     var showDialog by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
 

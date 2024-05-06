@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -26,9 +25,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.skills.data.models.RecordItem
+import com.example.skills.data.models.Status
+import com.example.skills.data.viewmodel.recordsItemList
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -64,6 +64,11 @@ fun MasterClientServices(
     innerPadding: PaddingValues,
     navController: NavHostController,
 ) {
+    val recordItems by remember { mutableStateOf(recordsItemList) }
+
+    val twoSegments = remember { listOf("Актуальные", "История") }
+    var selectedTwoSegment by remember { mutableStateOf(twoSegments.first()) }
+
     Column(
         modifier = Modifier.padding(
             top = innerPadding.calculateTopPadding().plus(6.dp),
@@ -71,87 +76,12 @@ fun MasterClientServices(
             end = 16.dp
         )
     ) {
-        val twoSegments = remember { listOf("Актуальные", "История") }
-        var selectedTwoSegment by remember { mutableStateOf(twoSegments.first()) }
         SegmentedControl(
             twoSegments,
             selectedTwoSegment,
             onSegmentSelected = { selectedTwoSegment = it },
             modifier = Modifier.height(50.dp)
-        ) {
-            SegmentText(it, selectedTwoSegment == it)
-        }
-
-        val bookingItems by remember {
-            mutableStateOf(
-                listOf<BookingItem>(
-                    BookingItem(
-                        "Маникюр класический",
-                        800,
-                        LocalDateTime.now().minusDays(10L),
-                        60,
-                        "Анкудинова Полина",
-                        20,
-                        Status.ACTUAL
-                    ),
-                    BookingItem(
-                        "Маникюр класический",
-                        800,
-                        LocalDateTime.now(),
-                        60,
-                        "Анкудинова Полина",
-                        20,
-                        Status.ACTUAL
-                    ),
-                    BookingItem(
-                        "Маникюр класический",
-                        800,
-                        LocalDateTime.now().plusDays(4L),
-                        60,
-                        "Анкудинова Полина",
-                        20,
-                        Status.ACTUAL
-                    ),
-                    BookingItem(
-                        "Маникюр класический",
-                        800,
-                        LocalDateTime.now(),
-                        60,
-                        "Анкудинова Полина",
-                        20,
-                        Status.ACTUAL
-                    ),
-                    BookingItem(
-                        "Маникюр класический",
-                        800,
-                        LocalDateTime.now(),
-                        60,
-                        "Анкудинова Полина",
-                        20,
-                        Status.ACTUAL
-                    ),
-                    BookingItem(
-                        "Маникюр европейский",
-                        1000,
-                        LocalDateTime.now(),
-                        75,
-                        "Гиязов Арсель",
-                        20,
-                        Status.ARCHIVE,
-                        isDone = true
-                    ),
-                    BookingItem(
-                        "Маникюр европейский",
-                        1000,
-                        LocalDateTime.now(),
-                        75,
-                        "Гиязов Арсель",
-                        20,
-                        Status.ARCHIVE
-                    )
-                )
-            )
-        }
+        ) { SegmentText(it, selectedTwoSegment == it) }
         Spacer(modifier = Modifier.height(16.dp))
 
         val formatter = DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))
@@ -161,9 +91,9 @@ fun MasterClientServices(
                 .padding(bottom = 100.dp)
         ) {
             val groupedItems = if (selectedTwoSegment == "Актуальные") {
-                bookingItems.filter { it.status == Status.ACTUAL }.groupByDate()
+                recordItems.filter { it.status == Status.ACTUAL }.groupByDate()
             } else {
-                bookingItems.filter { it.status == Status.ARCHIVE }.groupByDate()
+                recordItems.filter { it.status == Status.ARCHIVE }.groupByDate()
             }
             groupedItems.forEach { (date, items) ->
                 item {
@@ -177,30 +107,14 @@ fun MasterClientServices(
                     )
                 }
                 items.forEach { bookingItem ->
-                    item { BookingItemCard(bookingItem) }
+                    item { RecordItemCard(bookingItem) }
                 }
             }
         }
     }
 }
 
-fun List<BookingItem>.groupByDate(): Map<LocalDate, List<BookingItem>> {
+fun List<RecordItem>.groupByDate(): Map<LocalDate, List<RecordItem>> {
     return this.groupBy { it.timeStart.toLocalDate() }
 }
 
-data class BookingItem(
-    val serviceName: String,
-    val price: Int,
-    val timeStart: LocalDateTime,
-    val duration: Int,
-    val clientName: String,
-    val clientAge: Int,
-    val status: Status,
-    val isDone: Boolean? = if (status == Status.ACTUAL) null else false,
-    val comment: String? = null,
-    val clientId: Long? = null,
-    val masterId: Long = 123,
-    val serviceId: Long = 123
-)
-
-enum class Status { ACTUAL, ARCHIVE }

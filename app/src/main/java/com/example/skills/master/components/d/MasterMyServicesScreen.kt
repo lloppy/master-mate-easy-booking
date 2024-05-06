@@ -44,6 +44,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.R
+import com.example.skills.data.viewmodel.categories
+import com.example.skills.data.viewmodel.services
 import com.example.skills.role.ScreenRole
 import com.example.skills.role.components.CustomButton
 import com.example.skills.ui.theme.paddingBetweenElements
@@ -102,53 +104,8 @@ fun MasterMyServices(
     navigateToChangeCategory: () -> Unit,
     navController: NavHostController
 ) {
-    val categories by remember {
-        mutableStateOf(
-            listOf<Category>(
-                Category(
-                    "Категория 1",
-                    {},
-                    singlesCategory = listOf(
-                        SingleService(
-                            12345,
-                            "Маникюр классический",
-                            "Процесс включает в себя увлажнение и массаж рук, обработку кутикулы, подпиливание и придание им красивой формы, удаление кутикулы, нанесение крема для ухода за руками и масла для ухода за кутикулой.",
-                            800,
-                            45
-                        ),
-                        SingleService(
-                            123456,
-                            "Маникюр европейский",
-                            "Кутикула аккуратно отодвигается специальным апельсиновым палочкой или мягким пушером. Чтобы размягчить грубую кутикулу, ее можно регулярно смазывать",
-                            1000,
-                            55
-                        ),
-                        SingleService(
-                            1234567,
-                            "Маникюр классический",
-                            "Процесс включает в себя увлажнение и массаж рук, обработку кутикулы, подпиливание и придание им красивой формы, удаление кутикулы, нанесение крема для ухода за руками и масла для ухода за кутикулой.",
-                            800,
-                            45
-                        )
-                    )
-                ),
-                Category(
-                    "Категория 2", {},
-                    singlesCategory = listOf(
-                        SingleService(
-                            23445,
-                            "Педикюр",
-                            "Расслабляющая ванночка для ног, обработка кутикулы, коррекция формы ногтей, удаление огрубевшей кожи",
-                            1200,
-                            75
-                        )
-                    )
-                ),
-                Category("Категория 3", {}),
-                Category("Добавить категорию", navigateToCreateCategory)
-            )
-        )
-    }
+
+//                Category("Добавить категорию", navigateToCreateCategory)
 
     var selectedCategory by remember { mutableStateOf(if (categories.isNotEmpty()) categories.first().name else "") }
 
@@ -222,12 +179,12 @@ fun MasterMyServices(
                         )
                     }
                 }
-                val selectedCategoryServices =
-                    categories.find { it.name == selectedCategory }?.singlesCategory
 
-                if (selectedCategoryServices != null) {
+                val selectedServicesByCategory = services.filter { it.category.name == selectedCategory }
+
+                if (selectedServicesByCategory != null) {
                     LazyColumn {
-                        items(selectedCategoryServices) { singleService ->
+                        items(selectedServicesByCategory) { singleService ->
                             SingleServiceCard(singleService, navController)
                         }
                     }

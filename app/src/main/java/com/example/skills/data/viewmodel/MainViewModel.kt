@@ -8,7 +8,10 @@ import androidx.lifecycle.ViewModel
 import com.example.skills.data.Master
 import com.example.skills.data.Role
 import com.example.skills.data.models.Category
+import com.example.skills.data.models.RecordItem
 import com.example.skills.data.models.Service
+import com.example.skills.data.models.Status
+import java.time.LocalDateTime
 
 
 // 1
@@ -33,17 +36,13 @@ class MainViewModel : ViewModel() {
         appJustLaunched = false
 //        }
     }
+
     fun logout() {
         // user = User()
 
         userIsAuthenticated = false
     }
 }
-
-fun getMaster(id: Long): Master = listMasters.first { it.id == id }
-fun getMaster(): Master = listMasters.first()
-fun getMastersList(): List<Master> = listMasters
-fun findService(serviceId: Long): Service = services.find { it.serviceId == serviceId }!!
 
 val categories = listOf<Category>(
     Category("Категория 1", {}),
@@ -73,7 +72,7 @@ val listMasters = listOf(
         "https://t.me/lloppy",
         "г.Екатеринбург, ул.Фонвизина, д.6",
         imageUrls,
-        categories
+        services
     ), Master(
         223,
         "Екатерина@gmail.com",
@@ -100,7 +99,7 @@ val listMasters = listOf(
         "https://t.me/lloppy",
         "г.Екатеринбург, ул.Фонвизина, д.6",
         imageUrls,
-        categories
+        services
     ),
     Master(
         423,
@@ -115,45 +114,118 @@ val listMasters = listOf(
         "https://t.me/lloppy",
         "г.Екатеринбург, ул.Фонвизина, д.6",
         imageUrls,
-        categories
+        services
     )
 )
 
-val services: List<Service> = listOf(
-    Service(
-        serviceId = 12345,
-        master = listMasters.first(),
-        name = "Маникюр классический",
-        description = "Кутикула аккуратно отодвигается специальным апельсиновым палочкой или мягким пушером, что позволяет избежать порезов и предотвратить возможное воспаление. Этот метод идеален для тех, кто стремится поддерживать ногти в отличном состоянии без риска инфекции.",
-        price = 800,
-        duration = 45,
-        category = categories.first()
-    ),
-    Service(
-        serviceId = 123456,
-        master = listMasters.first(),
-        name = "Маникюр европейский",
-        description = "Кутикула аккуратно отодвигается специальным апельсиновым палочкой или мягким пушером. Чтобы размягчить грубую кутикулу, ее можно регулярно смазывать",
-        price = 1000,
-        duration = 55,
-        category = categories.first()
-    ),
-    Service(
-        12344567,
-        master = listMasters.last(),
-        "Маникюр классический",
-        "Процесс включает в себя увлажнение и массаж рук, обработку кутикулы, подпиливание и придание им красивой формы, удаление кутикулы, нанесение крема для ухода за руками и масла для ухода за кутикулой.",
+val services: List<Service>
+    get() = listOf(
+        Service(
+            serviceId = 12345,
+            master = listMasters.first(),
+            name = "Маникюр классический",
+            description = "Кутикула аккуратно отодвигается специальным апельсиновым палочкой или мягким пушером, что позволяет избежать порезов и предотвратить возможное воспаление. Этот метод идеален для тех, кто стремится поддерживать ногти в отличном состоянии без риска инфекции.",
+            price = 800,
+            duration = 45,
+            category = categories.first()
+        ),
+        Service(
+            serviceId = 123456,
+            master = listMasters.first(),
+            name = "Маникюр европейский",
+            description = "Кутикула аккуратно отодвигается специальным апельсиновым палочкой или мягким пушером. Чтобы размягчить грубую кутикулу, ее можно регулярно смазывать",
+            price = 1000,
+            duration = 55,
+            category = categories.first()
+        ),
+        Service(
+            12344567,
+            master = listMasters.last(),
+            "Маникюр классический",
+            "Процесс включает в себя увлажнение и массаж рук, обработку кутикулы, подпиливание и придание им красивой формы, удаление кутикулы, нанесение крема для ухода за руками и масла для ухода за кутикулой.",
+            800,
+            45,
+            category = categories[1]
+        ),
+        Service(
+            2345,
+            listMasters.last(),
+            "Педикюр",
+            "Расслабляющая ванночка для ног, обработка кутикулы, коррекция формы ногтей, удаление огрубевшей кожи",
+            1200,
+            75,
+            category = categories[1]
+        )
+    )
+
+val recordsItemList = listOf<RecordItem>(
+    RecordItem(
+        "Маникюр класический",
         800,
-        45,
-        category = categories[1]
+        LocalDateTime.now().minusDays(10L),
+        60,
+        "Анкудинова Полина",
+        20,
+        Status.ACTUAL
     ),
-    Service(
-        2345,
-        listMasters.last(),
-        "Педикюр",
-        "Расслабляющая ванночка для ног, обработка кутикулы, коррекция формы ногтей, удаление огрубевшей кожи",
-        1200,
+    RecordItem(
+        "Маникюр класический",
+        800,
+        LocalDateTime.now(),
+        60,
+        "Анкудинова Полина",
+        20,
+        Status.ACTUAL
+    ),
+    RecordItem(
+        "Маникюр класический",
+        800,
+        LocalDateTime.now().plusDays(4L),
+        60,
+        "Анкудинова Полина",
+        20,
+        Status.ACTUAL
+    ),
+    RecordItem(
+        "Маникюр класический",
+        800,
+        LocalDateTime.now(),
+        60,
+        "Анкудинова Полина",
+        20,
+        Status.ACTUAL
+    ),
+    RecordItem(
+        "Маникюр класический",
+        800,
+        LocalDateTime.now(),
+        60,
+        "Анкудинова Полина",
+        20,
+        Status.ACTUAL
+    ),
+    RecordItem(
+        "Маникюр европейский",
+        1000,
+        LocalDateTime.now(),
         75,
-        category = categories[1]
+        "Гиязов Арсель",
+        20,
+        Status.ARCHIVE,
+        isDone = true
+    ),
+    RecordItem(
+        "Маникюр европейский",
+        1000,
+        LocalDateTime.now(),
+        75,
+        "Гиязов Арсель",
+        20,
+        Status.ARCHIVE
     )
 )
+
+fun getMaster(id: Long): Master = listMasters.first { it.id == id }
+fun getMaster(): Master = listMasters.first()
+fun getMastersList(): List<Master> = listMasters
+fun getService(serviceId: Long): Service = services.find { it.serviceId == serviceId }!!

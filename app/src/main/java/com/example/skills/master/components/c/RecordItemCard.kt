@@ -1,5 +1,6 @@
 package com.example.skills.master.components.c
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -29,15 +30,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.R
+import com.example.skills.data.models.RecordItem
+import com.example.skills.data.models.Status
 import com.example.skills.data.viewmodel.EditBookingViewModel
 import com.example.skills.master.components.d.CustomAlertDialog
 import com.example.skills.master.components.e.lineHeight
 import com.example.skills.role.ScreenRole
 
 
+@SuppressLint("DefaultLocale")
 @Composable
-fun BookingItemCard(bookingItem: BookingItem, isClient: Boolean = false, navController: NavHostController? = null, editBookingViewMode: EditBookingViewModel? = null) {
-                                                                            // возможны нул значения для мастера, для клиента всегда не нул
+fun RecordItemCard(
+    recordItem: RecordItem,
+    isClient: Boolean = false,
+    // возможны нул значения для мастера, для клиента всегда не нул
+    navController: NavHostController? = null,
+    editBookingViewModel: EditBookingViewModel? = null
+) {
     var showDialog by remember { mutableStateOf(false) }
 
     if (showDialog) {
@@ -56,33 +65,31 @@ fun BookingItemCard(bookingItem: BookingItem, isClient: Boolean = false, navCont
         modifier = Modifier
             .padding(bottom = 10.dp, top = 10.dp, start = 8.dp, end = 8.dp)
             .fillMaxWidth()
-            .height(164.dp.plus(if (bookingItem.status == Status.ARCHIVE) 24.dp else 0.dp).minus(if (isClient && bookingItem.comment == null) 24.dp else 0.dp))
+            .height(
+                164.dp
+                    .plus(if (recordItem.status == Status.ARCHIVE) 24.dp else 0.dp)
+                    .minus(if (isClient && recordItem.comment == null) 24.dp else 0.dp)
+            )
             .border(1.dp, Color.LightGray, RoundedCornerShape(20.dp))
             .background(Color.White)
     ) {
         Column(modifier = Modifier.padding(start = 20.dp, end = 15.dp)) {
             Spacer(modifier = Modifier.height(paddingBetweenText.plus(paddingBetweenText)))
-            val timeEnd = bookingItem.timeStart.plusMinutes(bookingItem.duration.toLong())
+            val timeEnd = recordItem.timeStart.plusMinutes(recordItem.duration.toLong())
             Box(modifier = Modifier.fillMaxWidth()) {
                 Column {
-                    if (bookingItem.status == Status.ARCHIVE) {
-                        if (bookingItem.isDone!!) {
+                    if (recordItem.status == Status.ARCHIVE) {
+                        if (recordItem.isDone!!) {
                             BadgeCard("Выполнена", Color(41, 174, 41))
                         } else {
                             BadgeCard("Отменена", Color(236, 19, 19))
                         }
                     }
                     Text(
-                        text = "${String.format("%02d", bookingItem.timeStart.hour)}:${
-                            String.format(
-                                "%02d",
-                                bookingItem.timeStart.minute
-                            )
+                        text = "${String.format("%02d", recordItem.timeStart.hour)}:${
+                            String.format("%02d", recordItem.timeStart.minute)
                         } - ${String.format("%02d", timeEnd.hour)}:${
-                            String.format(
-                                "%02d",
-                                timeEnd.minute
-                            )
+                            String.format("%02d", timeEnd.minute)
                         }",
                         color = Color.Black,
                         fontWeight = FontWeight.Normal,
@@ -94,7 +101,7 @@ fun BookingItemCard(bookingItem: BookingItem, isClient: Boolean = false, navCont
                     )
                     Spacer(modifier = Modifier.height(paddingBetweenText))
                     Text(
-                        text = bookingItem.serviceName,
+                        text = recordItem.serviceName,
                         color = Color.Black,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 14.sp,
@@ -120,7 +127,7 @@ fun BookingItemCard(bookingItem: BookingItem, isClient: Boolean = false, navCont
                             tint = Color.Unspecified
                         )
                     }
-                    if (bookingItem.status == Status.ACTUAL) {
+                    if (recordItem.status == Status.ACTUAL) {
                         IconButton(onClick = { showDialog = true }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.close_circle),
@@ -134,17 +141,17 @@ fun BookingItemCard(bookingItem: BookingItem, isClient: Boolean = false, navCont
 
             Spacer(modifier = Modifier.height(paddingBetweenText))
             Text(
-                text = bookingItem.price.toString() + " руб",
+                text = recordItem.price.toString() + " руб",
                 color = Color.Black,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 18.sp,
                 maxLines = 1
             )
 
-            if (!(isClient && bookingItem.comment == null)) {
+            if (!(isClient && recordItem.comment == null)) {
                 Spacer(modifier = Modifier.height(paddingBetweenText))
                 Text(
-                    text = if (!isClient) "Клиент: ${bookingItem.clientName} ${bookingItem.clientAge} лет  " else "Коментарий: ${bookingItem.comment}",
+                    text = if (!isClient) "Клиент: ${recordItem.clientName} ${recordItem.clientAge} лет  " else "Коментарий: ${recordItem.comment}",
                     color = Color.LightGray,
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp,

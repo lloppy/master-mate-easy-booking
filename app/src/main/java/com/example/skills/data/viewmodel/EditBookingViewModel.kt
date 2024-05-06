@@ -9,7 +9,7 @@ import java.time.LocalTime
 
 class EditBookingViewModel: ViewModel() {
     var data1: MutableLiveData<Master> = MutableLiveData() // selected master
-    var data2: MutableLiveData<Service> = MutableLiveData() // service id
+    var data2: MutableLiveData<Service> = MutableLiveData() // service
     var data3: MutableLiveData<LocalDate> = MutableLiveData() // date
     var data4: MutableLiveData<LocalTime> = MutableLiveData() // time
     var data5: MutableLiveData<String> = MutableLiveData() // comment (confirm)

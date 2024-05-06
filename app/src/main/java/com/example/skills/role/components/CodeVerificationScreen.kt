@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.backend.ActivationResponse
+import com.example.skills.data.backend.ApiService
 import kotlinx.coroutines.delay
 import retrofit2.Response
 import retrofit2.Retrofit

@@ -26,21 +26,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
+import com.example.skills.data.models.Status
 import com.example.skills.data.viewmodel.EditBookingViewModel
 import com.example.skills.data.viewmodel.getMaster
-import com.example.skills.master.components.c.BookingItem
-import com.example.skills.master.components.c.BookingItemCard
+import com.example.skills.data.viewmodel.getService
+import com.example.skills.data.viewmodel.recordsItemList
+import com.example.skills.master.components.c.RecordItemCard
 import com.example.skills.master.components.c.SegmentText
 import com.example.skills.master.components.c.SegmentedControl
-import com.example.skills.master.components.c.Status
 import com.example.skills.master.components.c.groupByDate
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ClientBookingsScreen(navController: NavHostController, editBookingViewModel: EditBookingViewModel) {
+fun ClientBookingsScreen(
+    navController: NavHostController,
+    editBookingViewModel: EditBookingViewModel
+) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -78,6 +81,8 @@ fun MasterClientServices(
             end = 16.dp
         )
     ) {
+        val records by remember { mutableStateOf(recordsItemList) }
+
         val twoSegments = remember { listOf("Актуальные", "История") }
         var selectedTwoSegment by remember { mutableStateOf(twoSegments.first()) }
         SegmentedControl(
@@ -88,92 +93,18 @@ fun MasterClientServices(
         ) {
             SegmentText(it, selectedTwoSegment == it)
         }
-
-        val bookingItems by remember {
-            mutableStateOf(
-                listOf<BookingItem>(
-                    BookingItem(
-                        "Маникюр класический",
-                        800,
-                        LocalDateTime.now().minusDays(10L),
-                        60,
-                        "Анкудинова Полина",
-                        20,
-                        Status.ACTUAL,
-                        comment = "Опоздаю на 10 минут",
-                        masterId = 123
-                    ),
-                    BookingItem(
-                        "Маникюр класический",
-                        800,
-                        LocalDateTime.now(),
-                        60,
-                        "Анкудинова Полина",
-                        20,
-                        Status.ACTUAL,
-                        masterId = 123
-                    ),
-                    BookingItem(
-                        "Маникюр класический",
-                        800,
-                        LocalDateTime.now().plusDays(4L),
-                        60,
-                        "Анкудинова Полина",
-                        20,
-                        Status.ACTUAL
-                    ),
-                    BookingItem(
-                        "Маникюр класический",
-                        800,
-                        LocalDateTime.now(),
-                        60,
-                        "Анкудинова Полина",
-                        20,
-                        Status.ACTUAL
-                    ),
-                    BookingItem(
-                        "Маникюр класический",
-                        800,
-                        LocalDateTime.now(),
-                        60,
-                        "Анкудинова Полина",
-                        20,
-                        Status.ACTUAL
-                    ),
-                    BookingItem(
-                        "Маникюр европейский",
-                        1000,
-                        LocalDateTime.now(),
-                        75,
-                        "Гилязов Арсель",
-                        20,
-                        Status.ARCHIVE,
-                        isDone = true,
-                        comment = "Опоздаю на 10 минут"
-                    ),
-                    BookingItem(
-                        "Маникюр европейский",
-                        1000,
-                        LocalDateTime.now(),
-                        75,
-                        "Гилязов Арсель",
-                        20,
-                        Status.ARCHIVE
-                    )
-                )
-            )
-        }
         Spacer(modifier = Modifier.height(16.dp))
 
         val formatter = DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))
         LazyColumn(
             Modifier
                 .fillMaxWidth()
-                .padding(bottom = 100.dp)) {
+                .padding(bottom = 100.dp)
+        ) {
             val groupedItems = if (selectedTwoSegment == "Актуальные") {
-                bookingItems.filter { it.status == Status.ACTUAL }.groupByDate()
+                records.filter { it.status == Status.ACTUAL }.groupByDate()
             } else {
-                bookingItems.filter { it.status == Status.ARCHIVE }.groupByDate()
+                records.filter { it.status == Status.ARCHIVE }.groupByDate()
             }
             groupedItems.forEach { (date, items) ->
                 item {
@@ -186,12 +117,12 @@ fun MasterClientServices(
                         maxLines = 1
                     )
                 }
-                items.forEach { bookingItem ->
+                items.forEach { recordItem ->
                     item {
-                        editBookingViewModel!!.data1 = MutableLiveData(getMaster(bookingItem.masterId))
-                        editBookingViewModel!!.data2 = bookingItem.serviceId
-                        val singleService = editBookingViewModel.data2.value!!
-                        BookingItemCard(bookingItem, true, navController, editBookingViewModel)
+                        editBookingViewModel!!.data1 = MutableLiveData(getMaster(recordItem.masterId))
+                        editBookingViewModel.data2 = MutableLiveData(getService(recordItem.serviceId))
+
+                        RecordItemCard(recordItem, true, navController, editBookingViewModel)
                     }
                 }
             }

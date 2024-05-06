@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.Master
 import com.example.skills.data.viewmodel.BookingViewModel
+import com.example.skills.data.viewmodel.getMastersList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,10 +63,8 @@ fun ClientMastersContent(
     navigateToSelectedMasterProfile: () -> Unit,
     bookingViewModel: BookingViewModel
 ) {
-    val viewModel = MainViewModel()
-
     val emptyMasters = emptyList<Master>()
-    val masters = viewModel.getMastersList()
+    val masters = getMastersList()
 
     Column(
         modifier = Modifier

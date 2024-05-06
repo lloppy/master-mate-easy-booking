@@ -21,14 +21,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import com.example.skills.data.Master
+import com.example.skills.data.models.Service
 import com.example.skills.data.viewmodel.EditBookingViewModel
-import com.example.skills.data.viewmodel.SingleService
 import com.example.skills.master.components.b.calendar.clickable
 
 
 @Composable
 fun ServiceEditCardClient(
-    singleService: SingleService,
+    singleService: Service,
     navigateToSelectDate: () -> Unit,
     master: Master,
     editBookingViewModel: EditBookingViewModel
