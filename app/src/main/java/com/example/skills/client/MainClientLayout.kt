@@ -1,23 +1,23 @@
-package com.example.skills.master
+package com.example.skills.client
 
 import android.annotation.SuppressLint
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.skills.general.navigation.master_nav_bar.MasterBottomNavigation
-import com.example.skills.general.navigation.master_nav_bar.SetupMasterNavGraph
+import com.example.skills.general.navigation.client_nav_bar.SetupClientNavGraph
+import com.example.skills.general.navigation.client_nav_bar.ClientBottomNavigation
 import com.example.skills.general.ScreenRole
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainMasterLayout() {
+fun MainClientLayout() {
     val navController = rememberNavController()
     val hideList = setOf(
-        ScreenRole.Master.GoogleCalendar.route,
-        ScreenRole.Master.EditProfile.route,
-        ScreenRole.Master.Notifications.route,
-        ScreenRole.Master.PasswordSettings.route
+        ScreenRole.Client.GoogleCalendar.route,
+        ScreenRole.Client.EditProfile.route,
+        ScreenRole.Client.Notifications.route,
+        ScreenRole.Client.PasswordSettings.route
     )
 
     val screen = navController.currentBackStackEntryAsState().value
@@ -26,9 +26,9 @@ fun MainMasterLayout() {
     Scaffold(
         bottomBar = {
             if (showBottomBar) {
-                MasterBottomNavigation(navController = navController)
+                ClientBottomNavigation(navController = navController)
             }
         }) {
-        SetupMasterNavGraph(navHostController = navController)
+        SetupClientNavGraph(navHostController = navController)
     }
 }
