@@ -1,4 +1,4 @@
-package com.example.skills.general
+package com.example.skills.general.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.skills.R
+import com.example.skills.general.ScreenRole
 import com.example.skills.general.components.CustomButton
 import com.example.skills.ui.theme.fontFamilyInter
 

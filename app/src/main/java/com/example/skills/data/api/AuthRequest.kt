@@ -1,4 +1,4 @@
-package com.example.skills.data.backend
+package com.example.skills.data.api
 
 data class AuthRequest(
     val email: String,

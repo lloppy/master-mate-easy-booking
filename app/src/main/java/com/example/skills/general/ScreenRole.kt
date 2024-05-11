@@ -3,7 +3,7 @@ package com.example.skills.general
 sealed class ScreenRole(val route: String) {
     object RoleLayout : ScreenRole("role_layout_screen")
 
-    sealed class Client(val clientRoute: String) : ScreenRole("client/$clientRoute") {
+    sealed class Client(private val clientRoute: String) : ScreenRole("client/$clientRoute") {
         object LogIn : Client("log_in_screen")
         object Registration : Client("registration_screen")
         object MainLayout : Client("main_layout_screen")
@@ -33,7 +33,7 @@ sealed class ScreenRole(val route: String) {
 
     }
 
-    sealed class Master(val masterRoute: String) : ScreenRole("master/$masterRoute") {
+    sealed class Master(private val masterRoute: String) : ScreenRole("master/$masterRoute") {
         object LogIn : Master("log_in_screen")
         object Registration : Master("registration_screen")
         object MainLayout : Master("main_layout_screen")
