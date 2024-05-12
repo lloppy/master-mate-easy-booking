@@ -1,6 +1,5 @@
 package com.example.skills.data.api.di
 
-
 import com.example.skills.data.api.di.auth.AuthFragmentBuildersModule
 import com.example.skills.data.api.di.auth.AuthModule
 import com.example.skills.data.api.di.auth.AuthScope
