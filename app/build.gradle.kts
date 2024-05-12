@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -103,7 +106,25 @@ dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
     implementation("com.kizitonwose.calendar:compose:2.5.1")
 
+    // Room
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+
+    // Dagger
+    val dagger_version = "2.51.1"
+    implementation("com.google.dagger:dagger:$dagger_version")
+    implementation("com.google.dagger:dagger-android:$dagger_version")
+    implementation("com.google.dagger:dagger-android-support:$dagger_version")
+    kapt("com.google.dagger:dagger-android-processor:$dagger_version")
+    kapt("com.google.dagger:dagger-compiler:$dagger_version")
+
+    implementation("com.google.dagger:hilt-android:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
+
+    // Coil
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("io.coil-kt:coil-compose:1.3.2")
+
 }
