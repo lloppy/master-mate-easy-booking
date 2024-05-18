@@ -14,7 +14,6 @@ sealed class ScreenRole(val route: String) {
         object CreateNewPassword : Client("new_password_screen")
 
         // in client profile
-        object GoogleCalendar : Master("google_calendar_screen")
         object PasswordSettings : Master("password_settings_screen")
         object EditProfile : Master("edit_profile_screen")
         object Notifications : Master("notifications_screen")
@@ -47,7 +46,6 @@ sealed class ScreenRole(val route: String) {
 
 
         // in master profile
-        object GoogleCalendar : Master("google_calendar_screen")
         object PasswordSettings : Master("password_settings_screen")
         object EditProfile : Master("edit_profile_screen")
         object ShareProfile : Master("share_profile_screen")

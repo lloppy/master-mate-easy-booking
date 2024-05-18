@@ -14,7 +14,6 @@ import com.example.skills.general.ScreenRole
 fun MainClientLayout() {
     val navController = rememberNavController()
     val hideList = setOf(
-        ScreenRole.Client.GoogleCalendar.route,
         ScreenRole.Client.EditProfile.route,
         ScreenRole.Client.Notifications.route,
         ScreenRole.Client.PasswordSettings.route

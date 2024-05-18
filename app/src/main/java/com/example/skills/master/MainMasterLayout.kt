@@ -14,7 +14,6 @@ import com.example.skills.general.ScreenRole
 fun MainMasterLayout() {
     val navController = rememberNavController()
     val hideList = setOf(
-        ScreenRole.Master.GoogleCalendar.route,
         ScreenRole.Master.EditProfile.route,
         ScreenRole.Master.ShareProfile.route,
         ScreenRole.Master.Notifications.route,

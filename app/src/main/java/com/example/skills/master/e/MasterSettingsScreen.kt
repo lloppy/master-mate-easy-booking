@@ -37,7 +37,6 @@ import com.example.skills.R
 fun MasterSettingsScreen(
     navigateToEditAccount: () -> Unit,
     navigateToEditPassword: () -> Unit,
-    navigateToCalendar: () -> Unit,
     navigateToNotifications: () -> Unit,
     exit: () -> Unit
 ) {
@@ -65,7 +64,6 @@ fun MasterSettingsScreen(
             innerPadding,
             navigateToEditAccount,
             navigateToEditPassword,
-            navigateToCalendar,
             navigateToNotifications,
             exit
         )
@@ -77,7 +75,6 @@ private fun SettingsContent(
     innerPadding: PaddingValues,
     navigateToEditAccount: () -> Unit,
     navigateToEditPassword: () -> Unit,
-    navigateToCalendar: () -> Unit,
     navigateToNotifications: () -> Unit,
     exit: () -> Unit
 ) {
@@ -100,12 +97,6 @@ private fun SettingsContent(
                 "Пароль",
                 "Измените свой пароль",
                 navigateToEditPassword
-            )
-            SettingsItem(
-                R.drawable.settings_calendar,
-                "Google Календарь",
-                "Синхронизируйте расписание",
-                navigateToCalendar
             )
             SettingsItem(
                 R.drawable.settings_notification,

@@ -14,7 +14,6 @@ import com.example.skills.master.d.EditServiceCardScreen
 import com.example.skills.master.d.MasterMyServicesScreen
 import com.example.skills.master.e.EditPasswordScreen
 import com.example.skills.master.e.EditProfileScreen
-import com.example.skills.master.e.GoogleCalendarScreen
 import com.example.skills.master.e.MasterSettingsScreen
 import com.example.skills.master.e.NotificationSettingsScreen
 import com.example.skills.general.ScreenRole
@@ -75,24 +74,12 @@ fun SetupMasterNavGraph(
                 navigateToEditPassword = {
                     navHostController.navigate(ScreenRole.Master.PasswordSettings.route)
                 },
-                navigateToCalendar = {
-                    navHostController.navigate(ScreenRole.Master.GoogleCalendar.route)
-                },
                 navigateToNotifications = {
                     navHostController.navigate(ScreenRole.Master.Notifications.route)
                 },
                 exit = {
                     // крашится, потому что другой роут, нужно потом полностью закрывать приложение
                     navHostController.navigate(ScreenRole.Master.LogIn.route)
-                }
-            )
-        }
-
-        composable(ScreenRole.Master.GoogleCalendar.route) {
-            GoogleCalendarScreen(
-                navController = navHostController,
-                navigateToMain = {
-                    navHostController.navigate(ScreenMaster.MasterHomeScreen.route)
                 }
             )
         }

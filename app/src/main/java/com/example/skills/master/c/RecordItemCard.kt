@@ -37,7 +37,6 @@ import com.example.skills.data.viewmodel.EditBookingViewModel
 import com.example.skills.data.viewmodel.MyRepository.getMaster
 import com.example.skills.data.viewmodel.MyRepository.getService
 import com.example.skills.master.d.CustomAlertDialog
-import com.example.skills.master.e.lineHeight
 import com.example.skills.general.ScreenRole
 
 
@@ -203,3 +202,6 @@ fun BadgeCard(text: String, color: Color) {
 }
 
 val paddingBetweenText = 9.dp
+var lineHeight = 18.sp
+var spacerValue = 14.dp
+var instructionTextSize = 14.sp

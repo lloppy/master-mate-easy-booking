@@ -6,28 +6,27 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.skills.data.viewmodel.BookingViewModel
+import com.example.skills.client.b.ClientBookingsScreen
+import com.example.skills.client.c.EditClientProfileScreen
 import com.example.skills.client.components.a.ClientMastersScreen
-import com.example.skills.client.components.a.new_booking.ConfirmClientBookingScreen
-import com.example.skills.client.components.a.new_booking.DoneClientBookingScreen
-import com.example.skills.data.viewmodel.EditBookingViewModel
+import com.example.skills.client.components.a.MasterServicesScreen
+import com.example.skills.client.components.a.ViewMasterScreen
 import com.example.skills.client.components.a.edit_booking.EditConfirmClientBookingScreen
 import com.example.skills.client.components.a.edit_booking.EditDateScreen
 import com.example.skills.client.components.a.edit_booking.EditDoneClientBookingScreen
-import com.example.skills.client.components.a.MasterServicesScreen
-import com.example.skills.client.components.a.new_booking.SelectDateScreen
-import com.example.skills.client.components.a.ViewMasterScreen
 import com.example.skills.client.components.a.edit_booking.EditTimeScreen
+import com.example.skills.client.components.a.new_booking.ConfirmClientBookingScreen
+import com.example.skills.client.components.a.new_booking.DoneClientBookingScreen
+import com.example.skills.client.components.a.new_booking.SelectDateScreen
 import com.example.skills.client.components.a.new_booking.SelectTimeScreen
-import com.example.skills.client.b.ClientBookingsScreen
-import com.example.skills.client.c.EditClientProfileScreen
-import com.example.skills.general.navigation.ScreenClient
+import com.example.skills.data.viewmodel.BookingViewModel
+import com.example.skills.data.viewmodel.EditBookingViewModel
 import com.example.skills.data.viewmodel.MainViewModel
+import com.example.skills.general.ScreenRole
+import com.example.skills.general.navigation.ScreenClient
 import com.example.skills.master.e.EditPasswordScreen
-import com.example.skills.master.e.GoogleCalendarScreen
 import com.example.skills.master.e.MasterSettingsScreen
 import com.example.skills.master.e.NotificationSettingsScreen
-import com.example.skills.general.ScreenRole
 
 @Composable
 fun SetupClientNavGraph(
@@ -60,25 +59,12 @@ fun SetupClientNavGraph(
                 navigateToEditPassword = {
                     navHostController.navigate(ScreenRole.Client.PasswordSettings.route)
                 },
-                navigateToCalendar = {
-                    navHostController.navigate(ScreenRole.Client.GoogleCalendar.route)
-                },
                 navigateToNotifications = {
                     navHostController.navigate(ScreenRole.Client.Notifications.route)
                 },
                 exit = {
                     // крашится, потому что другой роут, нужно потом полностью закрывать приложение
                     navHostController.navigate(ScreenRole.Client.LogIn.route)
-                }
-            )
-        }
-
-        composable(ScreenRole.Client.GoogleCalendar.route) {
-            GoogleCalendarScreen(
-                navController = navHostController,
-                // no navigateToMain
-                navigateToMain = {
-                    navHostController.navigate(ScreenClient.ClientBookingsScreen.route)
                 }
             )
         }

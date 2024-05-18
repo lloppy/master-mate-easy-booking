@@ -40,6 +40,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.skills.master.c.instructionTextSize
+import com.example.skills.master.c.lineHeight
+import com.example.skills.master.c.spacerValue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
