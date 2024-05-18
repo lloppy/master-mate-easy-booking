@@ -1,6 +1,10 @@
 package com.example.skills.master.c
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.provider.CalendarContract
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -23,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -36,8 +41,10 @@ import com.example.skills.data.models.RecordStatus
 import com.example.skills.data.viewmodel.EditBookingViewModel
 import com.example.skills.data.viewmodel.MyRepository.getMaster
 import com.example.skills.data.viewmodel.MyRepository.getService
-import com.example.skills.master.d.CustomAlertDialog
 import com.example.skills.general.ScreenRole
+import com.example.skills.master.d.CustomAlertDialog
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 
 @SuppressLint("DefaultLocale")
@@ -49,7 +56,9 @@ fun RecordItemCard(
     navController: NavHostController? = null,
     editBookingViewModel: EditBookingViewModel? = null
 ) {
+    val context = LocalContext.current
     var showDialog by remember { mutableStateOf(false) }
+    var showCalendarDialog by remember { mutableStateOf(false) }
 
     if (showDialog) {
         CustomAlertDialog(
@@ -63,6 +72,21 @@ fun RecordItemCard(
             "Запись будет отменена, мы уведомим об этом " + if (isClient) "мастера" else "клиента"
         )
     }
+
+    if (showCalendarDialog) {
+        CustomAlertDialog(
+            onDismiss = {
+                showCalendarDialog = false
+            },
+            onExit = {
+                showCalendarDialog = false
+                openGoogleCalendar(context, recordItem)
+            },
+            "Google Календарь",
+            "Добавить событие в Google Календарь"
+        )
+    }
+
     Column(
         modifier = Modifier
             .padding(bottom = 10.dp, top = 10.dp, start = 8.dp, end = 8.dp)
@@ -116,6 +140,15 @@ fun RecordItemCard(
                         .height(40.dp)
                         .align(Alignment.TopEnd)
                 ) {
+                    if (recordItem.recordStatus == RecordStatus.ACTUAL) {
+                        IconButton(onClick = { showCalendarDialog = true }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_calendar),
+                                contentDescription = "add to calendar",
+                                tint = Color.Unspecified
+                            )
+                        }
+                    }
                     IconButton(onClick = {
                         if (isClient) {
                             try {
@@ -181,6 +214,7 @@ fun RecordItemCard(
     }
 }
 
+
 @Composable
 fun BadgeCard(text: String, color: Color) {
     Box(
@@ -201,7 +235,49 @@ fun BadgeCard(text: String, color: Color) {
     }
 }
 
+
 val paddingBetweenText = 9.dp
 var lineHeight = 18.sp
 var spacerValue = 14.dp
 var instructionTextSize = 14.sp
+
+
+fun openGoogleCalendar(context: Context, recordItem: RecordItem) {
+    val zonedDateTime: ZonedDateTime =
+        recordItem.timeFrom.atZone(ZoneId.systemDefault())
+
+    val startMillis: Long = zonedDateTime.toInstant().toEpochMilli()
+    val endMillis: Long =
+        startMillis + recordItem.duration * 60 * 1000
+
+    val intent = Intent(Intent.ACTION_INSERT)
+        .setData(CalendarContract.Events.CONTENT_URI)
+        .putExtra(
+            CalendarContract.EXTRA_EVENT_BEGIN_TIME,
+            startMillis
+        )
+        .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endMillis)
+        .putExtra(CalendarContract.Events.TITLE, recordItem.serviceName)
+        .putExtra(
+            CalendarContract.Events.DESCRIPTION,
+            recordItem.comment
+        )
+//        .putExtra(
+//            CalendarContract.Events.EVENT_LOCATION,
+//            recordItem.masterId
+//        )
+        .putExtra(
+            CalendarContract.Events.AVAILABILITY,
+            CalendarContract.Events.AVAILABILITY_BUSY
+        )
+        .putExtra(CalendarContract.Events.HAS_ALARM, 1)
+    try {
+        context.startActivity(intent)
+    } catch (e: Exception) {
+        Toast.makeText(
+            context,
+            "Пожалуйста, установите Google Календарь",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+}
