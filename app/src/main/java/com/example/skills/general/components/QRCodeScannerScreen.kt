@@ -16,6 +16,7 @@ import androidx.camera.core.ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,12 +32,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
+import com.example.skills.R
 import com.example.skills.general.components.tools.QrCodeAnalyser
 import com.example.skills.ui.theme.SkillsTheme
 
@@ -69,6 +73,7 @@ class QRCodeScannerScreen : ComponentActivity() {
                     launcher.launch(android.Manifest.permission.CAMERA)
                 }
 
+                val screenSize = LocalConfiguration.current.screenHeightDp.dp / 2
                 Box(
                     Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter
                 ) {
@@ -104,6 +109,11 @@ class QRCodeScannerScreen : ComponentActivity() {
                             }, modifier = Modifier.fillMaxSize()
                         )
                     }
+                    Image(
+                        painter = painterResource(id = R.drawable.scan_card),
+                        contentDescription = "scan card",
+                        modifier = Modifier.fillMaxWidth().padding(bottom = screenSize.minus(32.dp), start = 32.dp, end = 32.dp)
+                    )
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
