@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -106,8 +107,7 @@ fun MasterMyServices(
     navController: NavHostController
 ) {
     var selectedCategory by remember { mutableStateOf(if (getCategories().isNotEmpty()) getCategories().first().name else "") }
-    var categories =
-        getCategories() + Category("Добавить категорию", action = navigateToCreateCategory)
+    var categories = getCategories() + Category("Добавить категорию", action = navigateToCreateCategory)
 
     Column(
         modifier = Modifier
@@ -127,16 +127,18 @@ fun MasterMyServices(
                 )
         ) {
             if (categories.size <= 1) {
-                Button(onClick = navigateToCreateCategory, Modifier.weight(1f)) {
-                    Text("Добавить категорию")
+                Column (modifier = Modifier.fillMaxWidth().fillMaxHeight(0.23f)) {
+                    Button(onClick = navigateToCreateCategory, Modifier.weight(1f)) {
+                        Text("Добавить категорию")
+                    }
+                    Text(
+                        text = "В вашем списке отсутствуют категории услуг. Чтобы добавить категорию, воспользуйтесь кнопкой выше.",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color.Gray,
+                        modifier = Modifier.padding(start = 12.dp, top = 25.dp)
+                    )
                 }
-                Text(
-                    text = "В вашем списке отсутствуют категории услуг. Чтобы добавить категорию, воспользуйтесь кнопкой выше.",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = Color.Gray,
-                    modifier = Modifier.padding(start = 12.dp, top = 25.dp)
-                )
             } else {
                 LazyRow(
                     Modifier
@@ -192,7 +194,7 @@ fun MasterMyServices(
                     }
                 } else {
                     Text(
-                        text = "В этой категории пока нет услуг. \nЧтобы создать их, нажмите на иконку с плюсом в левом верхнем углу.",
+                        text = "В этой категории пока нет услуг. \nЧтобы создать их, воспользуйтесь кнопкой ниже.",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Normal,
                         color = Color.Gray,
@@ -201,22 +203,24 @@ fun MasterMyServices(
                 }
             }
         }
-        Spacer(modifier = Modifier.height(12.dp))
-        CustomButton(
-            navigateTo = {
-                try {
-                    val serviceId = selectedCategory
-                    navController.navigate(
-                        ScreenRole.Master.CreateServiceCard.route.replace(
-                            "{serviceId}",
-                            serviceId
+        if (categories.size > 1) {
+            Spacer(modifier = Modifier.height(12.dp))
+            CustomButton(
+                navigateTo = {
+                    try {
+                        val serviceId = selectedCategory
+                        navController.navigate(
+                            ScreenRole.Master.CreateServiceCard.route.replace(
+                                "{serviceId}",
+                                serviceId
+                            )
                         )
-                    )
-                } catch (e: IllegalArgumentException) { // нужно блин выбрать категорию, а не тыкать в пустоту
-                }
-            },
-            buttonText = "Добавить услугу"
-        )
+                    } catch (e: IllegalArgumentException) { // нужно блин выбрать категорию, а не тыкать в пустоту
+                    }
+                },
+                buttonText = "Добавить услугу"
+            )
+        }
     }
 }
 
@@ -242,7 +246,12 @@ fun CategoryButton(
         border = BorderStroke(1.dp, Color.Gray)
     ) {
         if (text == "Добавить категорию") {
-            Icon(imageVector = Icons.Outlined.Add, contentDescription = "", tint = Color.Gray, modifier = Modifier.padding(end = 6.dp))
+            Icon(
+                imageVector = Icons.Outlined.Add,
+                contentDescription = "",
+                tint = Color.Gray,
+                modifier = Modifier.padding(end = 6.dp)
+            )
         }
         Text(text = text, fontSize = 14.sp, fontWeight = FontWeight.Normal)
     }

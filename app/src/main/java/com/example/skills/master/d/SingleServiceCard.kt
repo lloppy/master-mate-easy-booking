@@ -126,23 +126,7 @@ fun SingleServiceCard(singleService: Service, navController: NavHostController) 
                             )
                         } catch (e: IllegalArgumentException) { // нужно блин выбрать категорию, а не тыкать в пустоту
                         }
-                    }, buttonText = "Изменить", width = 0.6f, heightCoeff = 0.8f)
-                }
-                Box(
-                    modifier = Modifier
-                        .border(
-                            width = 1.dp,
-                            color = Color.White,
-                            shape = RoundedCornerShape(10.dp)
-                        )
-                ) {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.archive),
-                            contentDescription = "archive",
-                            tint = Color.White,
-                        )
-                    }
+                    }, buttonText = "Изменить", width = 0.8f, heightCoeff = 0.8f)
                 }
                 Box(
                     modifier = Modifier.border(
