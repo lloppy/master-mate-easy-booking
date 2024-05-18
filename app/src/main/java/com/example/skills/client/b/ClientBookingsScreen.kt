@@ -115,6 +115,7 @@ fun MasterClientServices(
                         maxLines = 1
                     )
                 }
+                
                 items.forEach { recordItem ->
                     item {
                         RecordItemCard(recordItem, true, navController, editBookingViewModel)

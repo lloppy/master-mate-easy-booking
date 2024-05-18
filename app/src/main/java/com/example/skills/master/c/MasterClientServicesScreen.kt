@@ -1,7 +1,9 @@
 package com.example.skills.master.c
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,6 +30,8 @@ import androidx.navigation.NavHostController
 import com.example.skills.data.models.RecordItem
 import com.example.skills.data.models.RecordStatus
 import com.example.skills.data.viewmodel.MyRepository.getRecordsItemList
+import com.example.skills.master.b.calendar.clickable
+import com.example.skills.master.d.CustomAlertDialog
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -65,10 +69,28 @@ fun MasterClientServices(
     navController: NavHostController,
 ) {
     val recordItems by remember { mutableStateOf(getRecordsItemList()) }
+    var selectedDate: LocalDate? = null
 
     val twoSegments = remember { listOf("Актуальные", "История") }
     var selectedTwoSegment by remember { mutableStateOf(twoSegments.first()) }
 
+    var showDialog by remember { mutableStateOf(false) }
+
+    if (showDialog) {
+        CustomAlertDialog(
+            onDismiss = {
+                showDialog = false
+            },
+            onExit = {
+                showDialog = false
+
+                recordItems.clear()
+                // recordItems.toMutableList().removeIf { it.timeFrom.toLocalDate() != selectedDate }
+            },
+            "Отменить все записи",
+            "Все записи на эту дату будут отменены, мы уведомим об этом клиентов"
+        )
+    }
     Column(
         modifier = Modifier.padding(
             top = innerPadding.calculateTopPadding().plus(6.dp),
@@ -97,14 +119,28 @@ fun MasterClientServices(
             }
             groupedItems.forEach { (date, items) ->
                 item {
-                    Text(
-                        text = date.format(formatter),
-                        modifier = Modifier.padding(start = 10.dp, top = 20.dp),
-                        color = Color.Black,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 18.sp,
-                        maxLines = 1
-                    )
+                    Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
+                        Text(
+                            text = date.format(formatter),
+                            modifier = Modifier.padding(start = 10.dp, top = 20.dp),
+                            color = Color.Black,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 18.sp,
+                            maxLines = 1
+                        )
+                        Text(
+                            text = "Отменить все записи",
+                            color = Color.Gray,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 16.sp,
+                            maxLines = 1,
+                            modifier = Modifier.padding(end = 10.dp, top = 20.dp)
+                                .clickable {
+                                    selectedDate = date
+                                    showDialog = true
+                                }
+                        )
+                    }
                 }
                 items.forEach { bookingItem ->
                     item { RecordItemCard(bookingItem) }

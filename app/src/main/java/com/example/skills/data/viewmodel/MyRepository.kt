@@ -120,7 +120,7 @@ object MyRepository {
         )
     )
 
-    private val recordsItemList = listOf<RecordItem>(
+    private val recordsItemList = mutableListOf<RecordItem>(
         RecordItem(
             serviceName = "Маникюр класический",
             price = 800,
@@ -193,7 +193,7 @@ object MyRepository {
     fun getMaster(): Master = listMasters.first()
     fun getMastersList(): List<Master> = listMasters
     fun getService(serviceId: Long): Service = services.find { it.serviceId == serviceId }!!
-    fun getRecordsItemList(): List<RecordItem> = recordsItemList
+    fun getRecordsItemList(): MutableList<RecordItem> = recordsItemList
     fun getCategories(): List<Category> = categories
     fun getServices(): List<Service> = services
 }
