@@ -1,6 +1,7 @@
 package com.example.skills.general.navigation.client_nav_bar
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -32,7 +33,7 @@ import com.example.skills.general.ScreenRole
 fun SetupClientNavGraph(
     navHostController: NavHostController,
 ) {
-    val mainViewModel = MainViewModel()
+    val mainViewModel = MainViewModel(LocalContext.current)
 
     // BookingViewModel
     val bookingViewModel: BookingViewModel = viewModel()
