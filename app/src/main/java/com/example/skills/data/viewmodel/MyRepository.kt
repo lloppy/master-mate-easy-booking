@@ -122,13 +122,14 @@ object MyRepository {
 
     private val recordsItemList = listOf<RecordItem>(
         RecordItem(
-            "Маникюр класический",
-            800,
-            LocalDateTime.now().minusDays(10L),
-            60,
-            "Анкудинова Полина",
-            20,
-            RecordStatus.ACTUAL
+            serviceName = "Маникюр класический",
+            price = 800,
+            timeFrom = LocalDateTime.now().minusDays(10L),
+            duration = 60,
+            comment = "Опоздаю на 10 минут",
+            clientName = "Анкудинова Полина",
+            clientAge = 20,
+            recordStatus = RecordStatus.ACTUAL
         ),
         RecordItem(
             "Маникюр класический",
