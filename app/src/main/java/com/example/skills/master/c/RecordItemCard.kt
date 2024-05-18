@@ -130,15 +130,21 @@ fun RecordItemCard(
                             }
                         }
                     }) {
-                        Icon(
-                            painter = if (isClient) {
-                                painterResource(id = R.drawable.edit)
-                            } else painterResource(
-                                id = R.drawable.phone_circle
-                            ),
-                            contentDescription = "edit/phone",
-                            tint = Color.Unspecified
-                        )
+                        val iconResId = when {
+                            isClient && recordItem.recordStatus == RecordStatus.ACTUAL -> R.drawable.edit
+                            !isClient -> R.drawable.phone_circle
+                            else -> null
+                        }
+
+                        if (iconResId != null) {
+                            val painter = painterResource(id = iconResId)
+
+                            Icon(
+                                painter = painter,
+                                contentDescription = "edit/phone",
+                                tint = Color.Unspecified
+                            )
+                        }
                     }
                     if (recordItem.recordStatus == RecordStatus.ACTUAL) {
                         IconButton(onClick = { showDialog = true }) {
