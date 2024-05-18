@@ -20,7 +20,8 @@ fun CustomOutlinedTextField(
     label: String,
     width: Float = 1f,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    readOnly: Boolean = false
+    readOnly: Boolean = false,
+    isCameraInput: Boolean = false
 ) {
     OutlinedTextField(
         value = value,
@@ -29,7 +30,7 @@ fun CustomOutlinedTextField(
         modifier = Modifier.fillMaxWidth(width),
         textStyle = MaterialTheme.typography.bodyMedium,
         singleLine = true,
-        colors = if (readOnly){
+        colors = if (readOnly) {
             OutlinedTextFieldDefaults.colors(
                 unfocusedLabelColor = Color.LightGray,
                 unfocusedBorderColor = Color.LightGray,
@@ -39,7 +40,10 @@ fun CustomOutlinedTextField(
         } else {
             OutlinedTextFieldDefaults.colors(
                 unfocusedLabelColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
+                unfocusedBorderColor = Color.Gray,
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+                focusedLabelColor = if (isCameraInput) Color.White else Color.Black
             )
         },
         interactionSource = interactionSource,
