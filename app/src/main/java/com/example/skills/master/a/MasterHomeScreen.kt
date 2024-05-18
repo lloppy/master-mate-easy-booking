@@ -30,7 +30,8 @@ import com.example.skills.data.viewmodel.MyRepository.getMaster
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainMasterScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    navigateToShare: () -> Unit
 ) {
     val master = getMaster()
 
@@ -54,6 +55,7 @@ fun MainMasterScreen(
                 actions = {
                     IconButton(onClick = {
                         val profileId = master.id
+                        navigateToShare.invoke()
                     }) {
                         Icon(
                             imageVector = Icons.Filled.Share,

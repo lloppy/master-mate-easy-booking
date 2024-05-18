@@ -19,6 +19,7 @@ import com.example.skills.master.e.MasterSettingsScreen
 import com.example.skills.master.e.NotificationSettingsScreen
 import com.example.skills.general.ScreenRole
 import com.example.skills.general.navigation.ScreenMaster
+import com.example.skills.master.a.ShareProfileScreen
 
 @Composable
 fun SetupMasterNavGraph(
@@ -30,8 +31,19 @@ fun SetupMasterNavGraph(
     ) {
         // person
         composable(route = ScreenMaster.MasterHomeScreen.route) {
-            MainMasterScreen(navHostController)
+            MainMasterScreen(
+                navController = navHostController,
+                navigateToShare = {
+                    navHostController.navigate(ScreenRole.Master.ShareProfile.route)
+                },
+            )
         }
+        composable(ScreenRole.Master.ShareProfile.route) {
+            ShareProfileScreen(
+                navController = navHostController
+            )
+        }
+
         //calendar
         composable(route = ScreenMaster.MasterCalendarScreen.route) {
             CalendarScreen()

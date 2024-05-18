@@ -50,6 +50,7 @@ sealed class ScreenRole(val route: String) {
         object GoogleCalendar : Master("google_calendar_screen")
         object PasswordSettings : Master("password_settings_screen")
         object EditProfile : Master("edit_profile_screen")
+        object ShareProfile : Master("share_profile_screen")
         object Notifications : Master("notifications_screen")
         object CreateService : Master("create_service_screen")
         object ChangeCategory: Master("change_category_screen")

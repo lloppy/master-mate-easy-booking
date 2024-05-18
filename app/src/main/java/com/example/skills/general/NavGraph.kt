@@ -17,6 +17,7 @@ import com.example.skills.general.components.LogInScreen
 import com.example.skills.general.components.NewPasswordScreen
 import com.example.skills.general.components.RegistrationScreen
 import com.example.skills.master.MainMasterLayout
+import com.example.skills.master.a.ShareProfileScreen
 
 fun NavGraphBuilder.clientNavGraph(navController: NavHostController) {
     navigation(
@@ -156,7 +157,8 @@ fun NavGraphBuilder.masterNavGraph(navController: NavHostController) {
         }
 
         composable(ScreenRole.Master.VerificationEmailForNewPassword.route) {
-            CodeVerificationScreen(navController = navController,
+            CodeVerificationScreen(
+                navController = navController,
                 navigateToCreateNewPassword = {
                     navController.navigate(ScreenRole.Master.CreateNewPassword.route)
                 }

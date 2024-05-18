@@ -56,6 +56,7 @@ fun SetupClientNavGraph(
                     // тут потом быть осторожнее, перепроверить что все норм
                     navHostController.navigate(ScreenRole.Master.EditProfile.route)
                 },
+
                 navigateToEditPassword = {
                     navHostController.navigate(ScreenRole.Client.PasswordSettings.route)
                 },
