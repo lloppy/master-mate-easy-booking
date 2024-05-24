@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.example.skills.client.MainClientLayout
+import com.example.skills.ui.client.MainClientLayout
 import com.example.skills.general.components.CodeVerificationScreen
 import com.example.skills.general.components.DoneClientRegistrationScreen
 import com.example.skills.general.components.DoneMasterInfoRegistrationScreen

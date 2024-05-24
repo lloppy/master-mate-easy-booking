@@ -6,8 +6,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.skills.client.b.ClientBookingsScreen
-import com.example.skills.client.c.EditClientProfileScreen
+import com.example.skills.ui.client.b.ClientBookingsScreen
+import com.example.skills.ui.client.c.EditClientProfileScreen
 import com.example.skills.client.components.a.ClientMastersScreen
 import com.example.skills.client.components.a.MasterServicesScreen
 import com.example.skills.client.components.a.ViewMasterScreen

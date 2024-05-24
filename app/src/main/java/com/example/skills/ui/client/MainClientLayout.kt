@@ -1,4 +1,4 @@
-package com.example.skills.client
+package com.example.skills.ui.client
 
 import android.annotation.SuppressLint
 import androidx.compose.material3.Scaffold
