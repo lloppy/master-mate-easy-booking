@@ -29,10 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.R
-import com.example.skills.data.models.Service
+import com.example.skills.data.entity.Service
 import com.example.skills.ui.master.b.calendar.clickable
-import com.example.skills.general.ScreenRole
-import com.example.skills.general.components.CustomButton
+import com.example.skills.navigation.ScreenRole
+import com.example.skills.ui.components.CustomButton
 
 
 @Composable

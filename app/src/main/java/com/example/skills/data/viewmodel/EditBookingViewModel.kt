@@ -2,8 +2,8 @@ package com.example.skills.data.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.skills.data.Master
-import com.example.skills.data.models.Service
+import com.example.skills.data.roles.Master
+import com.example.skills.data.entity.Service
 import java.time.LocalDate
 import java.time.LocalTime
 

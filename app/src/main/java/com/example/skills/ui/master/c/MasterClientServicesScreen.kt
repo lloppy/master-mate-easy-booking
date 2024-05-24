@@ -27,8 +27,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.skills.data.models.RecordItem
-import com.example.skills.data.models.RecordStatus
+import com.example.skills.data.entity.RecordItem
+import com.example.skills.data.entity.RecordStatus
 import com.example.skills.data.viewmodel.MyRepository.getRecordsItemList
 import com.example.skills.ui.master.b.calendar.clickable
 import com.example.skills.ui.master.d.CustomAlertDialog

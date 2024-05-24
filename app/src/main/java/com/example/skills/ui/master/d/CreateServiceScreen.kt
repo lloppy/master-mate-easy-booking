@@ -33,8 +33,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.skills.general.components.CustomButton
-import com.example.skills.general.components.CustomOutlinedTextField
+import com.example.skills.ui.components.CustomButton
+import com.example.skills.ui.components.CustomOutlinedTextField
 import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)

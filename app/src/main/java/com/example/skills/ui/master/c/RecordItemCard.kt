@@ -36,12 +36,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.example.skills.R
-import com.example.skills.data.models.RecordItem
-import com.example.skills.data.models.RecordStatus
+import com.example.skills.data.entity.RecordItem
+import com.example.skills.data.entity.RecordStatus
 import com.example.skills.data.viewmodel.EditBookingViewModel
 import com.example.skills.data.viewmodel.MyRepository.getMaster
 import com.example.skills.data.viewmodel.MyRepository.getService
-import com.example.skills.general.ScreenRole
+import com.example.skills.navigation.ScreenRole
 import com.example.skills.ui.master.d.CustomAlertDialog
 import java.time.ZoneId
 import java.time.ZonedDateTime

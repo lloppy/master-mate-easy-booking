@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -30,10 +29,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityOptionsCompat
-import com.example.skills.data.Master
+import com.example.skills.data.roles.Master
 import com.example.skills.data.viewmodel.BookingViewModel
 import com.example.skills.data.viewmodel.MyRepository.getMastersList
-import com.example.skills.general.components.QRCodeScannerScreen
+import com.example.skills.ui.components.QRCodeScannerScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)

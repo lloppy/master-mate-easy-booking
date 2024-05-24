@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -30,9 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skills.R
-import com.example.skills.data.Address
-import com.example.skills.data.Master
-import com.example.skills.data.Role
+import com.example.skills.data.roles.Address
+import com.example.skills.data.roles.Master
+import com.example.skills.data.roles.Role
 import com.example.skills.ui.master.b.calendar.clickable
 import com.example.skills.ui.master.d.paddingBetweenText
 import com.example.skills.ui.theme.fontFamilyInter

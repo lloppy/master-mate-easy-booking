@@ -32,8 +32,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.example.skills.data.viewmodel.EditBookingViewModel
-import com.example.skills.general.components.CustomButton
-import com.example.skills.general.components.CustomOutlinedTextField
+import com.example.skills.ui.components.CustomButton
+import com.example.skills.ui.components.CustomOutlinedTextField
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 

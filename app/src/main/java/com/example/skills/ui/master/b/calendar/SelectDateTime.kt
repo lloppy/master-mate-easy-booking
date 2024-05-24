@@ -28,8 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import com.example.skills.general.components.CustomButton
-import com.example.skills.general.components.CustomOutlinedTextField
+import com.example.skills.ui.components.CustomButton
+import com.example.skills.ui.components.CustomOutlinedTextField
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 

@@ -27,10 +27,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skills.R
-import com.example.skills.data.Master
+import com.example.skills.data.roles.Master
 import com.example.skills.ui.master.b.calendar.clickable
 import com.example.skills.ui.master.d.paddingBetweenText
-import com.example.skills.general.components.CustomButton
+import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.theme.fontFamilyInter
 
 @Composable

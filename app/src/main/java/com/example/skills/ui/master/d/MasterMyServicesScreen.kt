@@ -45,11 +45,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.R
-import com.example.skills.data.models.Category
+import com.example.skills.data.entity.Category
 import com.example.skills.data.viewmodel.MyRepository.getCategories
 import com.example.skills.data.viewmodel.MyRepository.getServices
-import com.example.skills.general.ScreenRole
-import com.example.skills.general.components.CustomButton
+import com.example.skills.navigation.ScreenRole
+import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.theme.paddingBetweenElements
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest

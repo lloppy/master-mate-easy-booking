@@ -29,7 +29,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.client.a.ViewMasterHead
-import com.example.skills.data.Master
+import com.example.skills.data.roles.Master
 import com.example.skills.data.viewmodel.BookingViewModel
 import com.example.skills.ui.master.a.MasterGallery
 import com.example.skills.ui.master.d.CustomAlertDialog

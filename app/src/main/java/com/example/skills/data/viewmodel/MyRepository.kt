@@ -1,13 +1,13 @@
 package com.example.skills.data.viewmodel
 
 import android.net.Uri
-import com.example.skills.data.Address
-import com.example.skills.data.Master
-import com.example.skills.data.Role
-import com.example.skills.data.models.Category
-import com.example.skills.data.models.RecordItem
-import com.example.skills.data.models.Service
-import com.example.skills.data.models.RecordStatus
+import com.example.skills.data.roles.Address
+import com.example.skills.data.roles.Master
+import com.example.skills.data.roles.Role
+import com.example.skills.data.entity.Category
+import com.example.skills.data.entity.RecordItem
+import com.example.skills.data.entity.Service
+import com.example.skills.data.entity.RecordStatus
 import java.time.LocalDateTime
 
 object MyRepository {

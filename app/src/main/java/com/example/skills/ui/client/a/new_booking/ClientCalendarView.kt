@@ -34,7 +34,7 @@ import com.example.skills.ui.master.b.calendar.ContinuousSelectionHelper.getSele
 import com.example.skills.ui.master.b.calendar.DateSelection
 import com.example.skills.ui.master.b.calendar.backgroundHighlight
 import com.example.skills.ui.master.b.calendar.clickable
-import com.example.skills.general.components.CustomButton
+import com.example.skills.ui.components.CustomButton
 import com.kizitonwose.calendar.compose.VerticalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.CalendarDay

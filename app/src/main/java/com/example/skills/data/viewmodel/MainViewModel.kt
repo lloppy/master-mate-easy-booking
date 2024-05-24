@@ -2,12 +2,11 @@ package com.example.skills.data.viewmodel
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.system.Os.remove
 import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import com.example.skills.data.User
+import com.example.skills.data.roles.User
 
 class MainViewModel(private val context: Context) : ViewModel() {
     lateinit var currentUser: User
