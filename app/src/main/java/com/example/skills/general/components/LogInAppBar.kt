@@ -53,6 +53,9 @@ import com.example.skills.general.components.tools.EmailState
 import com.example.skills.general.components.tools.EmailStateSaver
 import com.example.skills.general.components.tools.PasswordState
 import com.example.skills.general.components.tools.TextFieldState
+import com.example.skills.general.components.tools.Validator
+import com.example.skills.general.components.tools.Validator.isEmailValid
+import com.example.skills.general.components.tools.Validator.isNewPasswordValid
 import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -132,7 +135,14 @@ fun ContentLogIn(
         }
         val passwordState = remember { PasswordState() }
         val onSubmit = {
-            if (emailState.isValid && passwordState.isValid) {
+           isEmailValid(emailState.text) && isNewPasswordValid(passwordState.text)
+
+            if (
+                //emailState.isValid && passwordState.isValid
+
+                isEmailValid(emailState.text) && isNewPasswordValid(passwordState.text)
+
+            ) {
                 //onSignInSubmitted(emailState.text, passwordState.text)
                 navController.navigate(routeLogIn)
             }
@@ -169,7 +179,8 @@ fun ContentLogIn(
             Spacer(modifier = Modifier.height(16.dp))
 
             CustomButton(
-                navigateToMain,
+                { onSubmit() },
+                //navigateToMain,
                 "Войти"
             )
             Spacer(modifier = Modifier.height(8.dp))

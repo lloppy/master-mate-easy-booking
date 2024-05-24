@@ -23,7 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.skills.data.Master
 import com.example.skills.data.models.Service
 import com.example.skills.data.viewmodel.BookingViewModel
-import com.example.skills.master.b.calendar.clickable
+import com.example.skills.ui.master.b.calendar.clickable
 
 
 @Composable

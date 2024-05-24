@@ -1,4 +1,4 @@
-package com.example.skills.client.a
+package com.example.skills.ui.master.a
 
 import android.content.Intent
 import android.net.Uri
@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -24,17 +26,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skills.R
+import com.example.skills.data.Address
 import com.example.skills.data.Master
+import com.example.skills.data.Role
 import com.example.skills.ui.master.b.calendar.clickable
 import com.example.skills.ui.master.d.paddingBetweenText
-import com.example.skills.general.components.CustomButton
 import com.example.skills.ui.theme.fontFamilyInter
 
 @Composable
-fun ViewMasterHead(master: Master, navigateToServices: () -> Unit) {
+fun ProfileHead(master: Master) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
     val imageName = master.imageId ?: "master"
@@ -47,16 +51,12 @@ fun ViewMasterHead(master: Master, navigateToServices: () -> Unit) {
     val intent = Intent(Intent.ACTION_VIEW, uri)
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 12.dp, end = 12.dp, bottom = 6.dp),
+        modifier = Modifier.fillMaxWidth().padding(start = 12.dp, end = 12.dp, bottom = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 12.dp),
+            modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
@@ -84,7 +84,10 @@ fun ViewMasterHead(master: Master, navigateToServices: () -> Unit) {
                 color = Color.Gray,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
-                modifier = Modifier.clickable { expanded = !expanded })
+                modifier = Modifier
+                    .clickable {
+                        expanded = !expanded
+                    })
         }
         if (expanded) {
             Spacer(modifier = Modifier.height(paddingBetweenText))
@@ -125,30 +128,43 @@ fun ViewMasterHead(master: Master, navigateToServices: () -> Unit) {
                     }
             )
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp),
-            verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            val intentPhone = Intent(Intent.ACTION_DIAL).apply {
-                data = Uri.parse("tel:${master.phone}")
-            }
-            CustomButton(
-                navigateTo = { context.startActivity(intentPhone) },
-                buttonText = "Позвонить",
-                color = Color.Transparent,
-                width = 0.5f
-            )
-
-            CustomButton(
-                navigateTo = {
-                    navigateToServices.invoke()
-                },
-                buttonText = "Записаться",
-                color = Color.Transparent,
-            )
-        }
     }
+}
+
+
+@Preview
+@Composable
+fun prev() {
+    val imageUrls = listOf(
+        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
+        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
+        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
+        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
+        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
+        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
+        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
+        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
+        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
+        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
+        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
+        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
+    )
+
+
+    ProfileHead(
+        Master(
+            123,
+            "masterivan@gmail.com",
+            "Иван",
+            "Коссе",
+            "79503223232",
+            null,
+            "12345",
+            Role.MASTER,
+            "Ведущий мастер в области макияжа и стилистики с более чем десятилетним опытом. Сотрудничал с известными брендами, работала на крупнейших модных показах и обучала начинающих визажистов.",
+            "https://t.me/lloppy",
+            Address("Россия", "Москва", "Маяковская", "10", "2"),
+            imageUrls
+        )
+    )
 }

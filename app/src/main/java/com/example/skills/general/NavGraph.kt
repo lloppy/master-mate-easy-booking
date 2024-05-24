@@ -16,8 +16,7 @@ import com.example.skills.general.components.FullProfileScreen
 import com.example.skills.general.components.LogInScreen
 import com.example.skills.general.components.NewPasswordScreen
 import com.example.skills.general.components.RegistrationScreen
-import com.example.skills.master.MainMasterLayout
-import com.example.skills.master.a.ShareProfileScreen
+import com.example.skills.ui.master.MainMasterLayout
 
 fun NavGraphBuilder.clientNavGraph(navController: NavHostController) {
     navigation(

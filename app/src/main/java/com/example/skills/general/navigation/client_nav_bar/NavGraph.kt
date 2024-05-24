@@ -24,9 +24,9 @@ import com.example.skills.data.viewmodel.EditBookingViewModel
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.general.ScreenRole
 import com.example.skills.general.navigation.ScreenClient
-import com.example.skills.master.e.EditPasswordScreen
-import com.example.skills.master.e.MasterSettingsScreen
-import com.example.skills.master.e.NotificationSettingsScreen
+import com.example.skills.ui.master.e.EditPasswordScreen
+import com.example.skills.ui.master.e.MasterSettingsScreen
+import com.example.skills.ui.master.e.NotificationSettingsScreen
 
 @Composable
 fun SetupClientNavGraph(

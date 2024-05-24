@@ -30,10 +30,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import com.example.skills.data.viewmodel.BookingViewModel
-import com.example.skills.master.b.calendar.ContinuousSelectionHelper.getSelection
-import com.example.skills.master.b.calendar.DateSelection
-import com.example.skills.master.b.calendar.backgroundHighlight
-import com.example.skills.master.b.calendar.clickable
+import com.example.skills.ui.master.b.calendar.ContinuousSelectionHelper.getSelection
+import com.example.skills.ui.master.b.calendar.DateSelection
+import com.example.skills.ui.master.b.calendar.backgroundHighlight
+import com.example.skills.ui.master.b.calendar.clickable
 import com.example.skills.general.components.CustomButton
 import com.kizitonwose.calendar.compose.VerticalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState

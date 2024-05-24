@@ -12,7 +12,6 @@ import com.example.skills.data.User
 class MainViewModel(private val context: Context) : ViewModel() {
     lateinit var currentUser: User
 
-    var appJustLaunched by mutableStateOf(true)
     var userIsAuthenticated by mutableStateOf(false)
 
     private val preferences: SharedPreferences = context.getSharedPreferences("user_credentials", Context.MODE_PRIVATE)

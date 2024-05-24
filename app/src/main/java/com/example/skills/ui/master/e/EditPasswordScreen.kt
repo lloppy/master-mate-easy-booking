@@ -1,13 +1,15 @@
-package com.example.skills.general.components
+package com.example.skills.ui.master.e
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -20,29 +22,27 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.skills.general.components.tools.EmailState
-import com.example.skills.general.components.tools.EmailStateSaver
+import com.example.skills.general.components.CustomButton
+import com.example.skills.general.components.Password
+import com.example.skills.general.components.tools.PasswordState
 import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ForgotPasswordScreen(
+fun EditPasswordScreen(
     navController: NavHostController,
-    navigateToCodeVerification: () -> Unit
+    navigateToMain: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -53,7 +53,7 @@ fun ForgotPasswordScreen(
                 ),
                 title = {
                     Text(
-                        "Восстановление",
+                        "Пароль",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
@@ -76,24 +76,25 @@ fun ForgotPasswordScreen(
             )
         },
     ) { innerPadding ->
-        ContentForgotPassword(innerPadding, navigateToCodeVerification)
+        ContentNewPassword(innerPadding, navigateToMain, navController)
     }
 }
 
 @Composable
-fun ContentForgotPassword(
+fun ContentNewPassword(
     innerPadding: PaddingValues,
-    navigateToCodeVerification: () -> Unit
+    navigateToMain: () -> Unit,
+    navController: NavHostController
 ) {
-    var email by remember { mutableStateOf("") }
     val focusRequester = remember { FocusRequester() }
-    val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
-        mutableStateOf(EmailState(email))
-    }
+    val oldPasswordState = remember { PasswordState() }
+    val newPasswordState = remember { PasswordState() }
+    val passwordStateRepeat = remember { PasswordState() }
     val onSubmit = {
-        if (emailState.isValid) {
+        if (newPasswordState.isValid) {
             //onSignInSubmitted(emailState.text, passwordState.text)
-            navigateToCodeVerification
+            // navigateToMain
+            navController.popBackStack()
         }
     }
 
@@ -108,23 +109,44 @@ fun ContentForgotPassword(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 16.dp, start = 8.dp, end = 8.dp),
+                .padding(top = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.13f)
+                    .fillMaxHeight(0.35f)
                     .padding(start = 16.dp, end = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
-                Email(emailState, onImeAction = { focusRequester.requestFocus() })
+                Password(
+                    label = "Старый пароль",
+                    passwordState = oldPasswordState,
+                    modifier = Modifier.focusRequester(focusRequester),
+                    onImeAction = { onSubmit() }
+                )
+                Password(
+                    label = "Новый пароль",
+                    passwordState = newPasswordState,
+                    modifier = Modifier.focusRequester(focusRequester),
+                    onImeAction = { onSubmit() }
+                )
+                Password(
+                    label = "Повторите новый пароль",
+                    passwordState = passwordStateRepeat,
+                    modifier = Modifier.focusRequester(focusRequester),
+                    onImeAction = { onSubmit() }
+                )
+
             }
+            Spacer(modifier = Modifier.height(16.dp))
+
             CustomButton(
-                navigateToCodeVerification,
-                "Продолжить"
+                // { navController.popBackStack() },
+                navigateToMain,
+                "Сохранить"
             )
         }
     }

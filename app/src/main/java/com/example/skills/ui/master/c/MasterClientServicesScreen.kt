@@ -1,8 +1,9 @@
-package com.example.skills.client.b
+package com.example.skills.ui.master.c
 
-
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,22 +27,18 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.skills.data.models.RecordItem
 import com.example.skills.data.models.RecordStatus
-import com.example.skills.data.viewmodel.EditBookingViewModel
 import com.example.skills.data.viewmodel.MyRepository.getRecordsItemList
-import com.example.skills.ui.master.c.RecordItemCard
-import com.example.skills.ui.master.c.SegmentText
-import com.example.skills.ui.master.c.SegmentedControl
-import com.example.skills.ui.master.c.groupByDate
+import com.example.skills.ui.master.b.calendar.clickable
+import com.example.skills.ui.master.d.CustomAlertDialog
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ClientBookingsScreen(
-    navController: NavHostController,
-    editBookingViewModel: EditBookingViewModel
-) {
+fun MasterClientServicesScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -51,7 +48,7 @@ fun ClientBookingsScreen(
                 ),
                 title = {
                     Text(
-                        "Мои записи",
+                        "Записи клиентов",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
@@ -62,7 +59,7 @@ fun ClientBookingsScreen(
             )
         }
     ) { innerPadding ->
-        MasterClientServices(innerPadding, navController, editBookingViewModel)
+        MasterClientServices(innerPadding, navController)
     }
 }
 
@@ -70,8 +67,30 @@ fun ClientBookingsScreen(
 fun MasterClientServices(
     innerPadding: PaddingValues,
     navController: NavHostController,
-    editBookingViewModel: EditBookingViewModel?
 ) {
+    val recordItems by remember { mutableStateOf(getRecordsItemList()) }
+    var selectedDate: LocalDate? = null
+
+    val twoSegments = remember { listOf("Актуальные", "История") }
+    var selectedTwoSegment by remember { mutableStateOf(twoSegments.first()) }
+
+    var showDialog by remember { mutableStateOf(false) }
+
+    if (showDialog) {
+        CustomAlertDialog(
+            onDismiss = {
+                showDialog = false
+            },
+            onExit = {
+                showDialog = false
+
+                recordItems.clear()
+                // recordItems.toMutableList().removeIf { it.timeFrom.toLocalDate() != selectedDate }
+            },
+            "Отменить все записи",
+            "Все записи на эту дату будут отменены, мы уведомим об этом клиентов"
+        )
+    }
     Column(
         modifier = Modifier.padding(
             top = innerPadding.calculateTopPadding().plus(6.dp),
@@ -79,18 +98,12 @@ fun MasterClientServices(
             end = 16.dp
         )
     ) {
-        val records by remember { mutableStateOf(getRecordsItemList()) }
-
-        val twoSegments = remember { listOf("Актуальные", "История") }
-        var selectedTwoSegment by remember { mutableStateOf(twoSegments.first()) }
         SegmentedControl(
             twoSegments,
             selectedTwoSegment,
             onSegmentSelected = { selectedTwoSegment = it },
             modifier = Modifier.height(50.dp)
-        ) {
-            SegmentText(it, selectedTwoSegment == it)
-        }
+        ) { SegmentText(it, selectedTwoSegment == it) }
         Spacer(modifier = Modifier.height(16.dp))
 
         val formatter = DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))
@@ -100,28 +113,44 @@ fun MasterClientServices(
                 .padding(bottom = 100.dp)
         ) {
             val groupedItems = if (selectedTwoSegment == "Актуальные") {
-                records.filter { it.recordStatus == RecordStatus.ACTUAL }.groupByDate()
+                recordItems.filter { it.recordStatus == RecordStatus.ACTUAL }.groupByDate()
             } else {
-                records.filter { it.recordStatus == RecordStatus.ARCHIVE }.groupByDate()
+                recordItems.filter { it.recordStatus == RecordStatus.ARCHIVE }.groupByDate()
             }
             groupedItems.forEach { (date, items) ->
                 item {
-                    Text(
-                        text = date.format(formatter),
-                        modifier = Modifier.padding(start = 10.dp, top = 20.dp),
-                        color = Color.Black,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 18.sp,
-                        maxLines = 1
-                    )
-                }
-                
-                items.forEach { recordItem ->
-                    item {
-                        RecordItemCard(recordItem, true, navController, editBookingViewModel)
+                    Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
+                        Text(
+                            text = date.format(formatter),
+                            modifier = Modifier.padding(start = 10.dp, top = 20.dp),
+                            color = Color.Black,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 18.sp,
+                            maxLines = 1
+                        )
+                        Text(
+                            text = "Отменить все записи",
+                            color = Color.Gray,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 16.sp,
+                            maxLines = 1,
+                            modifier = Modifier.padding(end = 10.dp, top = 20.dp)
+                                .clickable {
+                                    selectedDate = date
+                                    showDialog = true
+                                }
+                        )
                     }
+                }
+                items.forEach { bookingItem ->
+                    item { RecordItemCard(bookingItem) }
                 }
             }
         }
     }
 }
+
+fun List<RecordItem>.groupByDate(): Map<LocalDate, List<RecordItem>> {
+    return this.groupBy { it.timeFrom.toLocalDate() }
+}
+

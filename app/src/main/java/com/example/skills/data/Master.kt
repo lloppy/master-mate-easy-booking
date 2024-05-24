@@ -17,6 +17,19 @@ data class Master(
     // extended
     var description: String,
     var linkCode: String,
-    var address: String,
+    var address: Address,
     var images: List<Uri>,
 ) : User(id, email, firstName, lastName, phone, imageId, password, role)
+
+
+data class Address(
+    val country: String,
+    val city: String,
+    val street: String,
+    val house: String,
+    val office: String
+) {
+    override fun toString(): String {
+        return "Страна: $country, г.$city, ул.$street, д.$house - $office"
+    }
+}

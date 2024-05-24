@@ -24,7 +24,7 @@ import com.example.skills.client.components.a.new_booking.paddingBetweenText
 import com.example.skills.data.Master
 import com.example.skills.data.models.Service
 import com.example.skills.data.viewmodel.EditBookingViewModel
-import com.example.skills.master.b.calendar.clickable
+import com.example.skills.ui.master.b.calendar.clickable
 
 
 @Composable

@@ -1,13 +1,14 @@
-package com.example.skills.general.components
+package com.example.skills.ui.master.d
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -23,26 +24,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.skills.general.components.tools.EmailState
-import com.example.skills.general.components.tools.EmailStateSaver
+import com.example.skills.general.components.CustomButton
+import com.example.skills.general.components.CustomOutlinedTextField
 import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ForgotPasswordScreen(
-    navController: NavHostController,
-    navigateToCodeVerification: () -> Unit
+fun ChangeCategoryScreen( navController: NavHostController
 ) {
     Scaffold(
         topBar = {
@@ -53,7 +50,7 @@ fun ForgotPasswordScreen(
                 ),
                 title = {
                     Text(
-                        "Восстановление",
+                        "Изменить категорию",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
@@ -76,26 +73,16 @@ fun ForgotPasswordScreen(
             )
         },
     ) { innerPadding ->
-        ContentForgotPassword(innerPadding, navigateToCodeVerification)
+        ContentChangeCategory(innerPadding, navController)
     }
 }
 
 @Composable
-fun ContentForgotPassword(
+fun ContentChangeCategory(
     innerPadding: PaddingValues,
-    navigateToCodeVerification: () -> Unit
+    navController: NavHostController
 ) {
-    var email by remember { mutableStateOf("") }
-    val focusRequester = remember { FocusRequester() }
-    val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
-        mutableStateOf(EmailState(email))
-    }
-    val onSubmit = {
-        if (emailState.isValid) {
-            //onSignInSubmitted(emailState.text, passwordState.text)
-            navigateToCodeVerification
-        }
-    }
+    var categoryName by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -115,18 +102,33 @@ fun ContentForgotPassword(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.13f)
                     .padding(start = 16.dp, end = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
-                Email(emailState, onImeAction = { focusRequester.requestFocus() })
+                CustomOutlinedTextField(
+                    value = categoryName,
+                    onValueChange = { categoryName = it },
+                    label = "Название"
+                )
             }
+            Spacer(modifier = Modifier.height(16.dp))
+
             CustomButton(
-                navigateToCodeVerification,
-                "Продолжить"
+                navigateTo = {
+                    navController.popBackStack()
+                },
+                "Сохранить"
             )
+            Spacer(modifier = Modifier.height(8.dp))
+            CustomButton(
+                navigateTo = {
+                    navController.popBackStack()
+                },
+                color = Color.Transparent,
+                buttonText = "Удалить"
+            )
+
         }
     }
 }
-

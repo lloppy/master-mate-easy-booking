@@ -1,10 +1,13 @@
 package com.example.skills.data.backend
 
+import com.example.skills.data.Address
+import com.example.skills.data.User
+import java.time.LocalDateTime
+
 data class AuthRequest(
     val email: String,
     val password: String
 )
-
 
 
 data class AuthResponse(
@@ -18,4 +21,26 @@ data class ActivationRequest(
 
 data class ActivationResponse(
     val message: String
+)
+
+data class EditMasterRequest(
+    val user: User,
+    val description: String,
+    val address: Address,
+    val linkCode: String
+)
+
+data class EditMasterResponse(
+    val message: String,
+    val status: String
+)
+
+data class EditClientRequest(
+    val user: User,
+    val birthDate: LocalDateTime
+)
+
+data class EditClientResponse(
+    val message: String,
+    val status: String
 )

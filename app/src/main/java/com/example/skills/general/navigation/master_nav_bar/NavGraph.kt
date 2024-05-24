@@ -4,21 +4,21 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.skills.master.a.MainMasterScreen
-import com.example.skills.master.b.CalendarScreen
-import com.example.skills.master.c.MasterClientServicesScreen
-import com.example.skills.master.d.ChangeCategoryScreen
-import com.example.skills.master.d.CreateServiceCardScreen
-import com.example.skills.master.d.CreateServiceScreen
-import com.example.skills.master.d.EditServiceCardScreen
-import com.example.skills.master.d.MasterMyServicesScreen
-import com.example.skills.master.e.EditPasswordScreen
-import com.example.skills.master.e.EditProfileScreen
-import com.example.skills.master.e.MasterSettingsScreen
-import com.example.skills.master.e.NotificationSettingsScreen
+import com.example.skills.ui.master.a.MainMasterScreen
+import com.example.skills.ui.master.b.CalendarScreen
+import com.example.skills.ui.master.c.MasterClientServicesScreen
+import com.example.skills.ui.master.d.ChangeCategoryScreen
+import com.example.skills.ui.master.d.CreateServiceCardScreen
+import com.example.skills.ui.master.d.CreateServiceScreen
+import com.example.skills.ui.master.d.EditServiceCardScreen
+import com.example.skills.ui.master.d.MasterMyServicesScreen
+import com.example.skills.ui.master.e.EditPasswordScreen
+import com.example.skills.ui.master.e.EditProfileScreen
+import com.example.skills.ui.master.e.MasterSettingsScreen
+import com.example.skills.ui.master.e.NotificationSettingsScreen
 import com.example.skills.general.ScreenRole
 import com.example.skills.general.navigation.ScreenMaster
-import com.example.skills.master.a.ShareProfileScreen
+import com.example.skills.ui.master.a.ShareProfileScreen
 
 @Composable
 fun SetupMasterNavGraph(
