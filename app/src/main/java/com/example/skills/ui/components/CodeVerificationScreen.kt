@@ -46,12 +46,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.api.ActivationRequest
-import com.example.skills.data.api.ActivationResponse
-import com.example.skills.data.api.Network.apiService
 import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
 import kotlinx.coroutines.delay
-import retrofit2.Response
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -156,7 +153,15 @@ private fun CodeVerificationComponents(
         if (timeLeft > 0) {
             Text("Отправить код повторно через $timeLeft сек", fontSize = 14.sp)
         } else {
-            TextButton(onClick = { timeLeft = 55 }) {
+            TextButton(onClick = {
+                timeLeft = 55
+
+                viewModel.activateAccount(ActivationRequest(code)) { isSuccess ->
+                    if (isSuccess) {
+                        navigateTo.invoke()
+                    }
+                }
+            }) {
                 Text("Отправить код повторно", fontSize = 14.sp)
             }
         }
@@ -164,8 +169,10 @@ private fun CodeVerificationComponents(
 
         CustomButton(
             {
-                viewModel.activateAccount(code) { isSuccess ->
-                    if (isSuccess) {
+                Log.d(MY_LOG, "code is $code")
+
+                viewModel.activateAccount(ActivationRequest(code)) { successful ->
+                    if (successful) {
                         navigateTo.invoke()
                     }
                 }

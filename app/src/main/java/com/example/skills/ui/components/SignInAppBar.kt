@@ -180,18 +180,20 @@ fun ContentSingIn(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
+
             CustomButton(
                 navigateTo = {
                     Log.e(MY_LOG, "click!")
 
+                    //  If the birthDate = null, then the master is registered, otherwise the Client. Date format is yyyy-MM-dd.
                     if (emailState.isValid && passwordState.isValid) {
                         val authRequest = AuthRequest(
                             email = emailState.text.trim(),
                             password = passwordState.text.trim(),
                             firstName = firstName,
                             lastName = secondName,
-                            phoneNumber = phone,
-                            birthDate = LocalDate.now().toString()
+                            phoneNumber = phone
+                          //  birthDate = LocalDate.now().toString()
                         )
                         viewModel.registerUser(authRequest) { successful ->
                             if (successful) {

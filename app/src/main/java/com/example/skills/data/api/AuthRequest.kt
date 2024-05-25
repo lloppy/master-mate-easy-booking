@@ -10,7 +10,7 @@ data class AuthRequest(
     val firstName: String,
     val lastName: String,
     val phoneNumber: String,
-    val birthDate: String?
+    val birthDate: String? = null
 )
 
 

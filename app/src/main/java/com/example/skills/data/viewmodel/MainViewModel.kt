@@ -24,22 +24,22 @@ class MainViewModel(context: Context) : ViewModel() {
 
     private val preferences: SharedPreferences = context.getSharedPreferences("user_credentials", Context.MODE_PRIVATE)
 
-    fun activateAccount(activationCode: String, onActivationComplete: (Boolean) -> Unit) {
+    fun activateAccount(activationRequest: ActivationRequest, onResponse: (Boolean) -> Unit) {
         viewModelScope.launch {
             try {
-                val response = apiService.activate(ActivationRequest(activationCode))
-                if (!response.isSuccessful) {
-                    Log.e(MY_LOG, "Server returned an error: ${response.errorBody()}")
-                    onActivationComplete.invoke(false)
-                    return@launch
+                val response = apiService.activate(activationRequest)
+                Log.d(MY_LOG, "activateAccount isSuccessful ${response.body()!!.status}")
+
+                if (response.isSuccessful && response.body()!!.status != null ) {
+                    Log.d(MY_LOG, "activateAccount isSuccessful ${response.body()!!.status}")
+                    onResponse(true)
+                } else {
+                    Log.e(MY_LOG, "activateAccount - Server returned an error: ${response.errorBody()?.string()}")
+                    onResponse(false)
                 }
-                Log.d(MY_LOG, "isSuccessful ${response.body()?.status}")
-                onActivationComplete.invoke(true)
-                return@launch
             } catch (e: Exception) {
-                Log.e(MY_LOG,"Exception occurred: ${e.message}")
-                onActivationComplete.invoke(false)
-                return@launch
+                Log.e(MY_LOG,"Exception occurred in activateAccount: ${e.message}")
+                onResponse(false)
             }
         }
     }
