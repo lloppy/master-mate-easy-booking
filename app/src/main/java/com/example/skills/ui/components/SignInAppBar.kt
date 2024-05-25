@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -25,6 +25,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,14 +41,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.skills.data.api.ApiService
 import com.example.skills.data.api.AuthRequest
+import com.example.skills.data.api.Network.apiService
+import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.ui.components.tools.EmailState
 import com.example.skills.ui.components.tools.EmailStateSaver
 import com.example.skills.ui.components.tools.PasswordState
 import com.example.skills.ui.theme.backgroundMaterial
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import java.net.SocketTimeoutException
+import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,7 +78,7 @@ fun RegistrationScreen(
                     Row {
                         IconButton(onClick = { navController.popBackStack() }) {
                             Icon(
-                                imageVector = Icons.Filled.ArrowBack,
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 tint = Color.Black,
                                 contentDescription = "Localized description"
                             )
@@ -96,6 +98,8 @@ fun ContentSingIn(
     innerPadding: PaddingValues,
     navigateToCodeVerification: () -> Unit
 ) {
+    var submitClicked by remember { mutableStateOf(false) }
+
     var email by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
     var secondName by remember { mutableStateOf("") }
@@ -106,29 +110,43 @@ fun ContentSingIn(
     }
     val passwordState = remember { PasswordState() }
     val passwordStateRepeat = remember { PasswordState() }
-    val onSubmit = @androidx.compose.runtime.Composable {
-        val apiService: ApiService = Retrofit.Builder()
-            .baseUrl("http://localhost:8080/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(ApiService::class.java)
 
+    val onSubmit: @Composable () -> Unit = {
         if (emailState.isValid && passwordState.isValid) {
-            val authRequest = AuthRequest(emailState.text.trim(), passwordState.text.trim())
-//            LaunchedEffect(authRequest) {
-//                val response = apiService.register(authRequest)
-//                if (response.isSuccessful) {
-//                    Log.e("RegistrationError", "body code is ${response.body()!!.token} ${response.body()}")
-//                    navigateToCodeVerification() // тут переделать
-//                } else {
-//                    Log.e("RegistrationError", "Server returned an error: ${response.errorBody()}")
-//                }
-//            }
-        } else {
-            Log.e("RegistrationError", "emailState.isValid && passwordState.isValid not valid")
-        }
+            val authRequest = AuthRequest(
+                email = emailState.text.trim(),
+                password = passwordState.text.trim(),
+                firstName = firstName,
+                lastName = secondName,
+                phoneNumber = phone,
+                birthDate = LocalDate.now().toString()
+            )
 
+            LaunchedEffect(key1 = submitClicked, block = {
+                try {
+                    val response = apiService.register(authRequest)
+                    if (response.isSuccessful) {
+                        Log.e(MY_LOG, "body code is ${response.body()!!.token} ${response.body()}")
+                        navigateToCodeVerification.invoke()
+                    } else {
+                        Log.e(MY_LOG, "Server returned an error: ${response.errorBody()}")
+                    }
+                } catch (e: Exception) {
+                    when (e) {
+                        is SocketTimeoutException -> {
+                            Log.e(MY_LOG, "API request timed out")
+                        }
+                        else -> {
+                            Log.e(MY_LOG, "Unknown API error occurred: ${e.localizedMessage}")
+                        }
+                    }
+                }
+            })
+        } else {
+            Log.e(MY_LOG, "emailState.isValid && passwordState.isValid not valid")
+        }
     }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -201,9 +219,11 @@ fun ContentSingIn(
                 Spacer(modifier = Modifier.height(16.dp))
             }
             CustomButton(
-                navigateTo = navigateToCodeVerification, //тут похоже переделать
-                buttonText = "Зарегистрироваться"
-                // action = onSubmit()
+                navigateTo = {
+//                    if (emailState.isValid && passwordState.isValid) navigateToCodeVerification.invoke()
+                },
+                buttonText = "Зарегистрироваться",
+                action = onSubmit()
             )
         }
     }

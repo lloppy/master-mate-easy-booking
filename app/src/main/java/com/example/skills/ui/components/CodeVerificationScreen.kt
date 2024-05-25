@@ -1,5 +1,6 @@
 package com.example.skills.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -44,8 +45,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.skills.data.api.ActivationRequest
 import com.example.skills.data.api.ActivationResponse
 import com.example.skills.data.api.ApiService
+import com.example.skills.data.api.Network.apiService
+import com.example.skills.data.viewmodel.MY_LOG
 import kotlinx.coroutines.delay
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -159,20 +163,25 @@ private fun CodeVerificationComponents(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        val apiService: ApiService = Retrofit.Builder()
-            .baseUrl("http://localhost:8080/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(ApiService::class.java)
 
         var activationResponse: Response<ActivationResponse>? = null
 
-//        LaunchedEffect(activationCode) {
-//            activationResponse = apiService.activate(ActivationRequest(activationCode))
-//                navigateTo()
-//        }
+        LaunchedEffect(activationCode) {
+            activationResponse = apiService.activate(ActivationRequest(activationCode))
+
+            if (activationResponse!!.isSuccessful) {
+                Log.e(
+                    MY_LOG,
+                    "body status is ${activationResponse!!.body()!!.status} ${activationResponse!!.body()}"
+                )
+                navigateTo.invoke()
+            } else {
+                Log.e(MY_LOG, "Server returned an error: ${activationResponse!!.errorBody()}")
+            }
+        }
+
         CustomButton(
-            navigateTo,
+            {},
             "Подтвердить"
         )
     }

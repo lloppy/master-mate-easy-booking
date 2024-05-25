@@ -5,6 +5,7 @@ import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Part
 
@@ -20,7 +21,7 @@ interface ApiService {
     suspend fun activate(@Body activationRequest: ActivationRequest): Response<ActivationResponse>
 
     @GET("api/users/me")
-    suspend fun getUserById(): Response<User>
+    suspend fun getUserByToken(@Header("Authorization") token: String): Response<User>
 
     @POST("api/users/me/edit/profilePicture")
     suspend fun uploadProfilePicture(@Part file: MultipartBody.Part): Response<String>

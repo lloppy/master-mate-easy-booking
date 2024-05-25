@@ -3,6 +3,7 @@ package com.example.skills
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.skills.navigation.SetupRoleNavGraph
@@ -16,7 +17,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             SkillsTheme {
                 roleNavController = rememberNavController()
-                SetupRoleNavGraph(roleNavController)
+                SetupRoleNavGraph(roleNavController, LocalContext.current)
             }
         }
     }

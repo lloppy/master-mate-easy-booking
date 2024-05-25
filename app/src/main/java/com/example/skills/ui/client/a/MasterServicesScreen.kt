@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.client.components.a.new_booking.ServiceCardClient
-import com.example.skills.data.viewmodel.BookingViewModel
+import com.example.skills.data.viewmodel.route.BookingViewModel
 import com.example.skills.data.viewmodel.MyRepository
 import com.example.skills.ui.theme.paddingBetweenElements
 

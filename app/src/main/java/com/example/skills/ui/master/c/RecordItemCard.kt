@@ -38,7 +38,7 @@ import androidx.navigation.NavHostController
 import com.example.skills.R
 import com.example.skills.data.entity.RecordItem
 import com.example.skills.data.entity.RecordStatus
-import com.example.skills.data.viewmodel.EditBookingViewModel
+import com.example.skills.data.viewmodel.route.EditBookingViewModel
 import com.example.skills.data.viewmodel.MyRepository.getMaster
 import com.example.skills.data.viewmodel.MyRepository.getService
 import com.example.skills.navigation.ScreenRole

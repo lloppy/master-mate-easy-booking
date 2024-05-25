@@ -6,13 +6,17 @@ import java.time.LocalDateTime
 
 data class AuthRequest(
     val email: String,
-    val password: String
+    val password: String,
+    val firstName: String,
+    val lastName: String,
+    val phoneNumber: String,
+    val birthDate: String?
 )
 
 
 data class AuthResponse(
     val token: String,
-    val error: String
+    val error: String?
 )
 
 data class ActivationRequest(
@@ -20,7 +24,7 @@ data class ActivationRequest(
 )
 
 data class ActivationResponse(
-    val message: String
+    val status: String
 )
 
 data class EditMasterRequest(

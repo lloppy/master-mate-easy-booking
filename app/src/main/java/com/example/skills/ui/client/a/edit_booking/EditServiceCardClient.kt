@@ -23,7 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.skills.client.components.a.new_booking.paddingBetweenText
 import com.example.skills.data.roles.Master
 import com.example.skills.data.entity.Service
-import com.example.skills.data.viewmodel.EditBookingViewModel
+import com.example.skills.data.viewmodel.route.EditBookingViewModel
 import com.example.skills.ui.master.b.calendar.clickable
 
 

@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityOptionsCompat
 import com.example.skills.data.roles.Master
-import com.example.skills.data.viewmodel.BookingViewModel
+import com.example.skills.data.viewmodel.route.BookingViewModel
 import com.example.skills.data.viewmodel.MyRepository.getMastersList
 import com.example.skills.ui.components.QRCodeScannerScreen
 

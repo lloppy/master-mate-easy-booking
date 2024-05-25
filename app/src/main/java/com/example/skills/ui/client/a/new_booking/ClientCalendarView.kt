@@ -29,7 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
-import com.example.skills.data.viewmodel.BookingViewModel
+import com.example.skills.data.viewmodel.route.BookingViewModel
 import com.example.skills.ui.master.b.calendar.ContinuousSelectionHelper.getSelection
 import com.example.skills.ui.master.b.calendar.DateSelection
 import com.example.skills.ui.master.b.calendar.backgroundHighlight

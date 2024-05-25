@@ -1,11 +1,14 @@
 package com.example.skills.navigation
 
+import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.RoleScreen
 import com.example.skills.ui.client.MainClientLayout
 import com.example.skills.ui.components.CodeVerificationScreen
@@ -19,7 +22,7 @@ import com.example.skills.ui.components.NewPasswordScreen
 import com.example.skills.ui.components.RegistrationScreen
 import com.example.skills.ui.master.MainMasterLayout
 
-fun NavGraphBuilder.clientNavGraph(navController: NavHostController) {
+fun NavGraphBuilder.clientNavGraph(navController: NavHostController, mainViewModel: ViewModel) {
     navigation(
         startDestination = ScreenRole.Client.LogIn.route,
         route = "client"
@@ -104,7 +107,7 @@ fun NavGraphBuilder.clientNavGraph(navController: NavHostController) {
     }
 }
 
-fun NavGraphBuilder.masterNavGraph(navController: NavHostController) {
+fun NavGraphBuilder.masterNavGraph(navController: NavHostController, mainViewModel: ViewModel) {
     navigation(
         startDestination = ScreenRole.Master.LogIn.route,
         route = "master"
@@ -205,15 +208,16 @@ fun NavGraphBuilder.masterNavGraph(navController: NavHostController) {
 }
 
 @Composable
-fun SetupRoleNavGraph(navHostController: NavHostController) {
+fun SetupRoleNavGraph(navHostController: NavHostController, context: Context) {
     NavHost(navController = navHostController, startDestination = ScreenRole.RoleLayout.route) {
+        val mainViewModel = MainViewModel(context = context)
 
         // Стартовая страница
         composable(ScreenRole.RoleLayout.route) {
             RoleScreen(navController = navHostController)
         }
 
-        clientNavGraph(navController = navHostController)
-        masterNavGraph(navController = navHostController)
+        clientNavGraph(navController = navHostController, mainViewModel)
+        masterNavGraph(navController = navHostController, mainViewModel)
     }
 }
