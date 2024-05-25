@@ -47,20 +47,19 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.api.ActivationRequest
 import com.example.skills.data.api.ActivationResponse
-import com.example.skills.data.api.ApiService
 import com.example.skills.data.api.Network.apiService
 import com.example.skills.data.viewmodel.MY_LOG
+import com.example.skills.data.viewmodel.MainViewModel
 import kotlinx.coroutines.delay
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CodeVerificationScreen(
     navController: NavHostController,
     navigateToDoneRegistration: (() -> Unit)? = null,
-    navigateToCreateNewPassword: (() -> Unit)? = null
+    navigateToCreateNewPassword: (() -> Unit)? = null,
+    viewModel: MainViewModel
 ) {
     var activationCode by remember { mutableStateOf("") }
 
@@ -99,7 +98,7 @@ fun CodeVerificationScreen(
         CodeVerificationComponents(
             innerPadding,
             navigateToDoneRegistration ?: navigateToCreateNewPassword!!,
-            activationCode
+            viewModel
         )
     }
 }
@@ -108,7 +107,7 @@ fun CodeVerificationScreen(
 private fun CodeVerificationComponents(
     innerPadding: PaddingValues,
     navigateTo: () -> Unit,
-    activationCode: String
+    viewModel: MainViewModel
 ) {
     var code by remember { mutableStateOf("") }
     var timeLeft by remember { mutableStateOf(55) }
@@ -161,27 +160,16 @@ private fun CodeVerificationComponents(
                 Text("Отправить код повторно", fontSize = 14.sp)
             }
         }
-
         Spacer(modifier = Modifier.height(16.dp))
 
-        var activationResponse: Response<ActivationResponse>? = null
-
-        LaunchedEffect(activationCode) {
-            activationResponse = apiService.activate(ActivationRequest(activationCode))
-
-            if (activationResponse!!.isSuccessful) {
-                Log.e(
-                    MY_LOG,
-                    "body status is ${activationResponse!!.body()!!.status} ${activationResponse!!.body()}"
-                )
-                navigateTo.invoke()
-            } else {
-                Log.e(MY_LOG, "Server returned an error: ${activationResponse!!.errorBody()}")
-            }
-        }
-
         CustomButton(
-            {},
+            {
+                viewModel.activateAccount(code) { isSuccess ->
+                    if (isSuccess) {
+                        navigateTo.invoke()
+                    }
+                }
+            },
             "Подтвердить"
         )
     }

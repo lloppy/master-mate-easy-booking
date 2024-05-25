@@ -3,6 +3,7 @@ package com.example.skills.navigation
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -22,12 +23,11 @@ import com.example.skills.ui.components.NewPasswordScreen
 import com.example.skills.ui.components.RegistrationScreen
 import com.example.skills.ui.master.MainMasterLayout
 
-fun NavGraphBuilder.clientNavGraph(navController: NavHostController, mainViewModel: ViewModel) {
+fun NavGraphBuilder.clientNavGraph(navController: NavHostController, mainViewModel: MainViewModel) {
     navigation(
         startDestination = ScreenRole.Client.LogIn.route,
         route = "client"
     ) {
-
         composable(ScreenRole.Client.LogIn.route) {
             LogInScreen(
                 navController = navController,
@@ -49,7 +49,8 @@ fun NavGraphBuilder.clientNavGraph(navController: NavHostController, mainViewMod
                 navController = navController, // используется только для стрелки Назад
                 navigateToCodeVerification = {
                     navController.navigate(ScreenRole.Client.CodeVerification.route)
-                }
+                },
+                viewModel = mainViewModel
             )
         }
 
@@ -71,7 +72,8 @@ fun NavGraphBuilder.clientNavGraph(navController: NavHostController, mainViewMod
                 navController = navController,
                 navigateToDoneRegistration = {
                     navController.navigate(ScreenRole.Client.DoneRegistration.route)
-                }
+                },
+                viewModel = mainViewModel
             )
         }
 
@@ -80,7 +82,8 @@ fun NavGraphBuilder.clientNavGraph(navController: NavHostController, mainViewMod
                 navController = navController,
                 navigateToCreateNewPassword = {
                     navController.navigate(ScreenRole.Client.CreateNewPassword.route)
-                }
+                },
+                viewModel = mainViewModel
             )
         }
 
@@ -100,14 +103,14 @@ fun NavGraphBuilder.clientNavGraph(navController: NavHostController, mainViewMod
                 },
                 navigateToSetUpCalendar = {
                     //TODO()
-                },
+                }
             )
         }
 
     }
 }
 
-fun NavGraphBuilder.masterNavGraph(navController: NavHostController, mainViewModel: ViewModel) {
+fun NavGraphBuilder.masterNavGraph(navController: NavHostController, mainViewModel: MainViewModel) {
     navigation(
         startDestination = ScreenRole.Master.LogIn.route,
         route = "master"
@@ -133,7 +136,8 @@ fun NavGraphBuilder.masterNavGraph(navController: NavHostController, mainViewMod
                 navController = navController,
                 navigateToCodeVerification = {
                     navController.navigate(ScreenRole.Master.CodeVerification.route)
-                }
+                },
+                viewModel = mainViewModel
             )
         }
 
@@ -155,7 +159,8 @@ fun NavGraphBuilder.masterNavGraph(navController: NavHostController, mainViewMod
                 navController = navController,
                 navigateToDoneRegistration = {
                     navController.navigate(ScreenRole.Master.DoneRegistration.route)
-                }
+                },
+                viewModel = mainViewModel
             )
         }
 
@@ -164,7 +169,8 @@ fun NavGraphBuilder.masterNavGraph(navController: NavHostController, mainViewMod
                 navController = navController,
                 navigateToCreateNewPassword = {
                     navController.navigate(ScreenRole.Master.CreateNewPassword.route)
-                }
+                },
+                viewModel = mainViewModel
             )
         }
 

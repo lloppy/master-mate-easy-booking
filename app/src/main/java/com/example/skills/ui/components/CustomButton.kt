@@ -56,12 +56,10 @@ fun CustomButton(
     width: Float = 1f,
     color: Color = Color.Black,
     enabled: Boolean = true,
-    action: Any? = null
 ) {
     Button(
         onClick = {
             navigateTo.invoke()
-            action
         },
         modifier = Modifier
             .fillMaxWidth(width)

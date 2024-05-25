@@ -25,7 +25,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,20 +41,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.api.AuthRequest
-import com.example.skills.data.api.Network.apiService
 import com.example.skills.data.viewmodel.MY_LOG
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.tools.EmailState
 import com.example.skills.ui.components.tools.EmailStateSaver
 import com.example.skills.ui.components.tools.PasswordState
 import com.example.skills.ui.theme.backgroundMaterial
-import java.net.SocketTimeoutException
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistrationScreen(
     navController: NavHostController,
-    navigateToCodeVerification: () -> Unit
+    navigateToCodeVerification: () -> Unit,
+    viewModel: MainViewModel
 ) {
     Scaffold(
         topBar = {
@@ -89,17 +88,16 @@ fun RegistrationScreen(
             )
         },
     ) { innerPadding ->
-        ContentSingIn(innerPadding, navigateToCodeVerification)
+        ContentSingIn(innerPadding, navigateToCodeVerification, viewModel)
     }
 }
 
 @Composable
 fun ContentSingIn(
     innerPadding: PaddingValues,
-    navigateToCodeVerification: () -> Unit
+    navigateToCodeVerification: () -> Unit,
+    viewModel: MainViewModel
 ) {
-    var submitClicked by remember { mutableStateOf(false) }
-
     var email by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
     var secondName by remember { mutableStateOf("") }
@@ -110,42 +108,6 @@ fun ContentSingIn(
     }
     val passwordState = remember { PasswordState() }
     val passwordStateRepeat = remember { PasswordState() }
-
-    val onSubmit: @Composable () -> Unit = {
-        if (emailState.isValid && passwordState.isValid) {
-            val authRequest = AuthRequest(
-                email = emailState.text.trim(),
-                password = passwordState.text.trim(),
-                firstName = firstName,
-                lastName = secondName,
-                phoneNumber = phone,
-                birthDate = LocalDate.now().toString()
-            )
-
-            LaunchedEffect(key1 = submitClicked, block = {
-                try {
-                    val response = apiService.register(authRequest)
-                    if (response.isSuccessful) {
-                        Log.e(MY_LOG, "body code is ${response.body()!!.token} ${response.body()}")
-                        navigateToCodeVerification.invoke()
-                    } else {
-                        Log.e(MY_LOG, "Server returned an error: ${response.errorBody()}")
-                    }
-                } catch (e: Exception) {
-                    when (e) {
-                        is SocketTimeoutException -> {
-                            Log.e(MY_LOG, "API request timed out")
-                        }
-                        else -> {
-                            Log.e(MY_LOG, "Unknown API error occurred: ${e.localizedMessage}")
-                        }
-                    }
-                }
-            })
-        } else {
-            Log.e(MY_LOG, "emailState.isValid && passwordState.isValid not valid")
-        }
-    }
 
     Column(
         modifier = Modifier
@@ -220,10 +182,27 @@ fun ContentSingIn(
             }
             CustomButton(
                 navigateTo = {
-//                    if (emailState.isValid && passwordState.isValid) navigateToCodeVerification.invoke()
+                    Log.e(MY_LOG, "click!")
+
+                    if (emailState.isValid && passwordState.isValid) {
+                        val authRequest = AuthRequest(
+                            email = emailState.text.trim(),
+                            password = passwordState.text.trim(),
+                            firstName = firstName,
+                            lastName = secondName,
+                            phoneNumber = phone,
+                            birthDate = LocalDate.now().toString()
+                        )
+                        viewModel.registerUser(authRequest) { successful ->
+                            if (successful) {
+                                navigateToCodeVerification.invoke()
+                            }
+                        }
+                    } else {
+                        Log.e(MY_LOG, "emailState.isValid && passwordState.isValid not valid")
+                    }
                 },
-                buttonText = "Зарегистрироваться",
-                action = onSubmit()
+                buttonText = "Зарегистрироваться"
             )
         }
     }
