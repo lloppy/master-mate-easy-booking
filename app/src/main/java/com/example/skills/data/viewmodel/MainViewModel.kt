@@ -32,7 +32,7 @@ class MainViewModel(context: Context) : ViewModel() {
     private var _userToken: String? = null
         private set
 
-    private val userIsAuthenticated = mutableStateOf(false)
+    val userIsAuthenticated = mutableStateOf(false)
     private val preferences: SharedPreferences =
         context.getSharedPreferences("user_credentials", Context.MODE_PRIVATE)
 

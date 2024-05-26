@@ -20,13 +20,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.skills.R
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.navigation.ScreenRole
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.theme.fontFamilyInter
 
 @Composable
 fun RoleScreen(navController: NavController) {
-
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -87,6 +87,5 @@ fun RoleScreen(navController: NavController) {
                 color = Color.Transparent
             )
         }
-
     }
 }

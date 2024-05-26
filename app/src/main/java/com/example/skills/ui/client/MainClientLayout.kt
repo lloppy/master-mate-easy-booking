@@ -3,16 +3,17 @@ package com.example.skills.ui.client
 import android.annotation.SuppressLint
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.navigation.nav_bar.client.SetupClientNavGraph
 import com.example.skills.navigation.nav_bar.client.ClientBottomNavigation
 import com.example.skills.navigation.ScreenRole
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainClientLayout() {
-    val navController = rememberNavController()
+fun MainClientLayout(navController: NavHostController, mainViewmodel: MainViewModel) {
     val hideList = setOf(
         ScreenRole.Client.EditProfile.route,
         ScreenRole.Client.Notifications.route,
@@ -28,6 +29,6 @@ fun MainClientLayout() {
                 ClientBottomNavigation(navController = navController)
             }
         }) {
-        SetupClientNavGraph(navHostController = navController)
+        SetupClientNavGraph(navHostController = navController, mainViewModel = mainViewmodel)
     }
 }

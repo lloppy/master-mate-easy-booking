@@ -18,6 +18,7 @@ import com.example.skills.client.components.a.new_booking.ConfirmClientBookingSc
 import com.example.skills.client.components.a.new_booking.DoneClientBookingScreen
 import com.example.skills.client.components.a.new_booking.SelectDateScreen
 import com.example.skills.client.components.a.new_booking.SelectTimeScreen
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.viewmodel.route.BookingViewModel
 import com.example.skills.data.viewmodel.route.EditBookingViewModel
 import com.example.skills.navigation.ScreenRole
@@ -29,6 +30,7 @@ import com.example.skills.ui.master.e.NotificationSettingsScreen
 @Composable
 fun SetupClientNavGraph(
     navHostController: NavHostController,
+    mainViewModel: MainViewModel
 ) {
     // BookingViewModel
     val bookingViewModel: BookingViewModel = viewModel()

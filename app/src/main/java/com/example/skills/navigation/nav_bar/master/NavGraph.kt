@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.master.a.MainMasterScreen
 import com.example.skills.ui.master.b.CalendarScreen
 import com.example.skills.ui.master.c.MasterClientServicesScreen
@@ -23,6 +24,7 @@ import com.example.skills.ui.master.a.ShareProfileScreen
 @Composable
 fun SetupMasterNavGraph(
     navHostController: NavHostController,
+    mainViewModel: MainViewModel
 ) {
     NavHost(
         navController = navHostController,
@@ -35,6 +37,7 @@ fun SetupMasterNavGraph(
                 navigateToShare = {
                     navHostController.navigate(ScreenRole.Master.ShareProfile.route)
                 },
+                viewModel = mainViewModel
             )
         }
         composable(ScreenRole.Master.ShareProfile.route) {

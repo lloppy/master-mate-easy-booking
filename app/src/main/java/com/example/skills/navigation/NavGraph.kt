@@ -1,13 +1,11 @@
 package com.example.skills.navigation
 
-import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.RoleScreen
@@ -23,32 +21,32 @@ import com.example.skills.ui.components.NewPasswordScreen
 import com.example.skills.ui.components.RegistrationScreen
 import com.example.skills.ui.master.MainMasterLayout
 
-fun NavGraphBuilder.clientNavGraph(navController: NavHostController, mainViewModel: MainViewModel) {
+fun NavGraphBuilder.clientNavGraph(navHostController: NavHostController, mainViewModel: MainViewModel) {
     navigation(
         startDestination = ScreenRole.Client.LogIn.route,
         route = "client"
     ) {
         composable(ScreenRole.Client.LogIn.route) {
             LogInScreen(
-                navController = navController,
+                navController = navHostController,
                 routeLogIn = ScreenRole.Client.MainLayout.route,
                 navigateToRegistration = {
-                    navController.navigate(ScreenRole.Client.Registration.route)
+                    navHostController.navigate(ScreenRole.Client.Registration.route)
                 },
                 navigateToForgotPassword = {
-                    navController.navigate(ScreenRole.Client.ForgotPassword.route)
+                    navHostController.navigate(ScreenRole.Client.ForgotPassword.route)
                 },
                 navigateToMain = {
-                    navController.navigate(ScreenRole.Client.MainLayout.route)
+                    navHostController.navigate(ScreenRole.Client.MainLayout.route)
                 }
             )
         }
 
         composable(ScreenRole.Client.Registration.route) {
             RegistrationScreen(
-                navController = navController, // используется только для стрелки Назад
+                navController = navHostController, // используется только для стрелки Назад
                 navigateToCodeVerification = {
-                    navController.navigate(ScreenRole.Client.CodeVerification.route)
+                    navHostController.navigate(ScreenRole.Client.CodeVerification.route)
                 },
                 viewModel = mainViewModel,
                 isClient = true
@@ -56,23 +54,26 @@ fun NavGraphBuilder.clientNavGraph(navController: NavHostController, mainViewMod
         }
 
         composable(ScreenRole.Client.MainLayout.route) {
-            MainClientLayout()
+            MainClientLayout(
+                navController = rememberNavController(),
+                mainViewmodel = mainViewModel
+            )
         }
 
         composable(ScreenRole.Client.ForgotPassword.route) {
             ForgotPasswordScreen(
-                navController = navController,
+                navController = navHostController,
                 navigateToCodeVerification = {
-                    navController.navigate(ScreenRole.Client.VerificationEmailForNewPassword.route)
+                    navHostController.navigate(ScreenRole.Client.VerificationEmailForNewPassword.route)
                 }
             )
         }
 
         composable(ScreenRole.Client.CodeVerification.route) {
             CodeVerificationScreen(
-                navController = navController,
+                navController = navHostController,
                 navigateToDoneRegistration = {
-                    navController.navigate(ScreenRole.Client.DoneRegistration.route)
+                    navHostController.navigate(ScreenRole.Client.DoneRegistration.route)
                 },
                 viewModel = mainViewModel
             )
@@ -80,9 +81,9 @@ fun NavGraphBuilder.clientNavGraph(navController: NavHostController, mainViewMod
 
         composable(ScreenRole.Client.VerificationEmailForNewPassword.route) {
             CodeVerificationScreen(
-                navController = navController,
+                navController = navHostController,
                 navigateToCreateNewPassword = {
-                    navController.navigate(ScreenRole.Client.CreateNewPassword.route)
+                    navHostController.navigate(ScreenRole.Client.CreateNewPassword.route)
                 },
                 viewModel = mainViewModel
             )
@@ -90,9 +91,9 @@ fun NavGraphBuilder.clientNavGraph(navController: NavHostController, mainViewMod
 
         composable(ScreenRole.Client.CreateNewPassword.route) {
             NewPasswordScreen(
-                navController = navController,
+                navController = navHostController,
                 navigateToMain = {
-                    navController.navigate(ScreenRole.Client.MainLayout.route)
+                    navHostController.navigate(ScreenRole.Client.MainLayout.route)
                 }
             )
         }
@@ -100,7 +101,7 @@ fun NavGraphBuilder.clientNavGraph(navController: NavHostController, mainViewMod
         composable(ScreenRole.Client.DoneRegistration.route) {
             DoneClientRegistrationScreen(
                 navigateToMain = {
-                    navController.navigate(ScreenRole.Client.MainLayout.route)
+                    navHostController.navigate(ScreenRole.Client.MainLayout.route)
                 },
                 navigateToSetUpCalendar = {
                     //TODO()
@@ -111,55 +112,58 @@ fun NavGraphBuilder.clientNavGraph(navController: NavHostController, mainViewMod
     }
 }
 
-fun NavGraphBuilder.masterNavGraph(navController: NavHostController, mainViewModel: MainViewModel) {
+fun NavGraphBuilder.masterNavGraph(navHostController: NavHostController, mainViewModel: MainViewModel) {
     navigation(
-        startDestination = ScreenRole.Master.LogIn.route,
+        startDestination = ScreenRole.Master.MainLayout.route,
         route = "master"
     ) {
         composable(ScreenRole.Master.LogIn.route) {
             LogInScreen(
-                navController = navController,
+                navController = navHostController,
                 routeLogIn = ScreenRole.Master.MainLayout.route,
                 navigateToRegistration = {
-                    navController.navigate(ScreenRole.Master.Registration.route)
+                    navHostController.navigate(ScreenRole.Master.Registration.route)
                 },
                 navigateToForgotPassword = {
-                    navController.navigate(ScreenRole.Master.ForgotPassword.route)
+                    navHostController.navigate(ScreenRole.Master.ForgotPassword.route)
                 },
                 navigateToMain = {
-                    navController.navigate(ScreenRole.Master.MainLayout.route)
+                    navHostController.navigate(ScreenRole.Master.MainLayout.route)
                 }
             )
         }
 
         composable(ScreenRole.Master.Registration.route) {
             RegistrationScreen(
-                navController = navController,
+                navController = navHostController,
                 navigateToCodeVerification = {
-                    navController.navigate(ScreenRole.Master.CodeVerification.route)
+                    navHostController.navigate(ScreenRole.Master.CodeVerification.route)
                 },
                 viewModel = mainViewModel
             )
         }
 
         composable(ScreenRole.Master.MainLayout.route) {
-            MainMasterLayout()
+            MainMasterLayout(
+                navController = rememberNavController(),
+                mainViewmodel = mainViewModel
+            )
         }
 
         composable(ScreenRole.Master.ForgotPassword.route) {
             ForgotPasswordScreen(
-                navController = navController,
+                navController = navHostController,
                 navigateToCodeVerification = {
-                    navController.navigate(ScreenRole.Master.VerificationEmailForNewPassword.route)
+                    navHostController.navigate(ScreenRole.Master.VerificationEmailForNewPassword.route)
                 }
             )
         }
 
         composable(ScreenRole.Master.CodeVerification.route) {
             CodeVerificationScreen(
-                navController = navController,
+                navController = navHostController,
                 navigateToDoneRegistration = {
-                    navController.navigate(ScreenRole.Master.DoneRegistration.route)
+                    navHostController.navigate(ScreenRole.Master.DoneRegistration.route)
                 },
                 viewModel = mainViewModel
             )
@@ -167,9 +171,9 @@ fun NavGraphBuilder.masterNavGraph(navController: NavHostController, mainViewMod
 
         composable(ScreenRole.Master.VerificationEmailForNewPassword.route) {
             CodeVerificationScreen(
-                navController = navController,
+                navController = navHostController,
                 navigateToCreateNewPassword = {
-                    navController.navigate(ScreenRole.Master.CreateNewPassword.route)
+                    navHostController.navigate(ScreenRole.Master.CreateNewPassword.route)
                 },
                 viewModel = mainViewModel
             )
@@ -177,9 +181,9 @@ fun NavGraphBuilder.masterNavGraph(navController: NavHostController, mainViewMod
 
         composable(ScreenRole.Master.CreateNewPassword.route) {
             NewPasswordScreen(
-                navController = navController,
+                navController = navHostController,
                 navigateToMain = {
-                    navController.navigate(ScreenRole.Master.MainLayout.route)
+                    navHostController.navigate(ScreenRole.Master.MainLayout.route)
                 }
             )
         }
@@ -187,16 +191,16 @@ fun NavGraphBuilder.masterNavGraph(navController: NavHostController, mainViewMod
         composable(ScreenRole.Master.DoneRegistration.route) {
             DoneMasterRegistrationScreen(
                 navigateToFullProfile = {
-                    navController.navigate(ScreenRole.Master.FullProfile.route)
+                    navHostController.navigate(ScreenRole.Master.FullProfile.route)
                 }
             )
         }
 
         composable(ScreenRole.Master.FullProfile.route) {
             FullProfileScreen(
-                navController = navController,
+                navController = navHostController,
                 navigateToDoneRegistration = {
-                    navController.navigate(ScreenRole.Master.DoneMasterInfoRegistration.route)
+                    navHostController.navigate(ScreenRole.Master.DoneMasterInfoRegistration.route)
                 },
                 viewModel = mainViewModel
             )
@@ -205,7 +209,7 @@ fun NavGraphBuilder.masterNavGraph(navController: NavHostController, mainViewMod
         composable(ScreenRole.Master.DoneMasterInfoRegistration.route) {
             DoneMasterInfoRegistrationScreen(
                 navigateToMain = {
-                    navController.navigate(ScreenRole.Master.MainLayout.route)
+                    navHostController.navigate(ScreenRole.Master.MainLayout.route)
                 },
                 navigateToSetUpCalendar = {
                     //TODO()
@@ -216,16 +220,15 @@ fun NavGraphBuilder.masterNavGraph(navController: NavHostController, mainViewMod
 }
 
 @Composable
-fun SetupRoleNavGraph(navHostController: NavHostController, context: Context) {
+fun SetupRoleNavGraph(navHostController: NavHostController, mainViewModel: MainViewModel) {
     NavHost(navController = navHostController, startDestination = ScreenRole.RoleLayout.route) {
-        val mainViewModel = MainViewModel(context = context)
 
-        // Стартовая страница
         composable(ScreenRole.RoleLayout.route) {
             RoleScreen(navController = navHostController)
         }
 
-        clientNavGraph(navController = navHostController, mainViewModel)
-        masterNavGraph(navController = navHostController, mainViewModel)
+        clientNavGraph(navHostController = navHostController, mainViewModel)
+        masterNavGraph(navHostController = navHostController, mainViewModel)
+
     }
 }
