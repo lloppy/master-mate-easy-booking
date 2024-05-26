@@ -36,14 +36,14 @@ import com.example.skills.ui.theme.fontFamilyInter
 fun ProfileHead(user: User) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
+
+    // TODO() сделать загрузку иконки
     val imageName = user.master?.profileImageId ?: "master"
     val imageId =
         context.resources.getIdentifier(imageName, "drawable", context.packageName)
     val painter =
         if (imageId != 0) painterResource(id = imageId) else painterResource(id = R.drawable.master)
 
-    val uri = Uri.parse(user.master?.linkCode)
-    val intent = Intent(Intent.ACTION_VIEW, uri)
 
     Column(
         modifier = Modifier
@@ -79,55 +79,61 @@ fun ProfileHead(user: User) {
                 modifier = Modifier.padding(start = 12.dp, end = 12.dp)
             )
         }
-        if (!expanded) {
-            Text(
-                text = "... ещё",
-                color = Color.Gray,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Normal,
-                modifier = Modifier
-                    .clickable {
-                        expanded = !expanded
-                    })
+        if (user.master?.address?.city != null) {
+            if (!expanded) {
+                Text(
+                    text = "... ещё",
+                    color = Color.Gray,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Normal,
+                    modifier = Modifier
+                        .clickable {
+                            expanded = !expanded
+                        })
+            }
+            if (expanded) {
+                Spacer(modifier = Modifier.height(paddingBetweenText))
+                Text(
+                    text = user.master!!.address.toString(),
+                    fontSize = 14.sp,
+                    fontFamily = fontFamilyInter,
+                    fontWeight = FontWeight.Normal,
+                    textAlign = TextAlign.Center,
+//                lineHeight = 18.sp,
+                    color = Color.Black,
+                    modifier = Modifier.padding(start = 8.dp, end = 8.dp)
+                )
+            }
         }
-        if (expanded) {
+        if (user.master?.messenger != null) {
             Spacer(modifier = Modifier.height(paddingBetweenText))
-            Text(
-                text = user.master!!.address.toString(),
-                fontSize = 14.sp,
-                fontFamily = fontFamilyInter,
-                fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Center,
-//                lineHeight = 18.sp,
-                color = Color.Black,
-                modifier = Modifier.padding(start = 8.dp, end = 8.dp)
-            )
-        }
-        Spacer(modifier = Modifier.height(paddingBetweenText))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_link),
-                contentDescription = "link",
-                tint = Color(0, 122, 255),
-            )
-            Text(
-                text = user.master!!.linkCode!!,
-                fontSize = 14.sp,
-                fontFamily = fontFamilyInter,
-                fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Center,
-//                lineHeight = 18.sp,
-                color = Color(0, 122, 255),
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .clickable {
-                        context.startActivity(intent)
-                    }
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_link),
+                    contentDescription = "messenger link",
+                    tint = Color(0, 122, 255),
+                )
+                Text(
+                    text = user.master!!.messenger!!,
+                    fontSize = 14.sp,
+                    fontFamily = fontFamilyInter,
+                    fontWeight = FontWeight.Normal,
+                    textAlign = TextAlign.Center,
+                    color = Color(0, 122, 255),
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .clickable {
+                            val uri =  Uri.parse(user.master!!.linkCode)
+                            val intent = Intent(Intent.ACTION_VIEW, uri)
+
+                            context.startActivity(intent)
+                        }
+                )
+            }
         }
     }
 }

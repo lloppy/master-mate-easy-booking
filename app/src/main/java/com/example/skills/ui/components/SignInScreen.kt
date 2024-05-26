@@ -26,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,6 +48,7 @@ import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.tools.EmailState
 import com.example.skills.ui.components.tools.EmailStateSaver
+import com.example.skills.ui.components.tools.LoadingScreen
 import com.example.skills.ui.components.tools.PasswordState
 import com.example.skills.ui.theme.backgroundMaterial
 import java.text.SimpleDateFormat
@@ -92,7 +94,13 @@ fun RegistrationScreen(
             )
         },
     ) { innerPadding ->
-        ContentSingIn(innerPadding, navigateToCodeVerification, viewModel, isClient)
+
+        val isLoading by viewModel.isLoading.collectAsState()
+        if (isLoading) {
+            LoadingScreen()
+        } else {
+            ContentSingIn(innerPadding, navigateToCodeVerification, viewModel, isClient)
+        }
     }
 }
 
@@ -213,8 +221,10 @@ fun ContentSingIn(
                             lastName = secondName,
                             phoneNumber = phone,
                             birthDate = if (!isClient) null else {
-                                val sourceFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-                                val desiredFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                                val sourceFormat =
+                                    SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+                                val desiredFormat =
+                                    SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                                 val date = sourceFormat.parse(birthday)
 
                                 desiredFormat.format(date!!)

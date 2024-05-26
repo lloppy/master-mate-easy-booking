@@ -29,6 +29,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,6 +50,7 @@ import com.example.skills.data.api.ActivationRequest
 import com.example.skills.data.api.Network
 import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
+import com.example.skills.ui.components.tools.LoadingScreen
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -93,11 +95,17 @@ fun CodeVerificationScreen(
             )
         },
     ) { innerPadding ->
-        CodeVerificationComponents(
-            innerPadding,
-            navigateToDoneRegistration ?: navigateToCreateNewPassword!!,
-            viewModel
-        )
+
+        val isLoading by viewModel.isLoading.collectAsState()
+        if (isLoading) {
+            LoadingScreen()
+        } else {
+            CodeVerificationComponents(
+                innerPadding,
+                navigateToDoneRegistration ?: navigateToCreateNewPassword!!,
+                viewModel
+            )
+        }
     }
 }
 

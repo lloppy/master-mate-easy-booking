@@ -224,12 +224,11 @@ private fun AddMasterAccountInfo(
         ) {
             CustomButton(
                 {
-                    viewModel.currentUser!!.master!!.description = profileDescription
-                    viewModel.currentUser!!.master!!.linkCode = link
-                    viewModel.currentUser!!.master!!.address = Address(address)
+                    viewModel.currentUser!!.master?.description = profileDescription
+                    viewModel.currentUser!!.master?.linkCode = link
+                    viewModel.currentUser!!.master?.address = Address(address)
 
                     navigateToDoneRegistration.invoke()
-
                 },
                 "Сохранить"
             )

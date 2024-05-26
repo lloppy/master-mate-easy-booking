@@ -14,10 +14,10 @@ import com.example.skills.data.api.Network
 import com.example.skills.data.api.Network.apiService
 import com.example.skills.data.roles.Role
 import com.example.skills.data.roles.User
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 const val MY_LOG = "MY_LOG"
 
@@ -35,6 +35,9 @@ class MainViewModel(context: Context) : ViewModel() {
     private val preferences: SharedPreferences =
         context.getSharedPreferences("user_credentials", Context.MODE_PRIVATE)
 
+    private val _isLoading = MutableStateFlow(false)
+    var isLoading: StateFlow<Boolean> = _isLoading
+
     init {
         Log.d(MY_LOG, "Initializing ViewModel, reading user credentials")
         _userToken = preferences.getString("token", null)
@@ -48,6 +51,8 @@ class MainViewModel(context: Context) : ViewModel() {
 
     fun registerUser(authRequest: AuthRequest, onResponse: (Boolean) -> Unit) {
         viewModelScope.launch {
+            _isLoading.emit(true)
+
             try {
                 val response = apiService.register(authRequest)
                 Log.d(MY_LOG, "Token try receive ${response.body()?.token}")
@@ -102,11 +107,14 @@ class MainViewModel(context: Context) : ViewModel() {
                 handleApiException(e)
                 onResponse(false)
             }
+            _isLoading.emit(false)
         }
     }
 
     fun activateAccount(code: String, onActivationComplete: (Boolean) -> Unit) {
         viewModelScope.launch {
+            _isLoading.emit(true)
+
             try {
                 Log.d(MY_LOG, "Activation started")
                 val activationRequest = ActivationRequest(code)
@@ -123,6 +131,7 @@ class MainViewModel(context: Context) : ViewModel() {
                 handleApiException(e)
                 onActivationComplete(false)
             }
+            _isLoading.emit(false)
         }
     }
 
