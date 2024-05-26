@@ -5,19 +5,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -39,7 +33,6 @@ import com.example.skills.ui.master.b.calendar.ContinuousSelectionHelper.getSele
 import com.kizitonwose.calendar.compose.VerticalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.CalendarDay
-import com.kizitonwose.calendar.core.CalendarMonth
 import com.kizitonwose.calendar.core.DayPosition
 import java.time.LocalDate
 import java.time.YearMonth
@@ -49,10 +42,7 @@ private val selectionColor = primaryColor
 private val continuousSelectionColor = Color.LightGray.copy(alpha = 0.3f)
 
 @Composable
-fun CalendarView(
-    close: () -> Unit = {},
-    dateSelected: (startDate: LocalDate, endDate: LocalDate) -> Unit = { _, _ -> },
-) {
+fun CalendarView() {
     val rusDaysOfWeek = listOf("ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС")
     val daysOfWeek = remember { rusDaysOfWeek }
 
@@ -67,13 +57,14 @@ fun CalendarView(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(start = 16.dp, end = 16.dp)
                 .background(Color.White),
         ) {
             Column {
                 val calendarState = rememberCalendarState(currentMonth)
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth().padding(bottom = 10.dp),
                     Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -115,28 +106,12 @@ fun CalendarView(
                             }
                         }
                     },
-                    monthHeader = { month -> MonthHeader(month) },
+                    monthHeader = {  DaysOfWeekHeader() },
                 )
                 if (selection.daysBetween != null || selection.startDate != null) {
-                    SelectDateTime(
-                        //onDismissRequest = { dateTimeDialogOpen = false }
-                    )
+                    SelectDateTime()
                 }
             }
-            CalendarBottom(
-                modifier = Modifier
-                    .wrapContentHeight()
-                    .fillMaxWidth()
-                    .background(Color.White)
-                    .align(Alignment.BottomCenter),
-                selection = selection,
-                save = {
-                    val (startDate, endDate) = selection
-                    if (startDate != null && endDate != null) {
-                        dateSelected(startDate, endDate)
-                    }
-                }
-            )
         }
     }
 }
@@ -152,7 +127,7 @@ private fun Day(
 
     Box(
         modifier = Modifier
-            .aspectRatio(1f) // This is important for square-sizing!
+            .aspectRatio(1f)
             .clickable(
                 enabled = day.position == DayPosition.MonthDate && day.date >= today,
                 showRipple = false,
@@ -179,7 +154,7 @@ private fun Day(
 }
 
 @Composable
-private fun MonthHeader(calendarMonth: CalendarMonth) {
+private fun DaysOfWeekHeader() {
     Box(modifier = Modifier.fillMaxWidth()) {
         val rusDaysOfWeek = listOf("ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС")
         val daysOfWeek = remember { rusDaysOfWeek }
@@ -194,36 +169,6 @@ private fun MonthHeader(calendarMonth: CalendarMonth) {
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold
                 )
-            }
-        }
-    }
-}
-
-@Composable
-private fun CalendarBottom(
-    modifier: Modifier = Modifier,
-    selection: DateSelection,
-    save: () -> Unit,
-) {
-    Column(modifier.fillMaxWidth()) {
-        Divider()
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "Выбрать дни",
-                fontWeight = FontWeight.Bold,
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Button(
-                modifier = Modifier
-                    .height(40.dp)
-                    .width(100.dp),
-                onClick = save,
-                enabled = selection.daysBetween != null,
-            ) {
-                Text(text = "Сохранить")
             }
         }
     }

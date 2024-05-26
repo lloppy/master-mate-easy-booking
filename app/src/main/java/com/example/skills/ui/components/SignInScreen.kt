@@ -3,6 +3,7 @@ package com.example.skills.ui.components
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -94,12 +95,13 @@ fun RegistrationScreen(
             )
         },
     ) { innerPadding ->
-
-        val isLoading by viewModel.isLoading.collectAsState()
-        if (isLoading) {
-            LoadingScreen()
-        } else {
+        Box(Modifier.fillMaxSize()) {
             ContentSingIn(innerPadding, navigateToCodeVerification, viewModel, isClient)
+
+            val isLoading by viewModel.isLoading.collectAsState()
+            if (isLoading) {
+                LoadingScreen()
+            }
         }
     }
 }

@@ -1,10 +1,13 @@
 package com.example.skills.ui.master.b.calendar
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.geometry.Offset
@@ -14,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -40,10 +44,6 @@ private class HalfSizeShape(private val clipStart: Boolean) : Shape {
     }
 }
 
-/**
- * Modern Airbnb highlight style, as seen in the app.
- * See also [backgroundHighlightLegacy].
- */
 fun Modifier.backgroundHighlight(
     day: CalendarDay,
     today: LocalDate,
@@ -58,7 +58,7 @@ fun Modifier.backgroundHighlight(
         DayPosition.MonthDate -> {
             when {
                 day.date.isBefore(today) -> {
-                    textColor(colorResource(R.color.black))
+                    textColor(Color.Gray)
                     this
                 }
                 startDate == day.date && endDate == null -> {
@@ -77,7 +77,7 @@ fun Modifier.backgroundHighlight(
                         .background(color = selectionColor, shape = CircleShape)
                 }
                 startDate != null && endDate != null && (day.date > startDate && day.date < endDate) -> {
-                    textColor(Color.Gray)
+                    textColor(Color.Black)
                     padding(vertical = padding)
                         .background(color = continuousSelectionColor)
                 }
@@ -92,16 +92,16 @@ fun Modifier.backgroundHighlight(
                         .background(color = selectionColor, shape = CircleShape)
                 }
                 day.date == today -> {
-                    textColor(Color.Gray)
+                    textColor(colorResource(R.color.black))
                     padding(padding)
                         .border(
                             width = 1.dp,
                             shape = CircleShape,
                             color = colorResource(R.color.black),
-                        )
+                        ).background(color = colorResource(R.color.light_green), CircleShape)
                 }
                 else -> {
-                    textColor(Color.Gray)
+                    textColor(Color.Black)
                     this
                 }
             }
@@ -131,91 +131,19 @@ fun Modifier.backgroundHighlight(
     }
 }
 
-/**
- * Old Airbnb highlight style.
- * See also [backgroundHighlight].
- */
-fun Modifier.backgroundHighlightLegacy(
-    day: CalendarDay,
-    today: LocalDate,
-    selection: DateSelection,
-    selectionColor: Color,
-    textColor: (Color) -> Unit,
+fun Modifier.clickable(
+    enabled: Boolean = true,
+    showRipple: Boolean = true,
+    onClickLabel: String? = null,
+    role: Role? = null,
+    onClick: () -> Unit,
 ): Modifier = composed {
-    val (startDate, endDate) = selection
-    val padding = 4.dp
-    when (day.position) {
-        DayPosition.MonthDate -> {
-            when {
-                day.date.isBefore(today) -> {
-                    textColor(colorResource(R.color.black))
-                    this
-                }
-                startDate == day.date && endDate == null -> {
-                    textColor(Color.White)
-                    padding(padding)
-                        .background(color = selectionColor, shape = CircleShape)
-                }
-                day.date == startDate -> {
-                    textColor(Color.White)
-                    padding(vertical = padding)
-                        .background(
-                            color = selectionColor,
-                            shape = RoundedCornerShape(
-                                topStartPercent = 50,
-                                bottomStartPercent = 50,
-                            ),
-                        )
-                }
-                startDate != null && endDate != null && (day.date > startDate && day.date < endDate) -> {
-                    textColor(Color.White)
-                    padding(vertical = padding)
-                        .background(color = selectionColor)
-                }
-                day.date == endDate -> {
-                    textColor(Color.White)
-                    padding(vertical = padding)
-                        .background(
-                            color = selectionColor,
-                            shape = RoundedCornerShape(topEndPercent = 50, bottomEndPercent = 50),
-                        )
-                }
-                day.date == today -> {
-                    textColor(Color.Gray)
-                    padding(padding)
-                        .border(
-                            width = 1.dp,
-                            shape = CircleShape,
-                            color = colorResource(R.color.black),
-                        )
-                }
-                else -> {
-                    textColor(Color.Gray)
-                    this
-                }
-            }
-        }
-        DayPosition.InDate -> {
-            textColor(Color.Transparent)
-            if (startDate != null && endDate != null &&
-                isInDateBetweenSelection(day.date, startDate, endDate)
-            ) {
-                padding(vertical = padding)
-                    .background(color = selectionColor)
-            } else {
-                this
-            }
-        }
-        DayPosition.OutDate -> {
-            textColor(Color.Transparent)
-            if (startDate != null && endDate != null &&
-                isOutDateBetweenSelection(day.date, startDate, endDate)
-            ) {
-                padding(vertical = padding)
-                    .background(color = selectionColor)
-            } else {
-                this
-            }
-        }
-    }
+    clickable(
+        interactionSource = remember { MutableInteractionSource() },
+        indication = if (showRipple) LocalIndication.current else null,
+        enabled = enabled,
+        onClickLabel = onClickLabel,
+        role = role,
+        onClick = onClick,
+    )
 }

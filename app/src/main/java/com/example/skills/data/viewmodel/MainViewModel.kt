@@ -113,6 +113,8 @@ class MainViewModel(context: Context) : ViewModel() {
 
                         Log.i(MY_LOG, "current User is Master")
                     }
+
+
                     onResponse(true)
                 } else {
                     Log.e(MY_LOG, "Registration failed: ${response.errorBody().toString()}")
@@ -137,6 +139,7 @@ class MainViewModel(context: Context) : ViewModel() {
                 if (route == "client" && currentUser?.client != null
                     || route == "master" && currentUser?.master != null
                 ) {
+
                     if (response.isSuccessful && response.body()?.token != null) {
                         _userToken = response.body()!!.token
                         saveTokenToPreferences(_userToken!!)

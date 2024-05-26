@@ -133,10 +133,7 @@ fun Interval(
                     }
                 ) { Text("Отмена") }
             }
-        )
-        {
-            TimePicker(state = timePickerState)
-        }
+        ) { TimePicker(state = timePickerState) }
     }
 
     if (isEditable && showTimePickerEnd) {
@@ -161,10 +158,7 @@ fun Interval(
                     }
                 ) { Text("Отмена") }
             }
-        )
-        {
-            TimePicker(state = timePickerState)
-        }
+        ) { TimePicker(state = timePickerState) }
     }
 
     Row(
@@ -212,7 +206,6 @@ fun Interval(
                     }
                 }
         )
-
     }
 }
 

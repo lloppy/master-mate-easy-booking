@@ -3,6 +3,7 @@ package com.example.skills.ui.components
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -59,8 +60,6 @@ import com.example.skills.ui.components.tools.EmailStateSaver
 import com.example.skills.ui.components.tools.LoadingScreen
 import com.example.skills.ui.components.tools.PasswordState
 import com.example.skills.ui.components.tools.TextFieldState
-import com.example.skills.ui.components.tools.Validator.isEmailValid
-import com.example.skills.ui.components.tools.Validator.isNewPasswordValid
 import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -106,10 +105,22 @@ fun LogInScreen(
         },
     ) { innerPadding ->
 
-        val isLoading by mainViewModel.isLoading.collectAsState()
-        if (isLoading) {
-            LoadingScreen()
-        } else {
+//        val isLoading by mainViewModel.isLoading.collectAsState()
+//        if (isLoading) {
+//            LoadingScreen()
+//            navigateToMain.invoke()
+//        } else {
+//            ContentLogIn(
+//                innerPadding,
+//                navController,
+//                routeLogIn = routeLogIn,
+//                navigateToRegistration,
+//                navigateToForgotPassword,
+//                navigateToMain,
+//                mainViewModel
+//            )
+//        }
+        Box(Modifier.fillMaxSize()) {
             ContentLogIn(
                 innerPadding,
                 navController,
@@ -119,6 +130,11 @@ fun LogInScreen(
                 navigateToMain,
                 mainViewModel
             )
+
+            val isLoading by mainViewModel.isLoading.collectAsState()
+            if (isLoading) {
+                LoadingScreen()
+            }
         }
     }
 }

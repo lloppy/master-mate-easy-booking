@@ -1,5 +1,6 @@
 package com.example.skills.ui.master.b
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -49,9 +50,10 @@ fun CalendarScreen() {
 fun CustomCalendarView(
     innerPadding: PaddingValues,
 ) {
-    Column (modifier = Modifier
-        .fillMaxSize()
-        .padding(innerPadding)){
-        CalendarView()
-    }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding),
+        verticalArrangement = Arrangement.Top
+    ) { CalendarView() }
 }
