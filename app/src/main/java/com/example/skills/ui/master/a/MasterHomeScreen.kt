@@ -95,6 +95,6 @@ fun MasterHomeScreen(
         verticalArrangement = Arrangement.Top
     ) {
         ProfileHead(master)
-        MasterGallery(master.images)
+        if (master.images != null) MasterGallery(master.images!!)
     }
 }

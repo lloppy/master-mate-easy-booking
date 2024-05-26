@@ -65,17 +65,19 @@ fun ProfileHead(master: Master) {
                 alignment = Alignment.TopCenter
             )
         }
-        Text(
-            text = master.description,
-            fontSize = 14.sp,
-            maxLines = if (expanded) Int.MAX_VALUE else 3,
-            fontFamily = fontFamilyInter,
-            fontWeight = FontWeight.Normal,
-            textAlign = TextAlign.Center,
-            lineHeight = 18.sp,
-            color = Color.Gray,
-            modifier = Modifier.padding(start = 12.dp, end = 12.dp)
-        )
+        if (master.description != null) {
+            Text(
+                text = master.description!!,
+                fontSize = 14.sp,
+                maxLines = if (expanded) Int.MAX_VALUE else 3,
+                fontFamily = fontFamilyInter,
+                fontWeight = FontWeight.Normal,
+                textAlign = TextAlign.Center,
+                lineHeight = 18.sp,
+                color = Color.Gray,
+                modifier = Modifier.padding(start = 12.dp, end = 12.dp)
+            )
+        }
         if (!expanded) {
             Text(
                 text = "... ещё",
@@ -112,7 +114,7 @@ fun ProfileHead(master: Master) {
                 tint = Color(0, 122, 255),
             )
             Text(
-                text = master.linkCode,
+                text = master.linkCode!!,
                 fontSize = 14.sp,
                 fontFamily = fontFamilyInter,
                 fontWeight = FontWeight.Normal,
@@ -151,7 +153,7 @@ fun prev() {
 
     ProfileHead(
         Master(
-            123,
+            "123",
             "masterivan@gmail.com",
             "Иван",
             "Коссе",

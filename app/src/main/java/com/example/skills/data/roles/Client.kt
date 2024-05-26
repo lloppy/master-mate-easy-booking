@@ -14,5 +14,5 @@ data class Client(
     override var role: Role = Role.CLIENT,
 
     // extended
-    var dateBirthday: LocalDate
+    var dateBirthday: LocalDate?
 ) : User(token, email, firstName, lastName, phone, imageId, password, role)

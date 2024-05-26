@@ -67,17 +67,19 @@ fun ViewMasterHead(master: Master, navigateToServices: () -> Unit) {
                 alignment = Alignment.TopCenter
             )
         }
-        Text(
-            text = master.description,
-            fontSize = 14.sp,
-            maxLines = if (expanded) Int.MAX_VALUE else 3,
-            fontFamily = fontFamilyInter,
-            fontWeight = FontWeight.Normal,
-            textAlign = TextAlign.Center,
-            lineHeight = 18.sp,
-            color = Color.Gray,
-            modifier = Modifier.padding(start = 12.dp, end = 12.dp)
-        )
+        if (master.description != null) {
+            Text(
+                text = master.description!!,
+                fontSize = 14.sp,
+                maxLines = if (expanded) Int.MAX_VALUE else 3,
+                fontFamily = fontFamilyInter,
+                fontWeight = FontWeight.Normal,
+                textAlign = TextAlign.Center,
+                lineHeight = 18.sp,
+                color = Color.Gray,
+                modifier = Modifier.padding(start = 12.dp, end = 12.dp)
+            )
+        }
         if (!expanded) {
             Text(
                 text = "... ещё",
@@ -111,7 +113,7 @@ fun ViewMasterHead(master: Master, navigateToServices: () -> Unit) {
                 tint = Color(0, 122, 255),
             )
             Text(
-                text = master.linkCode,
+                text = master.linkCode!!,
                 fontSize = 14.sp,
                 fontFamily = fontFamilyInter,
                 fontWeight = FontWeight.Normal,

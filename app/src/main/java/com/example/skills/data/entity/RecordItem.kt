@@ -22,8 +22,8 @@ data class RecordItem(
     val recordStatus: RecordStatus,
     val isDone: Boolean? = if (recordStatus == RecordStatus.ACTUAL) null else false,
     val comment: String? = null,
-    val clientId: Long? = null,
-    val masterId: Long = 123,
+    val clientId: String? = null,
+    val masterId: String = "123",
     val serviceId: Long = 123
 )
 

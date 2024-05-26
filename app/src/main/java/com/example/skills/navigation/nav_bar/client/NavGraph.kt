@@ -1,7 +1,6 @@
 package com.example.skills.navigation.nav_bar.client
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -10,7 +9,7 @@ import com.example.skills.ui.client.b.ClientBookingsScreen
 import com.example.skills.ui.client.c.EditClientProfileScreen
 import com.example.skills.client.components.a.ClientMastersScreen
 import com.example.skills.client.components.a.MasterServicesScreen
-import com.example.skills.client.components.a.ViewMasterScreen
+import com.example.skills.ui.client.a.ViewMasterScreen
 import com.example.skills.client.components.a.edit_booking.EditConfirmClientBookingScreen
 import com.example.skills.client.components.a.edit_booking.EditDateScreen
 import com.example.skills.client.components.a.edit_booking.EditDoneClientBookingScreen
@@ -19,10 +18,8 @@ import com.example.skills.client.components.a.new_booking.ConfirmClientBookingSc
 import com.example.skills.client.components.a.new_booking.DoneClientBookingScreen
 import com.example.skills.client.components.a.new_booking.SelectDateScreen
 import com.example.skills.client.components.a.new_booking.SelectTimeScreen
-import com.example.skills.data.api.ApiService
 import com.example.skills.data.viewmodel.route.BookingViewModel
 import com.example.skills.data.viewmodel.route.EditBookingViewModel
-import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.navigation.ScreenRole
 import com.example.skills.navigation.ScreenClient
 import com.example.skills.ui.master.e.EditPasswordScreen

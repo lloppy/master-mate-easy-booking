@@ -27,7 +27,7 @@ object MyRepository {
 
     private val listMasters = listOf(
         Master(
-            123,
+            "123",
             "masterivan@gmail.com",
             "Иван",
             "Коссе",
@@ -40,7 +40,7 @@ object MyRepository {
             Address("Россия", "Москва", "Маяковская", "10", "2"),
             imageUrls
         ), Master(
-            223,
+            "223",
             "Екатерина@gmail.com",
             "Екатерина",
             "Иванова",
@@ -53,7 +53,7 @@ object MyRepository {
             Address("Россия", "Москва", "Маяковская", "10", "2"),
             imageUrls
         ), Master(
-            323,
+            "323",
             "Вероника@gmail.com",
             "Вероника",
             "Дуброва",
@@ -67,7 +67,7 @@ object MyRepository {
             imageUrls
         ),
         Master(
-            423,
+            "423",
             "Пётр@gmail.com",
             "Пётр",
             "Высоков",
@@ -190,7 +190,7 @@ object MyRepository {
     )
 
 
-    fun getMaster(id: Long): Master = listMasters.first { it.token == id }
+    fun getMaster(id: String): Master = listMasters.first { it.token == id }
     fun getMaster(): Master = listMasters.first()
     fun getMastersList(): List<Master> = listMasters
     fun getService(serviceId: Long): Service = services.find { it.serviceId == serviceId }!!

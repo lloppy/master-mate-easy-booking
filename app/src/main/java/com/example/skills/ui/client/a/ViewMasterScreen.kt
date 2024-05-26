@@ -1,4 +1,4 @@
-package com.example.skills.client.components.a
+package com.example.skills.ui.client.a
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -64,7 +64,7 @@ fun ViewMasterScreen(
                 actions = {
                     IconButton(onClick = {
                         // удаляем из бдшки и обновляем :)
-                        val profileId = master.token
+                        val profileToken = master.token
 
                         showDialog = true
                     }) {
@@ -123,6 +123,6 @@ fun MasterHomeScreen(
         verticalArrangement = Arrangement.Top
     ) {
         ViewMasterHead(master, navigateToServices)
-        MasterGallery(master.images)
+        if (master.images != null) MasterGallery(master.images!!)
     }
 }

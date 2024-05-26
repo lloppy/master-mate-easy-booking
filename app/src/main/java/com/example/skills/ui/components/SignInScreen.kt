@@ -49,6 +49,8 @@ import com.example.skills.ui.components.tools.EmailState
 import com.example.skills.ui.components.tools.EmailStateSaver
 import com.example.skills.ui.components.tools.PasswordState
 import com.example.skills.ui.theme.backgroundMaterial
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -161,10 +163,10 @@ fun ContentSingIn(
                         colors = OutlinedTextFieldDefaults.colors(
                             unfocusedLabelColor = Color.Gray,
                             unfocusedBorderColor = Color.Gray
-                        )
+                        ),
+                        shape = RoundedCornerShape(16.dp)
                     )
                 }
-
                 Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
                 Email(emailState, onImeAction = { focusRequester.requestFocus() })
 
@@ -201,7 +203,8 @@ fun ContentSingIn(
                 navigateTo = {
                     Log.v(MY_LOG, "click!")
 
-                    //  If the birthDate = null, then the master is registered, otherwise the Client. Date format is yyyy-MM-dd.
+                    //  If the birthDate = null, then the master is registered, otherwise the Client.
+                    // Date format is yyyy-MM-dd.
                     if (emailState.isValid && passwordState.isValid) {
                         val authRequest = AuthRequest(
                             email = emailState.text.trim(),
@@ -209,7 +212,13 @@ fun ContentSingIn(
                             firstName = firstName,
                             lastName = secondName,
                             phoneNumber = phone,
-                            birthDate = if (!isClient) null else birthday
+                            birthDate = if (!isClient) null else {
+                                val sourceFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+                                val desiredFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                                val date = sourceFormat.parse(birthday)
+
+                                desiredFormat.format(date!!)
+                            }
                         )
                         viewModel.registerUser(authRequest) { successful ->
                             if (successful) {

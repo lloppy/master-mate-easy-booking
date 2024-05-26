@@ -50,7 +50,8 @@ fun NavGraphBuilder.clientNavGraph(navController: NavHostController, mainViewMod
                 navigateToCodeVerification = {
                     navController.navigate(ScreenRole.Client.CodeVerification.route)
                 },
-                viewModel = mainViewModel
+                viewModel = mainViewModel,
+                isClient = true
             )
         }
 

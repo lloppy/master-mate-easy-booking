@@ -15,7 +15,6 @@ import com.example.skills.data.api.Network.apiService
 import com.example.skills.data.roles.Client
 import com.example.skills.data.roles.Master
 import com.example.skills.data.roles.Role
-import com.example.skills.data.roles.User
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
 import java.time.LocalDate
@@ -24,9 +23,6 @@ import java.time.format.DateTimeFormatter
 const val MY_LOG = "MY_LOG"
 
 class MainViewModel(context: Context) : ViewModel() {
-    var currentUser: User? by mutableStateOf(null)
-        private set
-
     var currentUserMaster: Master? by mutableStateOf(null)
         private set
 
@@ -54,29 +50,17 @@ class MainViewModel(context: Context) : ViewModel() {
         viewModelScope.launch {
             try {
                 val response = apiService.register(authRequest)
+                Log.d(MY_LOG, "Token try receive ${response.body()?.token}")
 
                 if (response.isSuccessful && response.body()?.token != null) {
-                    Log.d(MY_LOG, "Token received ${response.body()?.token}")
+                    Log.i(MY_LOG, "Token received ${response.body()?.token}")
+
                     _userToken = response.body()!!.token
                     saveTokenToPreferences(_userToken!!)
                     Network.updateToken(_userToken)
                     userIsAuthenticated.value = true
 
                     if (authRequest.birthDate != null) {
-                        currentUser = Client(
-                            token = _userToken!!,
-                            email = authRequest.email,
-                            password = authRequest.password,
-                            firstName = authRequest.firstName,
-                            lastName = authRequest.lastName,
-                            phone = authRequest.phoneNumber,
-                            role = Role.CLIENT,
-                            dateBirthday = LocalDate.parse(
-                                authRequest.birthDate,
-                                DateTimeFormatter.ofPattern("dd.MM.yyyy")
-                            )
-                        )
-
                         currentUserClient = Client(
                             token = _userToken!!,
                             email = authRequest.email,
@@ -90,17 +74,8 @@ class MainViewModel(context: Context) : ViewModel() {
                                 DateTimeFormatter.ofPattern("dd.MM.yyyy")
                             )
                         )
+                        Log.i(MY_LOG, "current User is Client")
                     } else {
-                        currentUser = Master(
-                            token = _userToken!!,
-                            email = authRequest.email,
-                            password = authRequest.password,
-                            firstName = authRequest.firstName,
-                            lastName = authRequest.lastName,
-                            phone = authRequest.phoneNumber,
-                            role = Role.MASTER
-                        )
-
                         currentUserMaster = Master(
                             token = _userToken!!,
                             email = authRequest.email,
@@ -110,11 +85,11 @@ class MainViewModel(context: Context) : ViewModel() {
                             phone = authRequest.phoneNumber,
                             role = Role.MASTER
                         )
+                        Log.i(MY_LOG, "current User is Master")
                     }
-
                     onResponse(true)
                 } else {
-                    Log.e(MY_LOG, "Registration failed: ${response.errorBody()}")
+                    Log.e(MY_LOG, "Registration failed: ${response.errorBody().toString()}")
                     onResponse(false)
                 }
             } catch (e: Exception) {
@@ -149,7 +124,10 @@ class MainViewModel(context: Context) : ViewModel() {
         Log.d(MY_LOG, "Logging out user")
         preferences.edit().remove("token").apply()
         _userToken = null
-        currentUser = null
+
+        currentUserClient = null
+        currentUserMaster = null
+
         userIsAuthenticated.value = false
         Network.updateToken(null)
     }
@@ -163,13 +141,15 @@ class MainViewModel(context: Context) : ViewModel() {
             if (response.isSuccessful) {
                 Log.d(MY_LOG, "User loaded successfully")
 
-                if(response.body()?.role == Role.CLIENT) {
-                    currentUser = response.body() as Client
-                } else if(response.body()?.role == Role.MASTER) {
-                    currentUser = response.body() as Master
-                }
+                if (response.body()?.role == Role.CLIENT) {
+                    currentUserClient = response.body() as Client
+                    Log.i(MY_LOG, "current User is Client")
 
-                Log.i(MY_LOG, "User is ${currentUser!!.email}, ${currentUser!!.firstName}")
+                } else if (response.body()?.role == Role.MASTER) {
+                    currentUserMaster = response.body() as Master
+                    Log.i(MY_LOG, "current User is Master")
+
+                }
             } else {
                 Log.e(MY_LOG, "Failed to load user")
             }

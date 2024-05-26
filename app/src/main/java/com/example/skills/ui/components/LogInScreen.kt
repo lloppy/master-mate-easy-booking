@@ -53,7 +53,6 @@ import com.example.skills.ui.components.tools.EmailState
 import com.example.skills.ui.components.tools.EmailStateSaver
 import com.example.skills.ui.components.tools.PasswordState
 import com.example.skills.ui.components.tools.TextFieldState
-import com.example.skills.ui.components.tools.Validator
 import com.example.skills.ui.components.tools.Validator.isEmailValid
 import com.example.skills.ui.components.tools.Validator.isNewPasswordValid
 import com.example.skills.ui.theme.backgroundMaterial
@@ -214,7 +213,7 @@ fun Email(
     emailState: TextFieldState = remember { EmailState() },
     imeAction: ImeAction = ImeAction.Next,
     onImeAction: () -> Unit = {},
-    readOnle: Boolean = false
+    readOnly: Boolean = false
 ) {
     OutlinedTextField(
         value = emailState.text,
@@ -242,12 +241,24 @@ fun Email(
             }
         ),
         singleLine = true,
-        colors = OutlinedTextFieldDefaults.colors(
-            unfocusedLabelColor = Color.Gray,
-            unfocusedBorderColor = Color.Gray
-        ),
+        colors = if (readOnly) {
+            OutlinedTextFieldDefaults.colors(
+                unfocusedLabelColor = Color.LightGray,
+                unfocusedBorderColor = Color.LightGray,
+                unfocusedTextColor = Color.LightGray,
+                disabledTextColor = Color.LightGray
+            )
+        } else {
+            OutlinedTextFieldDefaults.colors(
+                unfocusedLabelColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray,
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+                focusedLabelColor =  Color.Black
+            )
+        },
         shape = RoundedCornerShape(16.dp),
-        readOnly = readOnle
+        readOnly = readOnly
     )
 
     emailState.getError()?.let { error -> TextFieldError(textError = error) }

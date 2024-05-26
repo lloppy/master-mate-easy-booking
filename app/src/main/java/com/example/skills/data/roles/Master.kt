@@ -22,13 +22,14 @@ data class Master(
 
 
 data class Address(
-    val country: String,
     val city: String,
-    val street: String,
-    val house: String,
-    val office: String
+    val country: String? = null,
+    val street: String? = null,
+    val house: String? = null,
+    val office: String? = null,
 ) {
     override fun toString(): String {
-        return "Страна: $country, г.$city, ул.$street, д.$house - $office"
+        return city
+        // return "Страна: $country, г.$city, ул.$street, д.$house - $office"
     }
 }
