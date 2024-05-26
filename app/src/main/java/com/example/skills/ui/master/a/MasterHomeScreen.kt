@@ -35,7 +35,7 @@ fun MainMasterScreen(
     navigateToShare: () -> Unit,
     viewModel: MainViewModel
 ) {
-    val master = getMaster() //viewModel.currentUserMaster!!
+    val master = viewModel.currentUserMaster!!
 
     Scaffold(
         topBar = {

@@ -1,5 +1,7 @@
 package com.example.skills.data.api
 
+import com.example.skills.data.roles.Client
+import com.example.skills.data.roles.Master
 import com.example.skills.data.roles.User
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -22,7 +24,6 @@ interface ApiService {
 
     @GET("api/users/me")
     suspend fun getUserByToken(@Header("Authorization") token: String): Response<User>
-
     @POST("api/users/me/edit/profilePicture")
     suspend fun uploadProfilePicture(@Part file: MultipartBody.Part): Response<String>
 

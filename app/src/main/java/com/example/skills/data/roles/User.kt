@@ -8,5 +8,6 @@ open class User (
     open var phone: String,
     open var imageId: String? = null,
     open var password: String,
-    open var role: Role
+    open var role: Role,
+
 )

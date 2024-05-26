@@ -32,6 +32,9 @@ class MainViewModel(context: Context) : ViewModel() {
     private var _userToken: String? = null
         private set
 
+    private var _userRole: String? = null
+        private set
+
     val userIsAuthenticated = mutableStateOf(false)
     private val preferences: SharedPreferences =
         context.getSharedPreferences("user_credentials", Context.MODE_PRIVATE)
@@ -39,6 +42,7 @@ class MainViewModel(context: Context) : ViewModel() {
     init {
         Log.d(MY_LOG, "Initializing ViewModel, reading user credentials")
         _userToken = preferences.getString("token", null)
+        _userRole = preferences.getString("role", "guest")
         _userToken?.let {
             Network.updateToken(it)
             userIsAuthenticated.value = true
@@ -74,6 +78,8 @@ class MainViewModel(context: Context) : ViewModel() {
                                 DateTimeFormatter.ofPattern("dd.MM.yyyy")
                             )
                         )
+                        saveRoleToPreferences("client")
+
                         Log.i(MY_LOG, "current User is Client")
                     } else {
                         currentUserMaster = Master(
@@ -85,6 +91,8 @@ class MainViewModel(context: Context) : ViewModel() {
                             phone = authRequest.phoneNumber,
                             role = Role.MASTER
                         )
+                        saveRoleToPreferences("master")
+
                         Log.i(MY_LOG, "current User is Master")
                     }
                     onResponse(true)
@@ -124,6 +132,7 @@ class MainViewModel(context: Context) : ViewModel() {
         Log.d(MY_LOG, "Logging out user")
         preferences.edit().remove("token").apply()
         _userToken = null
+        _userRole = "guest"
 
         currentUserClient = null
         currentUserMaster = null
@@ -136,23 +145,22 @@ class MainViewModel(context: Context) : ViewModel() {
     private fun loadCurrentUser(token: String) {
         viewModelScope.launch {
             Log.d(MY_LOG, "Attempting to load user by token")
-            val response = apiService.getUserByToken("Bearer $token")
 
-            if (response.isSuccessful) {
-                Log.d(MY_LOG, "User loaded successfully")
-
-                if (response.body()?.role == Role.CLIENT) {
-                    currentUserClient = response.body() as Client
-                    Log.i(MY_LOG, "current User is Client")
-
-                } else if (response.body()?.role == Role.MASTER) {
+            if (_userRole == "master") {
+                val response = apiService.getMasterByToken("Bearer $token")
+                if (response.isSuccessful) {
+                    Log.d(MY_LOG, "Master loaded successfully")
                     currentUserMaster = response.body() as Master
-                    Log.i(MY_LOG, "current User is Master")
+                } else Log.e(MY_LOG, "Failed to load master")
 
-                }
-            } else {
-                Log.e(MY_LOG, "Failed to load user")
-            }
+            } else if (_userRole == "client") {
+                val response = apiService.getClientByToken("Bearer $token")
+                if (response.isSuccessful) {
+                    Log.d(MY_LOG, "Client loaded successfully")
+                    currentUserClient = response.body() as Client
+                } else Log.e(MY_LOG, "Failed to load client")
+
+            } else Log.d(MY_LOG, "It is a guest session")
         }
     }
 
@@ -160,6 +168,14 @@ class MainViewModel(context: Context) : ViewModel() {
         Log.d(MY_LOG, "Saving token to shared preferences")
         preferences.edit().apply {
             putString("token", token)
+            apply()
+        }
+    }
+
+    private fun saveRoleToPreferences(role: String) {
+        Log.d(MY_LOG, "Saving role to shared preferences")
+        preferences.edit().apply {
+            putString("role", role)
             apply()
         }
     }
