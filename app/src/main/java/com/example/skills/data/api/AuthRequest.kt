@@ -13,6 +13,10 @@ data class AuthRequest(
     val birthDate: String? = null
 )
 
+data class LogInRequest(
+    val email: String,
+    val password: String,
+)
 
 data class AuthResponse(
     val token: String,

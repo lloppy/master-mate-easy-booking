@@ -41,7 +41,8 @@ fun NavGraphBuilder.clientNavGraph(
                 },
                 navigateToMain = {
                     navHostController.navigate(ScreenRole.Client.MainLayout.route)
-                }
+                },
+                mainViewModel = mainViewModel
             )
         }
 
@@ -135,7 +136,8 @@ fun NavGraphBuilder.masterNavGraph(
                 },
                 navigateToMain = {
                     navHostController.navigate(ScreenRole.Master.MainLayout.route)
-                }
+                },
+                mainViewModel = mainViewModel
             )
         }
 

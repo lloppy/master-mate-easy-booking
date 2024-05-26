@@ -17,7 +17,7 @@ interface ApiService {
     suspend fun register(@Body authRequest: AuthRequest): Response<AuthResponse>
 
     @POST("api/auth/authenticate")
-    suspend fun authenticate(@Body authRequest: AuthRequest): Response<AuthResponse>
+    suspend fun authenticate(@Body authRequest: LogInRequest): Response<AuthResponse>
 
     @POST("/api/account/activate")
     suspend fun activate(@Header("Authorization") token: String, @Body activationRequest: ActivationRequest): Response<ActivationResponse>
@@ -31,6 +31,7 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Part file: MultipartBody.Part
     ): Response<String>
+
     @POST("api/users/me/get/profilePicture")
     suspend fun getProfilePicture(
         @Header("Authorization") token: String

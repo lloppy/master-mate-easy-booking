@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.skills.data.api.ActivationRequest
 import com.example.skills.data.api.AuthRequest
+import com.example.skills.data.api.LogInRequest
 import com.example.skills.data.api.Network
 import com.example.skills.data.api.Network.apiService
 import com.example.skills.data.roles.Role
@@ -119,6 +120,32 @@ class MainViewModel(context: Context) : ViewModel() {
                 }
             } catch (e: Exception) {
                 Log.d(MY_LOG, "Receive token exception")
+                handleApiException(e)
+                onResponse(false)
+            }
+            _isLoading.emit(false)
+        }
+    }
+
+    fun authenticate(authRequest: LogInRequest, onResponse: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+
+            try {
+                val response = apiService.authenticate(authRequest)
+
+                if (response.isSuccessful && response.body()?.token != null) {
+                    _userToken = response.body()!!.token
+                    saveTokenToPreferences(_userToken!!)
+                    Network.updateToken(_userToken)
+                    userIsAuthenticated.value = true
+                    onResponse(true)
+                } else {
+                    Log.e(MY_LOG, "Authentication failed: ${response.errorBody().toString()}")
+                    onResponse(false)
+                }
+            } catch (e: Exception) {
+                Log.d(MY_LOG, "Authorization exception")
                 handleApiException(e)
                 onResponse(false)
             }

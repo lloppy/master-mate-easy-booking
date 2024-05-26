@@ -1,5 +1,6 @@
 package com.example.skills.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,8 +51,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.skills.data.api.LogInRequest
+import com.example.skills.data.viewmodel.MY_LOG
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.tools.EmailState
 import com.example.skills.ui.components.tools.EmailStateSaver
+import com.example.skills.ui.components.tools.LoadingScreen
 import com.example.skills.ui.components.tools.PasswordState
 import com.example.skills.ui.components.tools.TextFieldState
 import com.example.skills.ui.components.tools.Validator.isEmailValid
@@ -64,7 +70,8 @@ fun LogInScreen(
     routeLogIn: String,
     navigateToRegistration: () -> Unit,
     navigateToForgotPassword: () -> Unit,
-    navigateToMain: () -> Unit
+    navigateToMain: () -> Unit,
+    mainViewModel: MainViewModel
 ) {
     Scaffold(
         topBar = {
@@ -98,14 +105,21 @@ fun LogInScreen(
             )
         },
     ) { innerPadding ->
-        ContentLogIn(
-            innerPadding,
-            navController,
-            routeLogIn = routeLogIn,
-            navigateToRegistration,
-            navigateToForgotPassword,
-            navigateToMain
-        )
+
+        val isLoading by mainViewModel.isLoading.collectAsState()
+        if (isLoading) {
+            LoadingScreen()
+        } else {
+            ContentLogIn(
+                innerPadding,
+                navController,
+                routeLogIn = routeLogIn,
+                navigateToRegistration,
+                navigateToForgotPassword,
+                navigateToMain,
+                mainViewModel
+            )
+        }
     }
 }
 
@@ -116,7 +130,8 @@ fun ContentLogIn(
     routeLogIn: String,
     navigateToRegistration: () -> Unit,
     navigateToForgotPassword: () -> Unit,
-    navigateToMain: () -> Unit
+    navigateToMain: () -> Unit,
+    viewModel: MainViewModel
 ) {
     val email by remember { mutableStateOf("") }
 
@@ -133,19 +148,6 @@ fun ContentLogIn(
             mutableStateOf(EmailState(email))
         }
         val passwordState = remember { PasswordState() }
-        val onSubmit = {
-           isEmailValid(emailState.text) && isNewPasswordValid(passwordState.text)
-
-            if (
-                //emailState.isValid && passwordState.isValid
-
-                isEmailValid(emailState.text) && isNewPasswordValid(passwordState.text)
-
-            ) {
-                //onSignInSubmitted(emailState.text, passwordState.text)
-                navController.navigate(routeLogIn)
-            }
-        }
 
         Column(
             modifier = Modifier
@@ -163,7 +165,6 @@ fun ContentLogIn(
                     label = "Пароль",
                     passwordState = passwordState,
                     modifier = Modifier.focusRequester(focusRequester),
-                    onImeAction = { onSubmit() }
                 )
             }
             Row(
@@ -178,8 +179,23 @@ fun ContentLogIn(
             Spacer(modifier = Modifier.height(16.dp))
 
             CustomButton(
-                { onSubmit() },
-                //navigateToMain,
+                navigateTo = {
+                    Log.v(MY_LOG, "click!")
+
+                    if (emailState.isValid && passwordState.isValid) {
+                        val authRequest = LogInRequest(
+                            email = emailState.text.trim(),
+                            password = passwordState.text.trim()
+                        )
+                        viewModel.authenticate(authRequest) { successful ->
+                            if (successful) {
+                                navigateToMain.invoke()
+                            }
+                        }
+                    } else {
+                        Log.e(MY_LOG, "emailState.isValid && passwordState.isValid not valid")
+                    }
+                },
                 "Войти"
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -254,7 +270,7 @@ fun Email(
                 unfocusedBorderColor = Color.Gray,
                 focusedContainerColor = Color.White,
                 unfocusedContainerColor = Color.White,
-                focusedLabelColor =  Color.Black
+                focusedLabelColor = Color.Black
             )
         },
         shape = RoundedCornerShape(16.dp),
