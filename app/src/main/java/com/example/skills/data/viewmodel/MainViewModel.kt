@@ -7,11 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.skills.data.api.ActivationRequest
 import com.example.skills.data.api.ActivationResponse
 import com.example.skills.data.api.AuthRequest
+import com.example.skills.data.api.Network
 import com.example.skills.data.api.Network.apiService
 import com.example.skills.data.roles.User
 import kotlinx.coroutines.launch
@@ -21,24 +21,29 @@ const val MY_LOG = "MY_LOG"
 
 class MainViewModel(context: Context) : ViewModel() {
     var currentUser: User? by mutableStateOf(null)
+    var userToken: String? by mutableStateOf(null)
     var userIsAuthenticated by mutableStateOf(false)
 
     private val preferences: SharedPreferences = context.getSharedPreferences("user_credentials", Context.MODE_PRIVATE)
 
-    fun activateAccount(activationCode: String, onActivationComplete: (ActivationResponse?) -> Unit) {
+    fun activateAccount(code: String, onActivationComplete: (Boolean) -> Unit) {
         viewModelScope.launch {
             try {
-                val response = apiService.activate(ActivationRequest(activationCode))
+                Log.i(MY_LOG, userToken.toString())
+
+                val activationRequest = ActivationRequest(code)
+                val response = apiService.activate("Bearer $userToken", activationRequest)
+
                 if (response.isSuccessful) {
                     Log.d(MY_LOG, "activateAccount isSuccessful ${response.body()?.status}")
-                    onActivationComplete.invoke(response.body())
+                    onActivationComplete(true)
                 } else {
                     Log.e(MY_LOG, "activateAccount - Server returned an error: ${response.errorBody()?.string()}")
-                    onActivationComplete.invoke(null)
+                    onActivationComplete(false)
                 }
             } catch (e: Exception) {
                 Log.e(MY_LOG,"Exception occurred in activateAccount: ${e.message}")
-                onActivationComplete.invoke(null)
+                onActivationComplete(false)
             }
         }
     }
@@ -49,8 +54,9 @@ class MainViewModel(context: Context) : ViewModel() {
                 val response = apiService.register(authRequest)
 
                 if (response.isSuccessful && response.body()!!.token != null) {
-                    Log.e(MY_LOG, "body code is ${response.body()!!.token} ${response.body()}")
+                    Log.i(MY_LOG, "body code is ${response.body()!!.token} ${response.body()}")
                     saveUserCredentials(response.body()!!.token)
+                    userToken = response.body()!!.token
                     onResponse(true)
                 } else {
                     Log.e(MY_LOG, "Server returned an error: ${response.errorBody()}")
@@ -76,6 +82,7 @@ class MainViewModel(context: Context) : ViewModel() {
             remove("token")
             apply()
         }
+        this.userToken = null
         currentUser = null
         userIsAuthenticated = false
     }
@@ -83,6 +90,7 @@ class MainViewModel(context: Context) : ViewModel() {
     init {
         Log.d(MY_LOG, "Initializing ViewModel, reading user credentials")
         readUserCredentials()
+
     }
 
     private fun loadCurrentUser(token: String) {

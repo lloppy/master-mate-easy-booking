@@ -17,8 +17,8 @@ object Network {
             .addConverterFactory(GsonConverterFactory.create())
             .client(
                 OkHttpClient.Builder()
-                    .readTimeout(40, TimeUnit.SECONDS)
-                    .connectTimeout(40, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .connectTimeout(60, TimeUnit.SECONDS)
                     .addInterceptor(httpLoggingInterceptor).build()
             )
             .build()

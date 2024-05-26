@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.api.ActivationRequest
+import com.example.skills.data.api.Network
 import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
 import kotlinx.coroutines.delay
@@ -170,13 +171,11 @@ private fun CodeVerificationComponents(
             {
                 Log.d(MY_LOG, "code is $code")
 
-                viewModel.activateAccount(code, onActivationComplete = { activationResponse ->
-                    activationResponse?.let {
-                        Log.d(MY_LOG, "Сервер прислал статус: ${it.status}")
-                    } ?: run {
-                        Log.d(MY_LOG, "Активация не удалась или что-то пошло не так")
+                viewModel.activateAccount(code) { successful ->
+                    if (successful) {
+                        navigateTo.invoke()
                     }
-                })
+                }
             },
             "Подтвердить"
         )

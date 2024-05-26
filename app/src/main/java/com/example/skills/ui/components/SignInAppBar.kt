@@ -183,7 +183,7 @@ fun ContentSingIn(
 
             CustomButton(
                 navigateTo = {
-                    Log.e(MY_LOG, "click!")
+                    Log.v(MY_LOG, "click!")
 
                     //  If the birthDate = null, then the master is registered, otherwise the Client. Date format is yyyy-MM-dd.
                     if (emailState.isValid && passwordState.isValid) {
