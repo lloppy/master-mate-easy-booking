@@ -26,7 +26,10 @@ import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.theme.fontFamilyInter
 
 @Composable
-fun RoleScreen(navController: NavController) {
+fun RoleScreen(
+    navigateToClientLogin: ()-> Unit,
+    navigateToMasterLogin: ()-> Unit,
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -75,14 +78,12 @@ fun RoleScreen(navController: NavController) {
             Spacer(modifier = Modifier.padding(12.dp))
 
             CustomButton(
-                ScreenRole.Client.LogIn.route,
-                navController,
+                navigateToClientLogin,
                 "Я клиент"
             )
             Spacer(modifier = Modifier.padding(2.dp))
             CustomButton(
-                ScreenRole.Master.LogIn.route,
-                navController,
+                navigateToMasterLogin,
                 "Я мастер",
                 color = Color.Transparent
             )

@@ -18,37 +18,6 @@ import com.example.skills.ui.theme.paddingBetweenElements
 
 @Composable
 fun CustomButton(
-    navResId: String,
-    navController: NavController,
-    buttonText: String,
-    height: Dp = buttonHeight,
-    width: Float = 1f,
-    color: Color = Color.Black
-) {
-    Button(
-        onClick = { navController.navigate(navResId) },
-        modifier = Modifier
-            .fillMaxWidth(width)
-            .height(height)
-            .padding(start = paddingBetweenElements, end = paddingBetweenElements),
-        shape = RoundedCornerShape(buttonRoundedCorner),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = color,
-            contentColor = if (color == Color.Black) Color.White else Color.Black
-        ),
-        border = BorderStroke(1.dp, Color.Black)
-
-    ) {
-        Text(text = buttonText)
-    }
-}
-
-val buttonRoundedCorner = 16.dp
-
-
-
-@Composable
-fun CustomButton(
     navigateTo: () -> Unit,
     buttonText: String,
     height: Dp = buttonHeight,
@@ -81,3 +50,4 @@ fun CustomButton(
 
 
 var buttonHeight = 60.dp
+val buttonRoundedCorner = 16.dp

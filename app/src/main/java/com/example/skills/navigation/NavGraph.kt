@@ -21,7 +21,10 @@ import com.example.skills.ui.components.NewPasswordScreen
 import com.example.skills.ui.components.RegistrationScreen
 import com.example.skills.ui.master.MainMasterLayout
 
-fun NavGraphBuilder.clientNavGraph(navHostController: NavHostController, mainViewModel: MainViewModel) {
+fun NavGraphBuilder.clientNavGraph(
+    navHostController: NavHostController,
+    mainViewModel: MainViewModel
+) {
     navigation(
         startDestination = ScreenRole.Client.LogIn.route,
         route = "client"
@@ -112,7 +115,10 @@ fun NavGraphBuilder.clientNavGraph(navHostController: NavHostController, mainVie
     }
 }
 
-fun NavGraphBuilder.masterNavGraph(navHostController: NavHostController, mainViewModel: MainViewModel) {
+fun NavGraphBuilder.masterNavGraph(
+    navHostController: NavHostController,
+    mainViewModel: MainViewModel
+) {
     navigation(
         startDestination = ScreenRole.Master.MainLayout.route,
         route = "master"
@@ -224,11 +230,13 @@ fun SetupRoleNavGraph(navHostController: NavHostController, mainViewModel: MainV
     NavHost(navController = navHostController, startDestination = ScreenRole.RoleLayout.route) {
 
         composable(ScreenRole.RoleLayout.route) {
-            RoleScreen(navController = navHostController)
+            RoleScreen(
+                navigateToClientLogin = { navHostController.navigate(ScreenRole.Client.LogIn.route) },
+                navigateToMasterLogin = { navHostController.navigate(ScreenRole.Master.LogIn.route) }
+            )
         }
 
         clientNavGraph(navHostController = navHostController, mainViewModel)
         masterNavGraph(navHostController = navHostController, mainViewModel)
-
     }
 }
