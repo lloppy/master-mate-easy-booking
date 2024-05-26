@@ -17,7 +17,7 @@ interface ApiService {
     @POST("api/auth/authenticate")
     suspend fun authenticate(@Body authRequest: AuthRequest): Response<AuthResponse>
 
-    @POST("api/account/activate")
+    @POST("/api/account/activate")
     suspend fun activate(@Body activationRequest: ActivationRequest): Response<ActivationResponse>
 
     @GET("api/users/me")

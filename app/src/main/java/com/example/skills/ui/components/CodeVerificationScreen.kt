@@ -155,12 +155,11 @@ private fun CodeVerificationComponents(
         } else {
             TextButton(onClick = {
                 timeLeft = 55
-
-                viewModel.activateAccount(ActivationRequest(code)) { isSuccess ->
-                    if (isSuccess) {
-                        navigateTo.invoke()
-                    }
-                }
+//                viewModel.activateAccount(ActivationRequest(code)) { isSuccess ->
+//                    if (isSuccess) {
+//                        navigateTo.invoke()
+//                    }
+//                }
             }) {
                 Text("Отправить код повторно", fontSize = 14.sp)
             }
@@ -171,11 +170,13 @@ private fun CodeVerificationComponents(
             {
                 Log.d(MY_LOG, "code is $code")
 
-                viewModel.activateAccount(ActivationRequest(code)) { successful ->
-                    if (successful) {
-                        navigateTo.invoke()
+                viewModel.activateAccount(code, onActivationComplete = { activationResponse ->
+                    activationResponse?.let {
+                        Log.d(MY_LOG, "Сервер прислал статус: ${it.status}")
+                    } ?: run {
+                        Log.d(MY_LOG, "Активация не удалась или что-то пошло не так")
                     }
-                }
+                })
             },
             "Подтвердить"
         )

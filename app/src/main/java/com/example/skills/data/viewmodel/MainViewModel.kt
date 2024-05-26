@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.skills.data.api.ActivationRequest
+import com.example.skills.data.api.ActivationResponse
 import com.example.skills.data.api.AuthRequest
 import com.example.skills.data.api.Network.apiService
 import com.example.skills.data.roles.User
@@ -24,22 +25,20 @@ class MainViewModel(context: Context) : ViewModel() {
 
     private val preferences: SharedPreferences = context.getSharedPreferences("user_credentials", Context.MODE_PRIVATE)
 
-    fun activateAccount(activationRequest: ActivationRequest, onResponse: (Boolean) -> Unit) {
+    fun activateAccount(activationCode: String, onActivationComplete: (ActivationResponse?) -> Unit) {
         viewModelScope.launch {
             try {
-                val response = apiService.activate(activationRequest)
-                Log.d(MY_LOG, "activateAccount isSuccessful ${response.body()!!.status}")
-
-                if (response.isSuccessful && response.body()!!.status != null ) {
-                    Log.d(MY_LOG, "activateAccount isSuccessful ${response.body()!!.status}")
-                    onResponse(true)
+                val response = apiService.activate(ActivationRequest(activationCode))
+                if (response.isSuccessful) {
+                    Log.d(MY_LOG, "activateAccount isSuccessful ${response.body()?.status}")
+                    onActivationComplete.invoke(response.body())
                 } else {
                     Log.e(MY_LOG, "activateAccount - Server returned an error: ${response.errorBody()?.string()}")
-                    onResponse(false)
+                    onActivationComplete.invoke(null)
                 }
             } catch (e: Exception) {
                 Log.e(MY_LOG,"Exception occurred in activateAccount: ${e.message}")
-                onResponse(false)
+                onActivationComplete.invoke(null)
             }
         }
     }
