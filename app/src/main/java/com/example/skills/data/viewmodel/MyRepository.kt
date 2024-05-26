@@ -190,7 +190,7 @@ object MyRepository {
     )
 
 
-    fun getMaster(id: Long): Master = listMasters.first { it.id == id }
+    fun getMaster(id: Long): Master = listMasters.first { it.token == id }
     fun getMaster(): Master = listMasters.first()
     fun getMastersList(): List<Master> = listMasters
     fun getService(serviceId: Long): Service = services.find { it.serviceId == serviceId }!!

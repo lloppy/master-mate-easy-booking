@@ -196,7 +196,8 @@ fun NavGraphBuilder.masterNavGraph(navController: NavHostController, mainViewMod
                 navController = navController,
                 navigateToDoneRegistration = {
                     navController.navigate(ScreenRole.Master.DoneMasterInfoRegistration.route)
-                }
+                },
+                viewModel = mainViewModel
             )
         }
 

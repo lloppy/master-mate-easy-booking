@@ -4,21 +4,21 @@ import android.net.Uri
 
 data class Master(
     // default
-    override val id: Long,
+    override val token: String,
     override var email: String,
     override var firstName: String,
     override var lastName: String,
     override var phone: String,
-    override var imageId: String?,
+    override var imageId: String? = null,
     override var password: String,
     override var role: Role = Role.MASTER,
 
     // extended
-    var description: String,
-    var linkCode: String,
-    var address: Address,
-    var images: List<Uri>,
-) : User(id, email, firstName, lastName, phone, imageId, password, role)
+    var description: String? = null,
+    var linkCode: String? = null,
+    var address: Address? = null,
+    var images: List<Uri>? = null,
+) : User(token, email, firstName, lastName, phone, imageId, password, role)
 
 
 data class Address(

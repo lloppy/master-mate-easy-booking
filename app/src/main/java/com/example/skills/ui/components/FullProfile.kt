@@ -51,6 +51,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
+import com.example.skills.data.roles.Master
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.tools.EmailState
 import com.example.skills.ui.components.tools.EmailStateSaver
 
@@ -59,7 +61,8 @@ import com.example.skills.ui.components.tools.EmailStateSaver
 @Composable
 fun FullProfileScreen(
     navController: NavHostController,
-    navigateToDoneRegistration: () -> Unit
+    navigateToDoneRegistration: () -> Unit,
+    viewModel: MainViewModel
 ) {
     Scaffold(
         topBar = {
@@ -93,21 +96,23 @@ fun FullProfileScreen(
             )
         },
     ) { innerPadding ->
-        AddMasterAccountInfo(innerPadding, navigateToDoneRegistration)
+        AddMasterAccountInfo(innerPadding, navigateToDoneRegistration, viewModel)
     }
 }
 
 @Composable
 private fun AddMasterAccountInfo(
     innerPadding: PaddingValues,
-    navigateToDoneRegistration: () -> Unit
+    navigateToDoneRegistration: () -> Unit,
+    viewModel: MainViewModel
 ) {
     val scrollState = rememberScrollState()
 
     var email by remember { mutableStateOf("") }
-    var firstName by remember { mutableStateOf("") }
-    var secondName by remember { mutableStateOf("") }
-    var phone by remember { mutableStateOf("") }
+    var firstName by remember { mutableStateOf(viewModel.currentUser!!.firstName) }
+    var secondName by remember { mutableStateOf(viewModel.currentUser!!.lastName) }
+    var phone by remember { mutableStateOf(viewModel.currentUser!!.phone) }
+
     val focusRequester = remember { FocusRequester() }
     val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
         mutableStateOf(EmailState(email))
@@ -138,16 +143,18 @@ private fun AddMasterAccountInfo(
             CustomOutlinedTextField(
                 value = firstName,
                 onValueChange = { firstName = it },
-                label = "Имя"
+                label = "Имя",
+                readOnly = true
             )
             Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
             CustomOutlinedTextField(
                 value = secondName,
                 onValueChange = { secondName = it },
-                label = "Фамилия"
+                label = "Фамилия",
+                readOnly = true
             )
             Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
-            Email(emailState, onImeAction = { focusRequester.requestFocus() })
+            Email(emailState, readOnle = true, onImeAction = { focusRequester.requestFocus() })
 
             Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
             OutlinedTextField(
@@ -161,7 +168,8 @@ private fun AddMasterAccountInfo(
                     unfocusedLabelColor = Color.Gray,
                     unfocusedBorderColor = Color.Gray
                 ),
-                shape = RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(16.dp),
+                readOnly = true
             )
 
             Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
@@ -222,7 +230,15 @@ private fun AddMasterAccountInfo(
                 .height(60.dp)
         ) {
             CustomButton(
-                navigateToDoneRegistration,
+                {
+                    if (viewModel.currentUser is Master) {
+                        val masterUser = viewModel.currentUser as Master
+                        viewModel.updateUserDescription(profileDescription)
+                    }
+
+                    navigateToDoneRegistration.invoke()
+
+                },
                 "Сохранить"
             )
         }

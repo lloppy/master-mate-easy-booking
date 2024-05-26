@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -36,6 +37,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,14 +49,14 @@ import com.example.skills.ui.components.tools.EmailState
 import com.example.skills.ui.components.tools.EmailStateSaver
 import com.example.skills.ui.components.tools.PasswordState
 import com.example.skills.ui.theme.backgroundMaterial
-import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistrationScreen(
     navController: NavHostController,
     navigateToCodeVerification: () -> Unit,
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    isClient: Boolean = false
 ) {
     Scaffold(
         topBar = {
@@ -88,7 +90,7 @@ fun RegistrationScreen(
             )
         },
     ) { innerPadding ->
-        ContentSingIn(innerPadding, navigateToCodeVerification, viewModel)
+        ContentSingIn(innerPadding, navigateToCodeVerification, viewModel, isClient)
     }
 }
 
@@ -96,12 +98,14 @@ fun RegistrationScreen(
 fun ContentSingIn(
     innerPadding: PaddingValues,
     navigateToCodeVerification: () -> Unit,
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    isClient: Boolean
 ) {
     var email by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
     var secondName by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
+    var birthday by remember { mutableStateOf("") }
     val focusRequester = remember { FocusRequester() }
     val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
         mutableStateOf(EmailState(email))
@@ -143,6 +147,24 @@ fun ContentSingIn(
                     label = "Фамилия"
                 )
 
+                if (isClient) {
+                    Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
+
+                    OutlinedTextField(
+                        value = birthday,
+                        onValueChange = { birthday = it },
+                        label = { Text(text = "Дата рождения (dd.MM.yyyy)") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        modifier = Modifier.fillMaxWidth(),
+                        textStyle = MaterialTheme.typography.bodyMedium,
+                        singleLine = true,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            unfocusedLabelColor = Color.Gray,
+                            unfocusedBorderColor = Color.Gray
+                        )
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
                 Email(emailState, onImeAction = { focusRequester.requestFocus() })
 
@@ -166,17 +188,11 @@ fun ContentSingIn(
                     label = "Пароль",
                     passwordState = passwordState,
                     modifier = Modifier.focusRequester(focusRequester),
-//                onImeAction = {
-//                    onSubmit()
-//                }
                 )
                 Password(
                     label = "Повторите пароль",
                     passwordState = passwordStateRepeat,
                     modifier = Modifier.focusRequester(focusRequester),
-//                onImeAction = {
-//                    onSubmit()
-//                }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
@@ -192,8 +208,8 @@ fun ContentSingIn(
                             password = passwordState.text.trim(),
                             firstName = firstName,
                             lastName = secondName,
-                            phoneNumber = phone
-                          //  birthDate = LocalDate.now().toString()
+                            phoneNumber = phone,
+                            birthDate = if (!isClient) null else birthday
                         )
                         viewModel.registerUser(authRequest) { successful ->
                             if (successful) {

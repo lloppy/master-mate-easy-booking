@@ -70,7 +70,7 @@ fun SimpleMasterCard(
             }
             IconButton(onClick = {
                 bookingViewModel.data1 = MutableLiveData(master)
-                Log.e("bookingViewModel", "SimpleMasterCard bookingViewModel masterId is ${bookingViewModel.data1.value!!.id}")
+                Log.e("bookingViewModel", "SimpleMasterCard bookingViewModel masterId is ${bookingViewModel.data1.value!!.token}")
 
                 navigateToSelectedMasterProfile.invoke()
             }) {

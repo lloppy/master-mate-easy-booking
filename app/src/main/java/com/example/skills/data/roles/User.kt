@@ -1,7 +1,7 @@
 package com.example.skills.data.roles
 
 open class User (
-    open val id: Long,
+    open val token: String,
     open var email: String,
     open var firstName: String,
     open var lastName: String,

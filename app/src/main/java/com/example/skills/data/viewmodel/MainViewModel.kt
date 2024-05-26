@@ -3,48 +3,50 @@ package com.example.skills.data.viewmodel
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import androidx.lifecycle.ViewModel
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.skills.data.api.ActivationRequest
-import com.example.skills.data.api.ActivationResponse
 import com.example.skills.data.api.AuthRequest
 import com.example.skills.data.api.Network
 import com.example.skills.data.api.Network.apiService
+import com.example.skills.data.roles.Client
+import com.example.skills.data.roles.Master
+import com.example.skills.data.roles.Role
 import com.example.skills.data.roles.User
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 const val MY_LOG = "MY_LOG"
 
 class MainViewModel(context: Context) : ViewModel() {
     var currentUser: User? by mutableStateOf(null)
-    var userToken: String? by mutableStateOf(null)
-    var userIsAuthenticated by mutableStateOf(false)
+        private set
 
-    private val preferences: SharedPreferences = context.getSharedPreferences("user_credentials", Context.MODE_PRIVATE)
+    var currentUserMaster: Master? by mutableStateOf(null)
+        private set
 
-    fun activateAccount(code: String, onActivationComplete: (Boolean) -> Unit) {
-        viewModelScope.launch {
-            try {
-                Log.i(MY_LOG, userToken.toString())
+    var currentUserClient: Client? by mutableStateOf(null)
+        private set
 
-                val activationRequest = ActivationRequest(code)
-                val response = apiService.activate("Bearer $userToken", activationRequest)
+    private var _userToken: String? = null
+        private set
 
-                if (response.isSuccessful) {
-                    Log.d(MY_LOG, "activateAccount isSuccessful ${response.body()?.status}")
-                    onActivationComplete(true)
-                } else {
-                    Log.e(MY_LOG, "activateAccount - Server returned an error: ${response.errorBody()?.string()}")
-                    onActivationComplete(false)
-                }
-            } catch (e: Exception) {
-                Log.e(MY_LOG,"Exception occurred in activateAccount: ${e.message}")
-                onActivationComplete(false)
-            }
+    private val userIsAuthenticated = mutableStateOf(false)
+    private val preferences: SharedPreferences =
+        context.getSharedPreferences("user_credentials", Context.MODE_PRIVATE)
+
+    init {
+        Log.d(MY_LOG, "Initializing ViewModel, reading user credentials")
+        _userToken = preferences.getString("token", null)
+        _userToken?.let {
+            Network.updateToken(it)
+            userIsAuthenticated.value = true
+            loadCurrentUser(it)
         }
     }
 
@@ -53,79 +55,142 @@ class MainViewModel(context: Context) : ViewModel() {
             try {
                 val response = apiService.register(authRequest)
 
-                if (response.isSuccessful && response.body()!!.token != null) {
-                    Log.i(MY_LOG, "body code is ${response.body()!!.token} ${response.body()}")
-                    saveUserCredentials(response.body()!!.token)
-                    userToken = response.body()!!.token
+                if (response.isSuccessful && response.body()?.token != null) {
+                    Log.d(MY_LOG, "Token received ${response.body()?.token}")
+                    _userToken = response.body()!!.token
+                    saveTokenToPreferences(_userToken!!)
+                    Network.updateToken(_userToken)
+                    userIsAuthenticated.value = true
+
+                    if (authRequest.birthDate != null) {
+                        currentUser = Client(
+                            token = _userToken!!,
+                            email = authRequest.email,
+                            password = authRequest.password,
+                            firstName = authRequest.firstName,
+                            lastName = authRequest.lastName,
+                            phone = authRequest.phoneNumber,
+                            role = Role.CLIENT,
+                            dateBirthday = LocalDate.parse(
+                                authRequest.birthDate,
+                                DateTimeFormatter.ofPattern("dd.MM.yyyy")
+                            )
+                        )
+
+                        currentUserClient = Client(
+                            token = _userToken!!,
+                            email = authRequest.email,
+                            password = authRequest.password,
+                            firstName = authRequest.firstName,
+                            lastName = authRequest.lastName,
+                            phone = authRequest.phoneNumber,
+                            role = Role.CLIENT,
+                            dateBirthday = LocalDate.parse(
+                                authRequest.birthDate,
+                                DateTimeFormatter.ofPattern("dd.MM.yyyy")
+                            )
+                        )
+                    } else {
+                        currentUser = Master(
+                            token = _userToken!!,
+                            email = authRequest.email,
+                            password = authRequest.password,
+                            firstName = authRequest.firstName,
+                            lastName = authRequest.lastName,
+                            phone = authRequest.phoneNumber,
+                            role = Role.MASTER
+                        )
+
+                        currentUserMaster = Master(
+                            token = _userToken!!,
+                            email = authRequest.email,
+                            password = authRequest.password,
+                            firstName = authRequest.firstName,
+                            lastName = authRequest.lastName,
+                            phone = authRequest.phoneNumber,
+                            role = Role.MASTER
+                        )
+                    }
+
                     onResponse(true)
                 } else {
-                    Log.e(MY_LOG, "Server returned an error: ${response.errorBody()}")
+                    Log.e(MY_LOG, "Registration failed: ${response.errorBody()}")
                     onResponse(false)
                 }
             } catch (e: Exception) {
-                when (e) {
-                    is SocketTimeoutException -> {
-                        Log.e(MY_LOG, "API request timed out")
-                    }
-                    else -> {
-                        Log.e(MY_LOG, "Unknown API error occurred: ${e.localizedMessage}")
-                    }
-                }
+                handleApiException(e)
                 onResponse(false)
             }
         }
     }
 
-    fun logout() {
-        Log.e(MY_LOG, "Logging out user")
-        preferences.edit().apply {
-            remove("token")
-            apply()
+    fun activateAccount(code: String, onActivationComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            try {
+                Log.d(MY_LOG, "Activation started")
+                val activationRequest = ActivationRequest(code)
+                val response = apiService.activate("Bearer $_userToken", activationRequest)
+
+                if (response.isSuccessful) {
+                    Log.d(MY_LOG, "Account activated")
+                    onActivationComplete(true)
+                } else {
+                    Log.e(MY_LOG, "Activation failed: ${response.errorBody()?.string()}")
+                    onActivationComplete(false)
+                }
+            } catch (e: Exception) {
+                handleApiException(e)
+                onActivationComplete(false)
+            }
         }
-        this.userToken = null
+    }
+
+    fun logout() {
+        Log.d(MY_LOG, "Logging out user")
+        preferences.edit().remove("token").apply()
+        _userToken = null
         currentUser = null
-        userIsAuthenticated = false
+        userIsAuthenticated.value = false
+        Network.updateToken(null)
     }
 
-    init {
-        Log.d(MY_LOG, "Initializing ViewModel, reading user credentials")
-        readUserCredentials()
-
-    }
-
+    // ---------------- PRIVATE FUN ------------------------------------------------
     private fun loadCurrentUser(token: String) {
         viewModelScope.launch {
             Log.d(MY_LOG, "Attempting to load user by token")
-            val user = apiService.getUserByToken(token)
-            if (user.isSuccessful) {
+            val response = apiService.getUserByToken("Bearer $token")
+
+            if (response.isSuccessful) {
                 Log.d(MY_LOG, "User loaded successfully")
-                currentUser = user.body()
+
+                if(response.body()?.role == Role.CLIENT) {
+                    currentUser = response.body() as Client
+                } else if(response.body()?.role == Role.MASTER) {
+                    currentUser = response.body() as Master
+                }
+
+                Log.i(MY_LOG, "User is ${currentUser!!.email}, ${currentUser!!.firstName}")
             } else {
                 Log.e(MY_LOG, "Failed to load user")
             }
         }
     }
 
-    private fun saveUserCredentials(token: String) {
-        Log.d(MY_LOG, "Saving user credentials to shared preferences")
+    private fun saveTokenToPreferences(token: String) {
+        Log.d(MY_LOG, "Saving token to shared preferences")
         preferences.edit().apply {
             putString("token", token)
             apply()
         }
-        Log.d(MY_LOG, "Loading current user info")
-        loadCurrentUser(token)
-        userIsAuthenticated = true
     }
 
-    private fun readUserCredentials() {
-        val token = preferences.getString("token", null)
-        if (token != null) {
-            Log.d(MY_LOG, "Token found in shared preferences, loading user")
-            loadCurrentUser(token)
-            userIsAuthenticated = true
-        } else {
-            Log.e(MY_LOG, "No token found in shared preferences")
-            userIsAuthenticated = false
+    private fun handleApiException(e: Exception) = when (e) {
+        is SocketTimeoutException -> {
+            Log.e(MY_LOG, "API request timed out")
+        }
+
+        else -> {
+            Log.e(MY_LOG, "Unknown API error occurred: ${e.localizedMessage}")
         }
     }
 }

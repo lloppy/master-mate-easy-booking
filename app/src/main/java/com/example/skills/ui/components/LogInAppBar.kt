@@ -213,7 +213,8 @@ fun ContentLogIn(
 fun Email(
     emailState: TextFieldState = remember { EmailState() },
     imeAction: ImeAction = ImeAction.Next,
-    onImeAction: () -> Unit = {}
+    onImeAction: () -> Unit = {},
+    readOnle: Boolean = false
 ) {
     OutlinedTextField(
         value = emailState.text,
@@ -245,7 +246,8 @@ fun Email(
             unfocusedLabelColor = Color.Gray,
             unfocusedBorderColor = Color.Gray
         ),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        readOnly = readOnle
     )
 
     emailState.getError()?.let { error -> TextFieldError(textError = error) }

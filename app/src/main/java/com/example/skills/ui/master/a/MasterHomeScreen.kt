@@ -54,7 +54,7 @@ fun MainMasterScreen(
                 },
                 actions = {
                     IconButton(onClick = {
-                        val profileId = master.id
+                        val profileId = master.token
                         navigateToShare.invoke()
                     }) {
                         Icon(

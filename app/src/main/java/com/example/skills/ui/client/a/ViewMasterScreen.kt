@@ -64,7 +64,7 @@ fun ViewMasterScreen(
                 actions = {
                     IconButton(onClick = {
                         // удаляем из бдшки и обновляем :)
-                        val profileId = master.id
+                        val profileId = master.token
 
                         showDialog = true
                     }) {
