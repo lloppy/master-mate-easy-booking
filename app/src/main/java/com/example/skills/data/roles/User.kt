@@ -19,7 +19,7 @@ class User(
 
 ) {
     class Client(
-        var birthday: LocalDate?
+        var birthday: String?
     )
 
     class Master(

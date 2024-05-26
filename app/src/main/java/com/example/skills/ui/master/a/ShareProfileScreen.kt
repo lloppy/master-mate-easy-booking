@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Context.CLIPBOARD_SERVICE
 import android.graphics.Bitmap
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -46,6 +47,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.skills.data.viewmodel.MY_LOG
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.theme.backgroundMaterial
 import com.google.zxing.BarcodeFormat
@@ -58,9 +61,10 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShareProfileScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    masterCode: String
 ) {
-    val masterCode = "DT2Q45L" // ну полная лажа конечно, но что делать 😢
+    Log.i(MY_LOG, "masterCode is $masterCode")
 
     Scaffold(
         topBar = {

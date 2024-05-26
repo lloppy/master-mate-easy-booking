@@ -42,7 +42,8 @@ fun SetupMasterNavGraph(
         }
         composable(ScreenRole.Master.ShareProfile.route) {
             ShareProfileScreen(
-                navController = navHostController
+                navController = navHostController,
+                masterCode = mainViewModel.currentUser!!.master!!.linkCode.toString()
             )
         }
 

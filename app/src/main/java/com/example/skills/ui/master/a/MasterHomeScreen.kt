@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.roles.User
 import com.example.skills.data.viewmodel.MainViewModel
+import com.example.skills.data.viewmodel.MyRepository.getMaster
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,7 +35,7 @@ fun MainMasterScreen(
     navigateToShare: () -> Unit,
     viewModel: MainViewModel
 ) {
-    val master = viewModel.currentUser!!
+    val master = getMaster() // viewModel.currentUser!!
 
     Scaffold(
         topBar = {
@@ -55,7 +56,6 @@ fun MainMasterScreen(
                 },
                 actions = {
                     IconButton(onClick = {
-                        val profileId = master.token
                         navigateToShare.invoke()
                     }) {
                         Icon(

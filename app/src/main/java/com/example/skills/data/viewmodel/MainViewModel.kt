@@ -71,10 +71,7 @@ class MainViewModel(context: Context) : ViewModel() {
                             phone = authRequest.phoneNumber,
                             role = Role.CLIENT,
                             client = User.Client(
-                                birthday = LocalDate.parse(
-                                    authRequest.birthDate,
-                                    DateTimeFormatter.ofPattern("dd.MM.yyyy")
-                                )
+                                birthday = authRequest.birthDate
                             )
                         )
                         saveRoleToPreferences("client")
