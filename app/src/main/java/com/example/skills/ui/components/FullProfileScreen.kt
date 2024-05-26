@@ -1,5 +1,6 @@
 package com.example.skills.ui.components
 
+import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -45,11 +46,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.example.skills.data.entity.Address
 import com.example.skills.data.viewmodel.MainViewModel
@@ -134,8 +137,9 @@ private fun AddMasterAccountInfo(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        ProfilePicturePicker()
+        ProfilePicturePicker(viewModel, LocalContext.current)
         Spacer(modifier = Modifier.height(6.dp))
+
         Text(text = "Добавьте фото профиля", fontSize = 16.sp, color = Color.Gray)
         Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField.plus(12.dp)))
 
@@ -239,19 +243,20 @@ private fun AddMasterAccountInfo(
 
 
 @Composable
-fun ProfilePicturePicker() {
+fun ProfilePicturePicker(viewModel: MainViewModel, context: Context) {
     var selectedImage by remember { mutableStateOf<Uri?>(null) }
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         selectedImage = uri
+        selectedImage?.let { viewModel.uploadImage(context, it) }
     }
 
     Column {
         if (selectedImage != null) {
             Image(
-                painter = rememberImagePainter(selectedImage),
-                contentDescription = "Selected profile pic",
+                painter = rememberAsyncImagePainter(selectedImage),
+                contentDescription = "Selected profile picture",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .height(120.dp)

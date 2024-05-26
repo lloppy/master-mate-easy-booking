@@ -86,7 +86,7 @@ fun MainMasterScreen(
 @Composable
 fun MasterHomeScreen(
     innerPadding: PaddingValues,
-    user: User
+    user: User,
 ) {
     Column(
         modifier = Modifier

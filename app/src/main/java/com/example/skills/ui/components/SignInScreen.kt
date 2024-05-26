@@ -111,7 +111,7 @@ fun ContentSingIn(
     viewModel: MainViewModel,
     isClient: Boolean
 ) {
-    var email by remember { mutableStateOf("") }
+    val email by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
     var secondName by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }

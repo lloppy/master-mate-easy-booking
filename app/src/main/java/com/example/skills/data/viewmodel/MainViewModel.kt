@@ -2,6 +2,8 @@ package com.example.skills.data.viewmodel
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.Uri
+import android.provider.OpenableColumns
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +19,12 @@ import com.example.skills.data.roles.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.net.SocketTimeoutException
 
 const val MY_LOG = "MY_LOG"
@@ -42,10 +50,16 @@ class MainViewModel(context: Context) : ViewModel() {
         Log.d(MY_LOG, "Initializing ViewModel, reading user credentials")
         _userToken = preferences.getString("token", null)
         _userRole = preferences.getString("role", null)
-        _userToken?.let {
-            Network.updateToken(it)
-            userIsAuthenticated.value = true
-            loadCurrentUser(it)
+        if (_userRole != null) {
+            Log.i(MY_LOG, "👋 Init session. Role is $_userRole, token is $_userToken")
+
+            _userToken?.let {
+                Network.updateToken(it)
+                userIsAuthenticated.value = true
+                loadCurrentUser(it)
+            }
+        } else {
+            Log.d(MY_LOG, "Gg, it`s old deprecated session 💩💩")
         }
     }
 
@@ -55,10 +69,10 @@ class MainViewModel(context: Context) : ViewModel() {
 
             try {
                 val response = apiService.register(authRequest)
-                Log.d(MY_LOG, "Token try receive ${response.body()?.token}")
+                Log.d(MY_LOG, "Try receive token: ${response.body()?.token}")
 
                 if (response.isSuccessful && response.body()?.token != null) {
-                    Log.i(MY_LOG, "Token received ${response.body()?.token}")
+                    Log.i(MY_LOG, "Token received isSuccessful: ${response.body()?.token}")
 
                     _userToken = response.body()!!.token
                     saveTokenToPreferences(_userToken!!)
@@ -104,6 +118,7 @@ class MainViewModel(context: Context) : ViewModel() {
                     onResponse(false)
                 }
             } catch (e: Exception) {
+                Log.d(MY_LOG, "Receive token exception")
                 handleApiException(e)
                 onResponse(false)
             }
@@ -132,6 +147,43 @@ class MainViewModel(context: Context) : ViewModel() {
                 onActivationComplete(false)
             }
             _isLoading.emit(false)
+        }
+    }
+
+    fun uploadImage(context: Context, selectedImage: Uri) {
+        val contentResolver = context.contentResolver
+        val parcelFileDescriptor = contentResolver.openFileDescriptor(selectedImage, "r", null)
+        val inputStream = FileInputStream(parcelFileDescriptor!!.fileDescriptor)
+        val file = File(context.cacheDir, getFileName(context, selectedImage))
+        val outputStream = FileOutputStream(file)
+        inputStream.copyTo(outputStream)
+
+        val requestFile = file.asRequestBody(contentResolver.getType(selectedImage)!!.toMediaTypeOrNull())
+        val body = MultipartBody.Part.createFormData("profilePicture", file.name, requestFile)
+
+        viewModelScope.launch {
+            val response = apiService.uploadProfilePicture("Bearer $_userToken", body)
+            if (response.isSuccessful) {
+                currentUser!!.master!!.profileImageId = response.body()
+                Log.d(MY_LOG, "Upload image success")
+            } else {
+                Log.e(MY_LOG, "Upload image fail")
+            }
+        }
+    }
+
+    fun getProfilePicture() {
+        viewModelScope.launch {
+            try {
+                val response = apiService.getProfilePicture(token = "Bearer $_userToken")
+                if (response.isSuccessful) {
+                    currentUser!!.master!!.profileImageId = response.body()
+                } else {
+                    Log.e(MY_LOG, "Get image fail, response is not Successful")
+                }
+            } catch (e: Exception) {
+                Log.e(MY_LOG, "Exception. Get image fail: ${e.message}")
+            }
         }
     }
 
@@ -184,5 +236,17 @@ class MainViewModel(context: Context) : ViewModel() {
         else -> {
             Log.e(MY_LOG, "Unknown API error occurred: ${e.localizedMessage}")
         }
+    }
+
+    private fun getFileName(context: Context, uri: Uri): String {
+        var name = ""
+        val returnCursor = context.contentResolver.query(uri, null, null, null, null)
+        if (returnCursor != null) {
+            val nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            returnCursor.moveToFirst()
+            name = returnCursor.getString(nameIndex)
+            returnCursor.close()
+        }
+        return name
     }
 }

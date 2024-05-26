@@ -33,8 +33,8 @@ object Network {
         if (token != null) {
             val authTokenInterceptor = Interceptor { chain ->
                 val request = chain.request().newBuilder().addHeader("Authorization", "Bearer $token").build()
-                Log.d(MY_LOG, "new token request is ${request.headers}")
-                Log.d(MY_LOG, "token is $token")
+                // Log.d(MY_LOG, "new token request is ${request.headers}")
+                Log.d(MY_LOG, "new token is $token")
 
                 chain.proceed(request)
             }

@@ -50,6 +50,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.components.CustomOutlinedTextField
@@ -246,7 +247,7 @@ fun ProfilePicturePicker() {
     Column {
         if (selectedImage != null) {
             Image(
-                painter = rememberImagePainter(selectedImage),
+                painter = rememberAsyncImagePainter(selectedImage),
                 contentDescription = "Selected profile pic",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

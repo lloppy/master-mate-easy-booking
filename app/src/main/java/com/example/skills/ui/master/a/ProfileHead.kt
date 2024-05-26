@@ -2,6 +2,8 @@ package com.example.skills.ui.master.a
 
 import android.content.Intent
 import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,8 +28,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import com.example.skills.R
 import com.example.skills.data.roles.User
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.master.b.calendar.clickable
 import com.example.skills.ui.master.d.paddingBetweenText
 import com.example.skills.ui.theme.fontFamilyInter
@@ -37,13 +42,8 @@ fun ProfileHead(user: User) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
 
-    // TODO() сделать загрузку иконки
-    val imageName = user.master?.profileImageId ?: "master"
-    val imageId =
-        context.resources.getIdentifier(imageName, "drawable", context.packageName)
-    val painter =
-        if (imageId != 0) painterResource(id = imageId) else painterResource(id = R.drawable.master)
-
+    val imageUri = user.master?.profileImageId
+    val painter = if (imageUri != null) rememberAsyncImagePainter(model = imageUri) else painterResource(id = R.drawable.master)
 
     Column(
         modifier = Modifier

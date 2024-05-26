@@ -55,7 +55,7 @@ fun DoneMasterInfoRegistrationScreen(navigateToMain: () -> Unit, navigateToSetUp
             )
             Spacer(modifier = Modifier.padding(8.dp))
             Text(
-                text = "Вы успешно заполнили профиль. Теперь давайте настроим подключение к Google Календарю и уведомления через Telegram.",
+                text = "Вы успешно заполнили профиль",
                 fontSize = 14.sp,
                 fontFamily = fontFamilyInter,
                 fontWeight = FontWeight.Normal,
@@ -72,14 +72,7 @@ fun DoneMasterInfoRegistrationScreen(navigateToMain: () -> Unit, navigateToSetUp
         ) {
             CustomButton(
                 navigateToMain,
-                "В другой раз",
-                color = Color.Transparent,
-                width = 0.5f
-            )
-
-            CustomButton(
-                navigateToSetUpCalendar,
-                "Продолжить"
+                "Готово"
             )
         }
     }
