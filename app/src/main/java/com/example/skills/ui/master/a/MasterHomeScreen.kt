@@ -24,9 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.skills.data.roles.Master
+import com.example.skills.data.roles.User
 import com.example.skills.data.viewmodel.MainViewModel
-import com.example.skills.data.viewmodel.MyRepository.getMaster
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,7 +34,7 @@ fun MainMasterScreen(
     navigateToShare: () -> Unit,
     viewModel: MainViewModel
 ) {
-    val master = viewModel.currentUserMaster!!
+    val master = viewModel.currentUser!!
 
     Scaffold(
         topBar = {
@@ -87,7 +86,7 @@ fun MainMasterScreen(
 @Composable
 fun MasterHomeScreen(
     innerPadding: PaddingValues,
-    master: Master
+    user: User
 ) {
     Column(
         modifier = Modifier
@@ -96,7 +95,7 @@ fun MasterHomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        ProfileHead(master)
-        if (master.images != null) MasterGallery(master.images!!)
+        ProfileHead(user)
+        if (user.master?.images != null) MasterGallery(user.master!!.images!!)
     }
 }

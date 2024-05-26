@@ -1,13 +1,34 @@
 package com.example.skills.data.roles
 
-open class User (
-    open val token: String,
-    open var email: String,
-    open var firstName: String,
-    open var lastName: String,
-    open var phone: String,
-    open var imageId: String? = null,
-    open var password: String,
-    open var role: Role,
+import android.net.Uri
+import com.example.skills.data.entity.Address
+import java.time.LocalDate
 
-)
+class User(
+    val token: String,
+    var email: String,
+    var password: String,
+
+    var firstName: String,
+    var lastName: String,
+    var phone: String,
+    var role: Role,
+
+    var master: Master? = null,
+    var client: Client? = null
+
+) {
+    class Client(
+        var birthday: LocalDate?
+    )
+
+    class Master(
+        var profileImageId: String? = null,
+        var images: List<Uri>? = null,
+
+        var description: String? = null,
+        var linkCode: String? = null,
+        var messenger: String? = null,
+        var address: Address? = null,
+    )
+}

@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.skills.ui.client.b.ClientBookingsScreen
 import com.example.skills.ui.client.c.EditClientProfileScreen
-import com.example.skills.client.components.a.ClientMastersScreen
+import com.example.skills.ui.client.a.ClientMastersScreen
 import com.example.skills.client.components.a.MasterServicesScreen
 import com.example.skills.ui.client.a.ViewMasterScreen
 import com.example.skills.client.components.a.edit_booking.EditConfirmClientBookingScreen

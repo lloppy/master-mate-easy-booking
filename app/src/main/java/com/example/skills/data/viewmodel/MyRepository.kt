@@ -1,13 +1,13 @@
 package com.example.skills.data.viewmodel
 
 import android.net.Uri
-import com.example.skills.data.roles.Address
-import com.example.skills.data.roles.Master
+import com.example.skills.data.entity.Address
 import com.example.skills.data.roles.Role
 import com.example.skills.data.entity.Category
 import com.example.skills.data.entity.RecordItem
 import com.example.skills.data.entity.Service
 import com.example.skills.data.entity.RecordStatus
+import com.example.skills.data.roles.User
 import java.time.LocalDateTime
 
 object MyRepository {
@@ -25,60 +25,22 @@ object MyRepository {
         Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
     )
 
+
     private val listMasters = listOf(
-        Master(
+        User(
             "123",
             "masterivan@gmail.com",
+            "79503223232",
             "Иван",
             "Коссе",
-            "79503223232",
-            null,
-            "12345",
+            "90303003",
             Role.MASTER,
-            "Ведущий мастер в области макияжа и стилистики с более чем десятилетним опытом. Сотрудничал с известными брендами, работала на крупнейших модных показах и обучала начинающих визажистов.",
-            "https://t.me/lloppy",
-            Address("Россия", "Москва", "Маяковская", "10", "2"),
-            imageUrls
-        ), Master(
-            "223",
-            "Екатерина@gmail.com",
-            "Екатерина",
-            "Иванова",
-            "79503223232",
-            null,
-            "12345",
-            Role.MASTER,
-            "Ведущий мастер в области макияжа и стилистики с более чем десятилетним опытом. Сотрудничал с известными брендами, работала на крупнейших модных показах и обучала начинающих визажистов.",
-            "https://t.me/lloppy",
-            Address("Россия", "Москва", "Маяковская", "10", "2"),
-            imageUrls
-        ), Master(
-            "323",
-            "Вероника@gmail.com",
-            "Вероника",
-            "Дуброва",
-            "79503223232",
-            null,
-            "12345",
-            Role.MASTER,
-            "Ведущий мастер в области макияжа и стилистики с более чем десятилетним опытом. Сотрудничал с известными брендами, работала на крупнейших модных показах и обучала начинающих визажистов.",
-            "https://t.me/lloppy",
-            Address("Россия", "Москва", "Маяковская", "10", "2"),
-            imageUrls
-        ),
-        Master(
-            "423",
-            "Пётр@gmail.com",
-            "Пётр",
-            "Высоков",
-            "79503223232",
-            null,
-            "12345",
-            Role.MASTER,
-            "Ведущий мастер в области макияжа и стилистики с более чем десятилетним опытом. Сотрудничал с известными брендами, работала на крупнейших модных показах и обучала начинающих визажистов.",
-            "https://t.me/lloppy",
-            Address("Россия", "Москва", "Маяковская", "10", "2"),
-            imageUrls
+            master = User.Master(
+                profileImageId = "Ведущий мастер в области макияжа и стилистики с более чем десятилетним опытом. Сотрудничал с известными брендами, работала на крупнейших модных показах и обучала начинающих визажистов.",
+                messenger = "https://t.me/lloppy",
+                address = Address("Россия", "Москва", "Маяковская", "10", "2"),
+                images = imageUrls
+            )
         )
     )
 
@@ -190,9 +152,9 @@ object MyRepository {
     )
 
 
-    fun getMaster(id: String): Master = listMasters.first { it.token == id }
-    fun getMaster(): Master = listMasters.first()
-    fun getMastersList(): List<Master> = listMasters
+    fun getMaster(id: String): User = listMasters.first { it.token == id }
+    fun getMaster(): User = listMasters.first()
+    fun getMastersList(): List<User> = listMasters
     fun getService(serviceId: Long): Service = services.find { it.serviceId == serviceId }!!
     fun getRecordsItemList(): MutableList<RecordItem> = recordsItemList
     fun getCategories(): List<Category> = categories

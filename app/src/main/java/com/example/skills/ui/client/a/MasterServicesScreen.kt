@@ -37,9 +37,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.skills.client.components.a.new_booking.ServiceCardClient
-import com.example.skills.data.viewmodel.route.BookingViewModel
 import com.example.skills.data.viewmodel.MyRepository
+import com.example.skills.data.viewmodel.route.BookingViewModel
+import com.example.skills.ui.client.a.new_booking.ServiceCardClient
 import com.example.skills.ui.theme.paddingBetweenElements
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -143,7 +143,12 @@ fun MasterMyServices(
             if (selectedServicesByCategory != null) {
                 LazyColumn(modifier = Modifier.padding(bottom = 100.dp)) {
                     items(selectedServicesByCategory) { singleService ->
-                        ServiceCardClient(singleService, navigateToSelectDate, master, bookingViewModel)
+                        ServiceCardClient(
+                            singleService,
+                            navigateToSelectDate,
+                            master,
+                            bookingViewModel
+                        )
                     }
                 }
             } else {

@@ -1,10 +1,11 @@
 package com.example.skills.data.entity
 
-import com.example.skills.data.roles.Master
+import com.example.skills.data.roles.User
+
 
 data class Service(
     val serviceId: Long,
-    val master: Master,
+    val master: User,
     val name: String,
     val description: String?,
     val price: Long?,

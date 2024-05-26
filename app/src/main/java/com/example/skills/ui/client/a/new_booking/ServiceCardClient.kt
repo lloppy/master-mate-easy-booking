@@ -1,4 +1,4 @@
-package com.example.skills.client.components.a.new_booking
+package com.example.skills.ui.client.a.new_booking
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -20,8 +20,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
-import com.example.skills.data.roles.Master
 import com.example.skills.data.entity.Service
+import com.example.skills.data.roles.User
 import com.example.skills.data.viewmodel.route.BookingViewModel
 import com.example.skills.ui.master.b.calendar.clickable
 
@@ -30,7 +30,7 @@ import com.example.skills.ui.master.b.calendar.clickable
 fun ServiceCardClient(
     singleService: Service,
     navigateToSelectDate: () -> Unit,
-    master: Master,
+    user: User,
     bookingViewModel: BookingViewModel
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -89,7 +89,7 @@ fun ServiceCardClient(
             } else {
                 Spacer(modifier = Modifier.height(paddingBetweenText))
                 Text(
-                    text = "Адрес: " + master.address,
+                    text = "Адрес: " + user.master!!.address,
                     color = Color.LightGray,
                     fontWeight = FontWeight.Normal,
                     fontSize = 12.sp,

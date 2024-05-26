@@ -24,37 +24,38 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skills.R
-import com.example.skills.data.roles.Address
-import com.example.skills.data.roles.Master
-import com.example.skills.data.roles.Role
+import com.example.skills.data.roles.User
 import com.example.skills.ui.master.b.calendar.clickable
 import com.example.skills.ui.master.d.paddingBetweenText
 import com.example.skills.ui.theme.fontFamilyInter
 
 @Composable
-fun ProfileHead(master: Master) {
+fun ProfileHead(user: User) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
-    val imageName = master.imageId ?: "master"
+    val imageName = user.master?.profileImageId ?: "master"
     val imageId =
         context.resources.getIdentifier(imageName, "drawable", context.packageName)
     val painter =
         if (imageId != 0) painterResource(id = imageId) else painterResource(id = R.drawable.master)
 
-    val uri = Uri.parse(master.linkCode)
+    val uri = Uri.parse(user.master?.linkCode)
     val intent = Intent(Intent.ACTION_VIEW, uri)
 
     Column(
-        modifier = Modifier.fillMaxWidth().padding(start = 12.dp, end = 12.dp, bottom = 8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 12.dp, end = 12.dp, bottom = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
@@ -65,9 +66,9 @@ fun ProfileHead(master: Master) {
                 alignment = Alignment.TopCenter
             )
         }
-        if (master.description != null) {
+        if (user.master?.description != null) {
             Text(
-                text = master.description!!,
+                text = user.master!!.description!!,
                 fontSize = 14.sp,
                 maxLines = if (expanded) Int.MAX_VALUE else 3,
                 fontFamily = fontFamilyInter,
@@ -92,7 +93,7 @@ fun ProfileHead(master: Master) {
         if (expanded) {
             Spacer(modifier = Modifier.height(paddingBetweenText))
             Text(
-                text = master.address.toString(),
+                text = user.master!!.address.toString(),
                 fontSize = 14.sp,
                 fontFamily = fontFamilyInter,
                 fontWeight = FontWeight.Normal,
@@ -114,7 +115,7 @@ fun ProfileHead(master: Master) {
                 tint = Color(0, 122, 255),
             )
             Text(
-                text = master.linkCode!!,
+                text = user.master!!.linkCode!!,
                 fontSize = 14.sp,
                 fontFamily = fontFamilyInter,
                 fontWeight = FontWeight.Normal,
@@ -129,42 +130,4 @@ fun ProfileHead(master: Master) {
             )
         }
     }
-}
-
-
-@Preview
-@Composable
-fun prev() {
-    val imageUrls = listOf(
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-    )
-
-
-    ProfileHead(
-        Master(
-            "123",
-            "masterivan@gmail.com",
-            "Иван",
-            "Коссе",
-            "79503223232",
-            null,
-            "12345",
-            Role.MASTER,
-            "Ведущий мастер в области макияжа и стилистики с более чем десятилетним опытом. Сотрудничал с известными брендами, работала на крупнейших модных показах и обучала начинающих визажистов.",
-            "https://t.me/lloppy",
-            Address("Россия", "Москва", "Маяковская", "10", "2"),
-            imageUrls
-        )
-    )
 }

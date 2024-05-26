@@ -12,9 +12,8 @@ import com.example.skills.data.api.ActivationRequest
 import com.example.skills.data.api.AuthRequest
 import com.example.skills.data.api.Network
 import com.example.skills.data.api.Network.apiService
-import com.example.skills.data.roles.Client
-import com.example.skills.data.roles.Master
 import com.example.skills.data.roles.Role
+import com.example.skills.data.roles.User
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
 import java.time.LocalDate
@@ -23,10 +22,7 @@ import java.time.format.DateTimeFormatter
 const val MY_LOG = "MY_LOG"
 
 class MainViewModel(context: Context) : ViewModel() {
-    var currentUserMaster: Master? by mutableStateOf(null)
-        private set
-
-    var currentUserClient: Client? by mutableStateOf(null)
+    var currentUser: User? by mutableStateOf(null)
         private set
 
     private var _userToken: String? = null
@@ -42,7 +38,7 @@ class MainViewModel(context: Context) : ViewModel() {
     init {
         Log.d(MY_LOG, "Initializing ViewModel, reading user credentials")
         _userToken = preferences.getString("token", null)
-        _userRole = preferences.getString("role", "guest")
+        _userRole = preferences.getString("role", null)
         _userToken?.let {
             Network.updateToken(it)
             userIsAuthenticated.value = true
@@ -64,8 +60,9 @@ class MainViewModel(context: Context) : ViewModel() {
                     Network.updateToken(_userToken)
                     userIsAuthenticated.value = true
 
+                    // Client
                     if (authRequest.birthDate != null) {
-                        currentUserClient = Client(
+                        currentUser = User(
                             token = _userToken!!,
                             email = authRequest.email,
                             password = authRequest.password,
@@ -73,23 +70,27 @@ class MainViewModel(context: Context) : ViewModel() {
                             lastName = authRequest.lastName,
                             phone = authRequest.phoneNumber,
                             role = Role.CLIENT,
-                            dateBirthday = LocalDate.parse(
-                                authRequest.birthDate,
-                                DateTimeFormatter.ofPattern("dd.MM.yyyy")
+                            client = User.Client(
+                                birthday = LocalDate.parse(
+                                    authRequest.birthDate,
+                                    DateTimeFormatter.ofPattern("dd.MM.yyyy")
+                                )
                             )
                         )
                         saveRoleToPreferences("client")
 
                         Log.i(MY_LOG, "current User is Client")
                     } else {
-                        currentUserMaster = Master(
+                        // Master
+                        currentUser = User(
                             token = _userToken!!,
                             email = authRequest.email,
                             password = authRequest.password,
                             firstName = authRequest.firstName,
                             lastName = authRequest.lastName,
                             phone = authRequest.phoneNumber,
-                            role = Role.MASTER
+                            role = Role.MASTER,
+                            master = User.Master()
                         )
                         saveRoleToPreferences("master")
 
@@ -131,11 +132,10 @@ class MainViewModel(context: Context) : ViewModel() {
     fun logout() {
         Log.d(MY_LOG, "Logging out user")
         preferences.edit().remove("token").apply()
-        _userToken = null
-        _userRole = "guest"
+        _userRole = null
 
-        currentUserClient = null
-        currentUserMaster = null
+        _userToken = null
+        currentUser = null
 
         userIsAuthenticated.value = false
         Network.updateToken(null)
@@ -145,22 +145,12 @@ class MainViewModel(context: Context) : ViewModel() {
     private fun loadCurrentUser(token: String) {
         viewModelScope.launch {
             Log.d(MY_LOG, "Attempting to load user by token")
+            val response = apiService.getUserByToken("Bearer $token")
 
-            if (_userRole == "master") {
-                val response = apiService.getMasterByToken("Bearer $token")
-                if (response.isSuccessful) {
-                    Log.d(MY_LOG, "Master loaded successfully")
-                    currentUserMaster = response.body() as Master
-                } else Log.e(MY_LOG, "Failed to load master")
-
-            } else if (_userRole == "client") {
-                val response = apiService.getClientByToken("Bearer $token")
-                if (response.isSuccessful) {
-                    Log.d(MY_LOG, "Client loaded successfully")
-                    currentUserClient = response.body() as Client
-                } else Log.e(MY_LOG, "Failed to load client")
-
-            } else Log.d(MY_LOG, "It is a guest session")
+            if (response.isSuccessful) {
+                Log.d(MY_LOG, "User loaded successfully")
+                currentUser = response.body()
+            } else Log.e(MY_LOG, "Failed to load master")
         }
     }
 

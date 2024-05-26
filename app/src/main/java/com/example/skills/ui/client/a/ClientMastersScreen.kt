@@ -1,4 +1,4 @@
-package com.example.skills.client.components.a
+package com.example.skills.ui.client.a
 
 import android.app.Activity
 import android.content.Intent
@@ -29,9 +29,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityOptionsCompat
-import com.example.skills.data.roles.Master
-import com.example.skills.data.viewmodel.route.BookingViewModel
+import com.example.skills.data.roles.User
 import com.example.skills.data.viewmodel.MyRepository.getMastersList
+import com.example.skills.data.viewmodel.route.BookingViewModel
 import com.example.skills.ui.components.QRCodeScannerScreen
 
 
@@ -87,7 +87,7 @@ fun ClientMastersContent(
     navigateToSelectedMasterProfile: () -> Unit,
     bookingViewModel: BookingViewModel
 ) {
-    val emptyMasters = emptyList<Master>()
+    //val masters = emptyList<User>()
     val masters = getMastersList()
 
     Column(

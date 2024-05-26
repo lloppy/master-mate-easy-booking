@@ -51,7 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
-import com.example.skills.data.roles.Address
+import com.example.skills.data.entity.Address
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.tools.EmailState
 import com.example.skills.ui.components.tools.EmailStateSaver
@@ -108,10 +108,10 @@ private fun AddMasterAccountInfo(
 ) {
     val scrollState = rememberScrollState()
 
-    var email by remember { mutableStateOf(viewModel.currentUserMaster!!.email) }
-    var firstName by remember { mutableStateOf(viewModel.currentUserMaster!!.firstName) }
-    var secondName by remember { mutableStateOf(viewModel.currentUserMaster!!.lastName) }
-    var phone by remember { mutableStateOf(viewModel.currentUserMaster!!.phone) }
+    var email by remember { mutableStateOf(viewModel.currentUser!!.email) }
+    var firstName by remember { mutableStateOf(viewModel.currentUser!!.firstName) }
+    var secondName by remember { mutableStateOf(viewModel.currentUser!!.lastName) }
+    var phone by remember { mutableStateOf(viewModel.currentUser!!.phone) }
 
     val focusRequester = remember { FocusRequester() }
     val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
@@ -224,9 +224,9 @@ private fun AddMasterAccountInfo(
         ) {
             CustomButton(
                 {
-                    viewModel.currentUserMaster!!.description = profileDescription
-                    viewModel.currentUserMaster!!.linkCode = link
-                    viewModel.currentUserMaster!!.address = Address(address)
+                    viewModel.currentUser!!.master!!.description = profileDescription
+                    viewModel.currentUser!!.master!!.linkCode = link
+                    viewModel.currentUser!!.master!!.address = Address(address)
 
                     navigateToDoneRegistration.invoke()
 

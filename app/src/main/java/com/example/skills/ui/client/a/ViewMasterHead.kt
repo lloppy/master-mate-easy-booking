@@ -1,4 +1,4 @@
-package com.example.skills.client.a
+package com.example.skills.ui.client.a
 
 import android.content.Intent
 import android.net.Uri
@@ -27,23 +27,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skills.R
-import com.example.skills.data.roles.Master
+import com.example.skills.data.roles.User
+import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.master.b.calendar.clickable
 import com.example.skills.ui.master.d.paddingBetweenText
-import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.theme.fontFamilyInter
 
 @Composable
-fun ViewMasterHead(master: Master, navigateToServices: () -> Unit) {
+fun ViewMasterHead(user: User, navigateToServices: () -> Unit) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
-    val imageName = master.imageId ?: "master"
-    val imageId =
-        context.resources.getIdentifier(imageName, "drawable", context.packageName)
-    val painter =
-        if (imageId != 0) painterResource(id = imageId) else painterResource(id = R.drawable.master)
+    val imageName = user.master?.profileImageId ?: "master"
 
-    val uri = Uri.parse(master.linkCode)
+    val imageId = context.resources.getIdentifier(imageName, "drawable", context.packageName)
+    val painter = if (imageId != 0) painterResource(id = imageId) else painterResource(id = R.drawable.master)
+
+    val uri = Uri.parse(user.master?.linkCode)
     val intent = Intent(Intent.ACTION_VIEW, uri)
 
     Column(
@@ -67,9 +66,9 @@ fun ViewMasterHead(master: Master, navigateToServices: () -> Unit) {
                 alignment = Alignment.TopCenter
             )
         }
-        if (master.description != null) {
+        if (user.master?.description != null) {
             Text(
-                text = master.description!!,
+                text = user.master!!.description!!,
                 fontSize = 14.sp,
                 maxLines = if (expanded) Int.MAX_VALUE else 3,
                 fontFamily = fontFamilyInter,
@@ -91,7 +90,7 @@ fun ViewMasterHead(master: Master, navigateToServices: () -> Unit) {
         if (expanded) {
             Spacer(modifier = Modifier.height(paddingBetweenText))
             Text(
-                text = master.address.toString(),
+                text = user.master!!.address.toString(),
                 fontSize = 14.sp,
                 fontFamily = fontFamilyInter,
                 fontWeight = FontWeight.Normal,
@@ -113,7 +112,7 @@ fun ViewMasterHead(master: Master, navigateToServices: () -> Unit) {
                 tint = Color(0, 122, 255),
             )
             Text(
-                text = master.linkCode!!,
+                text = user.master!!.linkCode!!,
                 fontSize = 14.sp,
                 fontFamily = fontFamilyInter,
                 fontWeight = FontWeight.Normal,
@@ -135,7 +134,7 @@ fun ViewMasterHead(master: Master, navigateToServices: () -> Unit) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             val intentPhone = Intent(Intent.ACTION_DIAL).apply {
-                data = Uri.parse("tel:${master.phone}")
+                data = Uri.parse("tel:${user}")
             }
             CustomButton(
                 navigateTo = { context.startActivity(intentPhone) },

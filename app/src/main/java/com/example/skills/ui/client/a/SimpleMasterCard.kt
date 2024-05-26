@@ -1,4 +1,4 @@
-package com.example.skills.client.components.a
+package com.example.skills.ui.client.a
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -25,13 +25,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import com.example.skills.R
-import com.example.skills.data.roles.Master
+import com.example.skills.data.roles.User
 import com.example.skills.data.viewmodel.route.BookingViewModel
 
 
 @Composable
 fun SimpleMasterCard(
-    master: Master,
+    master: User,
     navigateToSelectedMasterProfile: () -> Unit,
     bookingViewModel: BookingViewModel
 ) {

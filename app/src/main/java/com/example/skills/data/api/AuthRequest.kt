@@ -1,6 +1,6 @@
 package com.example.skills.data.api
 
-import com.example.skills.data.roles.Address
+import com.example.skills.data.entity.Address
 import com.example.skills.data.roles.User
 import java.time.LocalDateTime
 

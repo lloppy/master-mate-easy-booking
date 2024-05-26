@@ -1,7 +1,6 @@
 package com.example.skills.data.api
 
-import com.example.skills.data.roles.Client
-import com.example.skills.data.roles.Master
+
 import com.example.skills.data.roles.User
 import okhttp3.MultipartBody
 import retrofit2.Response

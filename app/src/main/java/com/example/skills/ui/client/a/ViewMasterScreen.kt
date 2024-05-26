@@ -28,8 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.skills.client.a.ViewMasterHead
-import com.example.skills.data.roles.Master
+import com.example.skills.data.roles.User
 import com.example.skills.data.viewmodel.route.BookingViewModel
 import com.example.skills.ui.master.a.MasterGallery
 import com.example.skills.ui.master.d.CustomAlertDialog
@@ -111,7 +110,7 @@ fun ViewMasterScreen(
 @Composable
 fun MasterHomeScreen(
     innerPadding: PaddingValues,
-    master: Master,
+    user: User,
     navigateToServices: () -> Unit
 ) {
 
@@ -122,7 +121,7 @@ fun MasterHomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        ViewMasterHead(master, navigateToServices)
-        if (master.images != null) MasterGallery(master.images!!)
+        ViewMasterHead(user, navigateToServices)
+        if (user.master?.images != null) MasterGallery(user.master!!.images!!)
     }
 }
