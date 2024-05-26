@@ -82,7 +82,7 @@ fun LogInScreen(
                 ),
                 title = {
                     Text(
-                        "Вход " + routeLogIn.take(6),
+                        "Вход " + routeLogIn.take(6), // master or client route
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
@@ -187,7 +187,7 @@ fun ContentLogIn(
                             email = emailState.text.trim(),
                             password = passwordState.text.trim()
                         )
-                        viewModel.authenticate(authRequest) { successful ->
+                        viewModel.authenticate(routeLogIn.take(6), authRequest) { successful ->
                             if (successful) {
                                 navigateToMain.invoke()
                             }

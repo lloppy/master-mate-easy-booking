@@ -127,22 +127,26 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
-    fun authenticate(authRequest: LogInRequest, onResponse: (Boolean) -> Unit) {
+    fun authenticate(route: String, authRequest: LogInRequest, onResponse: (Boolean) -> Unit) {
         viewModelScope.launch {
             _isLoading.emit(true)
 
             try {
                 val response = apiService.authenticate(authRequest)
 
-                if (response.isSuccessful && response.body()?.token != null) {
-                    _userToken = response.body()!!.token
-                    saveTokenToPreferences(_userToken!!)
-                    Network.updateToken(_userToken)
-                    userIsAuthenticated.value = true
-                    onResponse(true)
-                } else {
-                    Log.e(MY_LOG, "Authentication failed: ${response.errorBody().toString()}")
-                    onResponse(false)
+                if (route == "client" && currentUser?.client != null
+                    || route == "master" && currentUser?.master != null
+                ) {
+                    if (response.isSuccessful && response.body()?.token != null) {
+                        _userToken = response.body()!!.token
+                        saveTokenToPreferences(_userToken!!)
+                        Network.updateToken(_userToken)
+                        userIsAuthenticated.value = true
+                        onResponse(true)
+                    } else {
+                        Log.e(MY_LOG, "Authentication failed: ${response.errorBody().toString()}")
+                        onResponse(false)
+                    }
                 }
             } catch (e: Exception) {
                 Log.d(MY_LOG, "Authorization exception")
@@ -185,7 +189,8 @@ class MainViewModel(context: Context) : ViewModel() {
         val outputStream = FileOutputStream(file)
         inputStream.copyTo(outputStream)
 
-        val requestFile = file.asRequestBody(contentResolver.getType(selectedImage)!!.toMediaTypeOrNull())
+        val requestFile =
+            file.asRequestBody(contentResolver.getType(selectedImage)!!.toMediaTypeOrNull())
         val body = MultipartBody.Part.createFormData("profilePicture", file.name, requestFile)
 
         viewModelScope.launch {
