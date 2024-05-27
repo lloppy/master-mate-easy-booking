@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -61,8 +62,6 @@ fun CodeVerificationScreen(
     navigateToCreateNewPassword: (() -> Unit)? = null,
     viewModel: MainViewModel
 ) {
-    var activationCode by remember { mutableStateOf("") }
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -116,7 +115,7 @@ private fun CodeVerificationComponents(
     viewModel: MainViewModel
 ) {
     var code by remember { mutableStateOf("") }
-    var timeLeft by remember { mutableStateOf(55) }
+    var timeLeft by remember { mutableIntStateOf(55) }
 
     LaunchedEffect(key1 = true) {
         while (timeLeft > 0) {
@@ -164,11 +163,7 @@ private fun CodeVerificationComponents(
         } else {
             TextButton(onClick = {
                 timeLeft = 55
-//                viewModel.activateAccount(ActivationRequest(code)) { isSuccess ->
-//                    if (isSuccess) {
-//                        navigateTo.invoke()
-//                    }
-//                }
+                // TODO повторная отправка код на почту
             }) {
                 Text("Отправить код повторно", fontSize = 14.sp)
             }

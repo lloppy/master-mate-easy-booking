@@ -69,7 +69,6 @@ fun NewPasswordScreen(
                             )
                         }
                     }
-
                 }
             )
         },
@@ -88,7 +87,6 @@ fun ContentNewPassword(
     val passwordStateRepeat = remember { PasswordState() }
     val onSubmit = {
         if (passwordState.isValid) {
-            //onSignInSubmitted(emailState.text, passwordState.text)
             navigateToMain
         }
     }

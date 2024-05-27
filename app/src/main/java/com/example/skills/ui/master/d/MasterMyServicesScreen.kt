@@ -77,14 +77,6 @@ fun MasterMyServicesScreen(
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                     )
-                },
-                actions = {
-                    IconButton(onClick = { /* do something */ }) {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(id = R.drawable.archive),
-                            contentDescription = "Localized description"
-                        )
-                    }
                 }
             )
         }
@@ -107,7 +99,7 @@ fun MasterMyServices(
     navController: NavHostController
 ) {
     var selectedCategory by remember { mutableStateOf(if (getCategories().isNotEmpty()) getCategories().first().name else "") }
-    var categories = getCategories() + Category("Добавить категорию", action = navigateToCreateCategory)
+    val categories = getCategories() + Category("Добавить категорию", action = navigateToCreateCategory)
 
     Column(
         modifier = Modifier
@@ -215,7 +207,7 @@ fun MasterMyServices(
                                 serviceId
                             )
                         )
-                    } catch (e: IllegalArgumentException) { // нужно блин выбрать категорию, а не тыкать в пустоту
+                    } catch (e: IllegalArgumentException) { // нужно блин выбрать категорию, а не тыкать в пустоту 😤😤
                     }
                 },
                 buttonText = "Добавить услугу"

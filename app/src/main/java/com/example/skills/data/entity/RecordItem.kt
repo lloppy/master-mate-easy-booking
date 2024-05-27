@@ -3,16 +3,6 @@ package com.example.skills.data.entity
 import java.time.LocalDateTime
 
 data class RecordItem(
-// // val id: Long,
-//    val timeFrom: LocalDate,
-//    val timeTo: LocalTime,
-// //   val master: Master,
-//    val client: Client,
-//    val comment: String,
-//    val service: Service,
-//    val recordStatus: RecordStatus
-
-
     val serviceName: String,
     val price: Int,
     val timeFrom: LocalDateTime,

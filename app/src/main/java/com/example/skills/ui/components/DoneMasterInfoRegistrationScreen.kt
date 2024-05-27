@@ -23,7 +23,7 @@ import com.example.skills.R
 import com.example.skills.ui.theme.fontFamilyInter
 
 @Composable
-fun DoneMasterInfoRegistrationScreen(navigateToMain: () -> Unit, navigateToSetUpCalendar: () -> Unit) {
+fun DoneMasterInfoRegistrationScreen(navigateToMain: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Column(
             modifier = Modifier

@@ -2,7 +2,6 @@ package com.example.skills.data.entity
 
 import com.example.skills.data.roles.User
 
-
 data class Service(
     val serviceId: Long,
     val master: User,
@@ -14,7 +13,3 @@ data class Service(
     val category: Category,
    // val serviceStatus: ServiceStatus
 )
-
-//enum class ServiceStatus {
-//    STATUS1, STATUS2, STATUS3
-//}

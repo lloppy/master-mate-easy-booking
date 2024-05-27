@@ -33,7 +33,6 @@ fun SetupMasterNavGraph(
         // person
         composable(route = ScreenMaster.MasterHomeScreen.route) {
             MainMasterScreen(
-                navController = navHostController,
                 navigateToShare = {
                     navHostController.navigate(ScreenRole.Master.ShareProfile.route)
                 },
@@ -53,7 +52,7 @@ fun SetupMasterNavGraph(
         }
         // done checkbox
         composable(route = ScreenMaster.MasterCreateServiceScreen.route) {
-            MasterClientServicesScreen(navHostController)
+            MasterClientServicesScreen()
         }
         // server
         composable(route = ScreenMaster.MasterServerScreen.route) {

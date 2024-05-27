@@ -170,10 +170,7 @@ fun rememberQrBitmapPainter(
                 qrCodeWriter.encode(
                     content, BarcodeFormat.QR_CODE,
                     sizePx, sizePx, encodeHints
-                )
-            } catch (ex: WriterException) {
-                null
-            }
+                ) } catch (ex: WriterException) { null }
 
             val matrixWidth = bitmapMatrix?.width ?: sizePx
             val matrixHeight = bitmapMatrix?.height ?: sizePx
@@ -194,7 +191,6 @@ fun rememberQrBitmapPainter(
 
                 }
             }
-
             bitmap = newBitmap
         }
     }

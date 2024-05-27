@@ -2,7 +2,6 @@ package com.example.skills.data.roles
 
 import android.net.Uri
 import com.example.skills.data.entity.Address
-import java.time.LocalDate
 
 class User(
     val token: String,

@@ -104,26 +104,9 @@ fun LogInScreen(
             )
         },
     ) { innerPadding ->
-
-//        val isLoading by mainViewModel.isLoading.collectAsState()
-//        if (isLoading) {
-//            LoadingScreen()
-//            navigateToMain.invoke()
-//        } else {
-//            ContentLogIn(
-//                innerPadding,
-//                navController,
-//                routeLogIn = routeLogIn,
-//                navigateToRegistration,
-//                navigateToForgotPassword,
-//                navigateToMain,
-//                mainViewModel
-//            )
-//        }
         Box(Modifier.fillMaxSize()) {
             ContentLogIn(
                 innerPadding,
-                navController,
                 routeLogIn = routeLogIn,
                 navigateToRegistration,
                 navigateToForgotPassword,
@@ -142,7 +125,6 @@ fun LogInScreen(
 @Composable
 fun ContentLogIn(
     innerPadding: PaddingValues,
-    navController: NavHostController,
     routeLogIn: String,
     navigateToRegistration: () -> Unit,
     navigateToForgotPassword: () -> Unit,
@@ -293,6 +275,7 @@ fun Email(
         readOnly = readOnly
     )
 
+    //TODO сделать валидации ошибок, и для кастомного outliner
     emailState.getError()?.let { error -> TextFieldError(textError = error) }
 }
 

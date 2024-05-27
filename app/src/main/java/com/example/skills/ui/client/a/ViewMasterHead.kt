@@ -95,7 +95,6 @@ fun ViewMasterHead(user: User, navigateToServices: () -> Unit) {
                 fontFamily = fontFamilyInter,
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Center,
-//                lineHeight = 18.sp,
                 color = Color.Black,
                 modifier = Modifier.padding(start = 8.dp, end = 8.dp)
             )
@@ -117,7 +116,6 @@ fun ViewMasterHead(user: User, navigateToServices: () -> Unit) {
                 fontFamily = fontFamilyInter,
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Center,
-//                lineHeight = 18.sp,
                 color = Color(0, 122, 255),
                 modifier = Modifier
                     .padding(start = 8.dp)

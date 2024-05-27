@@ -1,6 +1,5 @@
 package com.example.skills.ui.master.c
 
-
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -55,7 +54,6 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-
 
 private const val NO_SEGMENT_INDEX = -1
 

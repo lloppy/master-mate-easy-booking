@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -37,15 +37,12 @@ import com.kizitonwose.calendar.core.DayPosition
 import java.time.LocalDate
 import java.time.YearMonth
 
-private val primaryColor = Color.Black.copy(alpha = 0.9f)
-private val selectionColor = primaryColor
-private val continuousSelectionColor = Color.LightGray.copy(alpha = 0.3f)
+val primaryColor = Color.Black.copy(alpha = 0.9f)
+val selectionColor = primaryColor
+val continuousSelectionColor = Color.LightGray.copy(alpha = 0.3f)
 
 @Composable
 fun CalendarView() {
-    val rusDaysOfWeek = listOf("ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС")
-    val daysOfWeek = remember { rusDaysOfWeek }
-
     var currentMonth by remember { mutableStateOf(YearMonth.now()) }
     val startMonth = remember { currentMonth }
     val endMonth = remember { currentMonth.plusMonths(12) }
@@ -64,7 +61,8 @@ fun CalendarView() {
                 val calendarState = rememberCalendarState(currentMonth)
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth().padding(bottom = 10.dp),
+                        .fillMaxWidth()
+                        .padding(bottom = 10.dp),
                     Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -79,12 +77,15 @@ fun CalendarView() {
                         IconButton(onClick = {
                             currentMonth = currentMonth.minusMonths(1)
                         }) {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = "Назад")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
                         }
                         IconButton(onClick = {
                             currentMonth = currentMonth.plusMonths(1)
                         }) {
-                            Icon(Icons.Filled.ArrowForward, contentDescription = "Вперед")
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowForward,
+                                contentDescription = "Вперед"
+                            )
                         }
                     }
                 }
@@ -106,7 +107,7 @@ fun CalendarView() {
                             }
                         }
                     },
-                    monthHeader = {  DaysOfWeekHeader() },
+                    monthHeader = { DaysOfWeekHeader() },
                 )
                 if (selection.daysBetween != null || selection.startDate != null) {
                     SelectDateTime()
@@ -117,7 +118,7 @@ fun CalendarView() {
 }
 
 @Composable
-private fun Day(
+fun Day(
     day: CalendarDay,
     today: LocalDate,
     selection: DateSelection,
@@ -154,9 +155,8 @@ private fun Day(
 }
 
 @Composable
-private fun DaysOfWeekHeader() {
+fun DaysOfWeekHeader() {
     Box(modifier = Modifier.fillMaxWidth()) {
-        val rusDaysOfWeek = listOf("ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС")
         val daysOfWeek = remember { rusDaysOfWeek }
 
         Row(modifier = Modifier.fillMaxWidth()) {
@@ -180,7 +180,7 @@ private fun Example2Preview() {
     CalendarView()
 }
 
-
+val rusDaysOfWeek = listOf("ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС")
 val monthNames = listOf(
     "январь",
     "февраль",

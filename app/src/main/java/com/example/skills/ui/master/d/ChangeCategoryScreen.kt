@@ -113,13 +113,13 @@ fun ContentChangeCategory(
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-
             CustomButton(
                 navigateTo = {
                     navController.popBackStack()
                 },
                 "Сохранить"
             )
+
             Spacer(modifier = Modifier.height(8.dp))
             CustomButton(
                 navigateTo = {
@@ -128,7 +128,6 @@ fun ContentChangeCategory(
                 color = Color.Transparent,
                 buttonText = "Удалить"
             )
-
         }
     }
 }

@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForwardIos
+import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -70,11 +70,14 @@ fun SimpleMasterCard(
             }
             IconButton(onClick = {
                 bookingViewModel.data1 = MutableLiveData(master)
-                Log.e("bookingViewModel", "SimpleMasterCard bookingViewModel masterId is ${bookingViewModel.data1.value!!.token}")
+                Log.e(
+                    "bookingViewModel",
+                    "SimpleMasterCard bookingViewModel masterId is ${bookingViewModel.data1.value!!.token}"
+                )
 
                 navigateToSelectedMasterProfile.invoke()
             }) {
-                Icon(Icons.Default.ArrowForwardIos, contentDescription = "icon")
+                Icon(Icons.AutoMirrored.Filled.ArrowForwardIos, contentDescription = "icon")
             }
         }
         Spacer(modifier = Modifier.height(16.dp))

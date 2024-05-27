@@ -38,7 +38,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MasterClientServicesScreen(navController: NavHostController) {
+fun MasterClientServicesScreen() {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -59,14 +59,13 @@ fun MasterClientServicesScreen(navController: NavHostController) {
             )
         }
     ) { innerPadding ->
-        MasterClientServices(innerPadding, navController)
+        MasterClientServices(innerPadding)
     }
 }
 
 @Composable
 fun MasterClientServices(
     innerPadding: PaddingValues,
-    navController: NavHostController,
 ) {
     val recordItems by remember { mutableStateOf(getRecordsItemList()) }
     var selectedDate: LocalDate? = null

@@ -19,11 +19,6 @@ data class DateSelection(val startDate: LocalDate? = null, val endDate: LocalDat
     }
 }
 
-private val rangeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
-fun dateRangeDisplayText(startDate: LocalDate, endDate: LocalDate): String {
-    return "Selected: ${rangeFormatter.format(startDate)} - ${rangeFormatter.format(endDate)}"
-}
-
 object ContinuousSelectionHelper {
     fun getSelection(
         clickedDate: LocalDate,

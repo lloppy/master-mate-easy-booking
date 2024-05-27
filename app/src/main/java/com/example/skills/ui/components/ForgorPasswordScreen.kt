@@ -90,12 +90,6 @@ fun ContentForgotPassword(
     val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
         mutableStateOf(EmailState(email))
     }
-    val onSubmit = {
-        if (emailState.isValid) {
-            //onSignInSubmitted(emailState.text, passwordState.text)
-            navigateToCodeVerification
-        }
-    }
 
     Column(
         modifier = Modifier

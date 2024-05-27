@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.viewmodel.route.BookingViewModel
+import com.example.skills.ui.client.a.new_booking.ClientCalendarView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

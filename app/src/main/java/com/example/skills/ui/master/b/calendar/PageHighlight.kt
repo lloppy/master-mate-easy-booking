@@ -61,11 +61,13 @@ fun Modifier.backgroundHighlight(
                     textColor(Color.Gray)
                     this
                 }
+
                 startDate == day.date && endDate == null -> {
                     textColor(Color.White)
                     padding(padding)
                         .background(color = selectionColor, shape = CircleShape)
                 }
+
                 day.date == startDate -> {
                     textColor(Color.White)
                     padding(vertical = padding)
@@ -76,11 +78,13 @@ fun Modifier.backgroundHighlight(
                         .padding(horizontal = padding)
                         .background(color = selectionColor, shape = CircleShape)
                 }
+
                 startDate != null && endDate != null && (day.date > startDate && day.date < endDate) -> {
                     textColor(Color.Black)
                     padding(vertical = padding)
                         .background(color = continuousSelectionColor)
                 }
+
                 day.date == endDate -> {
                     textColor(Color.White)
                     padding(vertical = padding)
@@ -91,6 +95,7 @@ fun Modifier.backgroundHighlight(
                         .padding(horizontal = padding)
                         .background(color = selectionColor, shape = CircleShape)
                 }
+
                 day.date == today -> {
                     textColor(colorResource(R.color.black))
                     padding(padding)
@@ -98,14 +103,17 @@ fun Modifier.backgroundHighlight(
                             width = 1.dp,
                             shape = CircleShape,
                             color = colorResource(R.color.black),
-                        ).background(color = colorResource(R.color.light_green), CircleShape)
+                        )
+                        .background(color = colorResource(R.color.light_green), CircleShape)
                 }
+
                 else -> {
                     textColor(Color.Black)
                     this
                 }
             }
         }
+
         DayPosition.InDate -> {
             textColor(Color.Transparent)
             if (startDate != null && endDate != null &&
@@ -117,6 +125,7 @@ fun Modifier.backgroundHighlight(
                 this
             }
         }
+
         DayPosition.OutDate -> {
             textColor(Color.Transparent)
             if (startDate != null && endDate != null &&

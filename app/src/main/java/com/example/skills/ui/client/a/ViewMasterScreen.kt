@@ -62,9 +62,7 @@ fun ViewMasterScreen(
                 },
                 actions = {
                     IconButton(onClick = {
-                        // удаляем из бдшки и обновляем :)
-                        val profileToken = master.token
-
+                        //TODO удаляем из бдшки и обновляем :) 😊👌
                         showDialog = true
                     }) {
                         Icon(
@@ -84,7 +82,6 @@ fun ViewMasterScreen(
             )
         }
     ) { innerPadding ->
-
         MasterHomeScreen(
             innerPadding,
             master,

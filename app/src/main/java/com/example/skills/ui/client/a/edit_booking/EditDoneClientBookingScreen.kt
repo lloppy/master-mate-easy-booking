@@ -1,4 +1,4 @@
-package com.example.skills.client.components.a.edit_booking
+package com.example.skills.ui.client.a.edit_booking
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

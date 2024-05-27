@@ -5,11 +5,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.example.skills.data.viewmodel.MainViewModel
-import com.example.skills.navigation.nav_bar.client.SetupClientNavGraph
-import com.example.skills.navigation.nav_bar.client.ClientBottomNavigation
 import com.example.skills.navigation.ScreenRole
+import com.example.skills.navigation.nav_bar.client.ClientBottomNavigation
+import com.example.skills.navigation.nav_bar.client.SetupClientNavGraph
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable

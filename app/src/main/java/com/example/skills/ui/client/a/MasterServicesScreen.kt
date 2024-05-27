@@ -1,4 +1,4 @@
-package com.example.skills.client.components.a
+package com.example.skills.ui.client.a
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource

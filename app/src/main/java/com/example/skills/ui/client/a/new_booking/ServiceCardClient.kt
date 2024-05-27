@@ -25,7 +25,6 @@ import com.example.skills.data.roles.User
 import com.example.skills.data.viewmodel.route.BookingViewModel
 import com.example.skills.ui.master.b.calendar.clickable
 
-
 @Composable
 fun ServiceCardClient(
     singleService: Service,

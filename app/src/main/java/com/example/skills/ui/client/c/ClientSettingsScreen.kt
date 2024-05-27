@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -45,7 +45,6 @@ import com.example.skills.ui.components.spaceBetweenOutlinedTextField
 import com.example.skills.ui.components.tools.EmailState
 import com.example.skills.ui.components.tools.EmailStateSaver
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditClientProfileScreen(
@@ -73,7 +72,7 @@ fun EditClientProfileScreen(
                     Row {
                         IconButton(onClick = { navController.popBackStack() }) {
                             Icon(
-                                imageVector = Icons.Filled.ArrowBack,
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 tint = Color.Black,
                                 contentDescription = "Localized description"
                             )
@@ -93,7 +92,7 @@ private fun EditClientAccountInfo(
     innerPadding: PaddingValues,
     navigateToMain: () -> Unit
 ) {
-    var email by remember { mutableStateOf("") }
+    val email by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
     var secondName by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
@@ -106,11 +105,7 @@ private fun EditClientAccountInfo(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(
-                top = innerPadding
-                    .calculateTopPadding(),
-
-                ),
+            .padding(top = innerPadding.calculateTopPadding()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
@@ -164,10 +159,8 @@ private fun EditClientAccountInfo(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomButton(
-            navigateToMain,
-            "Сохранить"
+            navigateToMain, "Сохранить"
         )
         Spacer(modifier = Modifier.height(16.dp))
-
     }
 }

@@ -107,8 +107,7 @@ class QRCodeScannerScreen : ComponentActivity() {
                                         context = context
                                     ) { result ->
                                         code = result
-                                        //    createBillFromQR(code)
-
+                                        //TODO  addMAsterFromQR(code)
                                     })
                                 try {
                                     cameraProviderFuture.get().bindToLifecycle(

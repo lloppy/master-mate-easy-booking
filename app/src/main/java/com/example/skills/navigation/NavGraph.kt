@@ -218,9 +218,6 @@ fun NavGraphBuilder.masterNavGraph(
             DoneMasterInfoRegistrationScreen(
                 navigateToMain = {
                     navHostController.navigate(ScreenRole.Master.MainLayout.route)
-                },
-                navigateToSetUpCalendar = {
-                    //TODO()
                 }
             )
         }

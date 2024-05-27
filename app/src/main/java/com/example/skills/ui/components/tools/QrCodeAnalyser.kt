@@ -8,7 +8,11 @@ import android.util.Log
 import android.widget.Toast
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
-import com.google.zxing.*
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.BinaryBitmap
+import com.google.zxing.DecodeHintType
+import com.google.zxing.MultiFormatReader
+import com.google.zxing.PlanarYUVLuminanceSource
 import com.google.zxing.common.HybridBinarizer
 import java.nio.ByteBuffer
 
@@ -42,10 +46,10 @@ class QrCodeAnalyser(
                 }.decode(binaryBmp)
                 onQrCodeScanner(result.text)
                 Log.e("qr", "result in camera is ${result.text}")
-                //var newBill = createBillFromQR(result.text)
+                // TODO add master: addMasterFromQR(result.text)
 
                 try {
-                  //  BillRepository.addBill(newBill, context)
+                    //  BillRepository.addBill(newBill, context)
                     image.close()
                     activity.finish()
                 } catch (e: IllegalArgumentException) {

@@ -23,15 +23,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.example.skills.data.roles.User
 import com.example.skills.data.viewmodel.MainViewModel
-import com.example.skills.data.viewmodel.MyRepository.getMaster
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainMasterScreen(
-    navController: NavHostController,
     navigateToShare: () -> Unit,
     viewModel: MainViewModel
 ) {
@@ -65,7 +62,9 @@ fun MainMasterScreen(
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = { /* do something */ }) {
+                    IconButton(onClick = {
+                        //TODO add pictures in feed
+                    }) {
                         Icon(
                             imageVector = Icons.Outlined.Add,
                             contentDescription = "Localized description"

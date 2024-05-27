@@ -1,4 +1,4 @@
-package com.example.skills.client.components.a.edit_booking
+package com.example.skills.ui.client.a.edit_booking
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.example.skills.data.viewmodel.route.EditBookingViewModel
-import com.example.skills.ui.client.a.edit_booking.EditServiceCardClient
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.components.CustomOutlinedTextField
 import java.time.format.DateTimeFormatter
@@ -65,7 +64,7 @@ fun EditConfirmClientBookingScreen(
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            imageVector = Icons.Outlined.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = "Localized description"
                         )
                     }
@@ -98,10 +97,14 @@ fun ConfirmClientBookingContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = innerPadding.calculateTopPadding().plus(16.dp), bottom = 100.dp),
+            .padding(
+                top = innerPadding
+                    .calculateTopPadding()
+                    .plus(16.dp), bottom = 100.dp
+            ),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column (modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
+        Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
             Text(
                 text = date.format(DateTimeFormatter.ofPattern("d MMMM", Locale("ru")))
                         + " в " + time.format(DateTimeFormatter.ofPattern("HH:mm")),
@@ -116,7 +119,7 @@ fun ConfirmClientBookingContent(
             )
             Spacer(modifier = Modifier.height(12.dp))
 
-            Column (modifier = Modifier.padding(start = 6.dp, end = 6.dp)) {
+            Column(modifier = Modifier.padding(start = 6.dp, end = 6.dp)) {
                 CustomOutlinedTextField(
                     value = comment,
                     onValueChange = { comment = it },

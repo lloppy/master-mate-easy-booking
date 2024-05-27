@@ -53,12 +53,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.example.skills.data.entity.Address
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.tools.EmailState
 import com.example.skills.ui.components.tools.EmailStateSaver
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -116,7 +114,6 @@ private fun AddMasterAccountInfo(
     var secondName by remember { mutableStateOf(viewModel.currentUser!!.lastName) }
     var phone by remember { mutableStateOf(viewModel.currentUser!!.phone) }
 
-    val focusRequester = remember { FocusRequester() }
     val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
         mutableStateOf(EmailState(email))
     }
