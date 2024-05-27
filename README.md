@@ -32,6 +32,6 @@ To install the app, follow the steps below:
 
 ## Support
 
-If you have any questions or problems with the app, feel free to contact [ankudinovapol@gmail.com](mailto:ankudinovapol@gmail.com).
+If you have any questions or problems with the app, feel free to contact [ankudinova.apps@gmail.com](mailto:ankudinova.apps@gmail.com).
 
 Thank you for choosing the **MasterMate** application!

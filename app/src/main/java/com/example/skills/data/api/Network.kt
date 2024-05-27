@@ -4,7 +4,6 @@ import android.util.Log
 import com.example.skills.data.viewmodel.MY_LOG
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -32,10 +31,9 @@ object Network {
     fun updateToken(token: String?) {
         if (token != null) {
             val authTokenInterceptor = Interceptor { chain ->
-                val request = chain.request().newBuilder().addHeader("Authorization", "Bearer $token").build()
-                // Log.d(MY_LOG, "new token request is ${request.headers}")
+                val request =
+                    chain.request().newBuilder().addHeader("Authorization", "Bearer $token").build()
                 Log.d(MY_LOG, "new token is $token")
-
                 chain.proceed(request)
             }
 

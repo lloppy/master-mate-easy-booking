@@ -131,7 +131,7 @@ fun MasterClientServices(
                             text = "Отменить все записи",
                             color = Color.Gray,
                             fontWeight = FontWeight.SemiBold,
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             maxLines = 1,
                             modifier = Modifier.padding(end = 10.dp, top = 20.dp)
                                 .clickable {
