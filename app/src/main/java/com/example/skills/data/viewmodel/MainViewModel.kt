@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.skills.data.api.ActivationRequest
@@ -15,6 +16,8 @@ import com.example.skills.data.api.AuthRequest
 import com.example.skills.data.api.LogInRequest
 import com.example.skills.data.api.Network
 import com.example.skills.data.api.Network.apiService
+import com.example.skills.data.entity.Category
+import com.example.skills.data.entity.Service
 import com.example.skills.data.roles.Role
 import com.example.skills.data.roles.User
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,6 +42,10 @@ class MainViewModel(context: Context) : ViewModel() {
 
     private var _userRole: String? = null
         private set
+
+    val servicesLiveDataMaster = MutableLiveData<List<Service>?>()
+    val categoriesLiveDataMaster = MutableLiveData<List<Category>?>()
+
 
     val userIsAuthenticated = mutableStateOf(false)
     private val preferences: SharedPreferences =
@@ -243,6 +250,13 @@ class MainViewModel(context: Context) : ViewModel() {
             if (response.isSuccessful) {
                 Log.d(MY_LOG, "User loaded successfully")
                 currentUser = response.body()
+
+                try {
+                    loadMasterServices()
+                    loadMasterCategories()
+                } catch (e: Exception){
+                    Log.e(MY_LOG, "Exception in loadMasterServices() loadMasterCategories()")
+                }
             } else Log.e(MY_LOG, "Failed to load master")
         }
     }
@@ -283,5 +297,44 @@ class MainViewModel(context: Context) : ViewModel() {
             returnCursor.close()
         }
         return name
+    }
+
+    private suspend fun loadMasterServices() {
+        val response = apiService.getMasterServicesByToken("Bearer $_userToken")
+        if (response.isSuccessful) {
+            val services = response.body()
+            if (services != null) {
+                servicesLiveDataMaster.postValue(services)
+            }
+        } else {
+            Log.d(MY_LOG, "Failed to load services")
+        }
+    }
+
+    private suspend fun loadMasterCategories() {
+        val response = apiService.getMasterCategoriesByToken("Bearer $_userToken")
+        if (response.isSuccessful) {
+            val categories = response.body()
+            if (categories != null) {
+                categoriesLiveDataMaster.postValue(categories.reversed())
+            }
+        } else {
+            Log.d(MY_LOG, "Failed to load services")
+        }
+    }
+
+    suspend fun addCategory(categoryName: String) {
+        val response = apiService.addCategory("Bearer $_userToken", Category(name = categoryName, description = ""))
+        if (response.isSuccessful) {
+            val category = response.body()?.string()
+            if (category != null) {
+                loadMasterCategories()
+                Log.i(MY_LOG, "Success to add category")
+            } else{
+                Log.e(MY_LOG, "category response is null")
+            }
+        } else {
+            Log.e(MY_LOG, "Failed to add category")
+        }
     }
 }

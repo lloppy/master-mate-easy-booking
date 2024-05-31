@@ -10,7 +10,7 @@ import com.example.skills.ui.master.b.CalendarScreen
 import com.example.skills.ui.master.c.MasterClientServicesScreen
 import com.example.skills.ui.master.d.ChangeCategoryScreen
 import com.example.skills.ui.master.d.CreateServiceCardScreen
-import com.example.skills.ui.master.d.CreateServiceScreen
+import com.example.skills.ui.master.d.CreateCategoryScreen
 import com.example.skills.ui.master.d.EditServiceCardScreen
 import com.example.skills.ui.master.d.MasterMyServicesScreen
 import com.example.skills.ui.master.e.EditPasswordScreen
@@ -58,12 +58,13 @@ fun SetupMasterNavGraph(
         composable(route = ScreenMaster.MasterServerScreen.route) {
             MasterMyServicesScreen(
                 navigateToCreateCategory = {
-                    navHostController.navigate(ScreenRole.Master.CreateService.route)
+                    navHostController.navigate(ScreenRole.Master.CreateCategory.route)
                 },
                 navigateToChangeCategory = {
                     navHostController.navigate(ScreenRole.Master.ChangeCategory.route)
                 },
-                navController = navHostController
+                navController = navHostController,
+                viewModel = mainViewModel
             )
         }
 
@@ -111,9 +112,10 @@ fun SetupMasterNavGraph(
             )
         }
 
-        composable(ScreenRole.Master.CreateService.route) {
-            CreateServiceScreen(
-                navController = navHostController
+        composable(ScreenRole.Master.CreateCategory.route) {
+            CreateCategoryScreen(
+                navController = navHostController,
+                viewModel = mainViewModel
             )
         }
 

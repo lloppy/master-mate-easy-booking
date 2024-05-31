@@ -1,5 +1,6 @@
 package com.example.skills.ui.master.d
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
@@ -22,7 +23,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,22 +30,22 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalViewConfiguration
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.skills.R
 import com.example.skills.data.entity.Category
+import com.example.skills.data.viewmodel.MY_LOG
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.viewmodel.MyRepository.getCategories
 import com.example.skills.data.viewmodel.MyRepository.getServices
 import com.example.skills.navigation.ScreenRole
@@ -54,12 +54,14 @@ import com.example.skills.ui.theme.paddingBetweenElements
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MasterMyServicesScreen(
     navigateToCreateCategory: () -> Unit,
     navigateToChangeCategory: () -> Unit,
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: MainViewModel
 ) {
     Scaffold(
         topBar = {
@@ -85,7 +87,8 @@ fun MasterMyServicesScreen(
             innerPadding,
             navigateToCreateCategory,
             navigateToChangeCategory,
-            navController
+            navController,
+            viewModel
         )
     }
 }
@@ -96,10 +99,24 @@ fun MasterMyServices(
     innerPadding: PaddingValues,
     navigateToCreateCategory: () -> Unit,
     navigateToChangeCategory: () -> Unit,
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: MainViewModel
 ) {
-    var selectedCategory by remember { mutableStateOf(if (getCategories().isNotEmpty()) getCategories().first().name else "") }
-    val categories = getCategories() + Category("Добавить категорию", action = navigateToCreateCategory)
+    val receivedCategories by viewModel.categoriesLiveDataMaster.observeAsState(emptyList())
+    var selectedCategory by remember { mutableStateOf(if (receivedCategories?.isNotEmpty() == true) getCategories().first().name else "") }
+
+    val categories = receivedCategories?.plus(
+        Category(
+            "Добавить категорию",
+            description = "",
+            action = navigateToCreateCategory
+        )
+    )
+    Log.i(MY_LOG, "categories size is ${categories?.size}")
+
+    val services by viewModel.servicesLiveDataMaster.observeAsState()
+    Log.i(MY_LOG, "services size is ${services?.size}")
+
 
     Column(
         modifier = Modifier
@@ -118,8 +135,10 @@ fun MasterMyServices(
                     end = 16.dp
                 )
         ) {
-            if (categories.size <= 1) {
-                Column (modifier = Modifier.fillMaxWidth().fillMaxHeight(0.23f)) {
+            if (categories!!.size <= 1) {
+                Column(modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.23f)) {
                     Button(onClick = navigateToCreateCategory, Modifier.weight(1f)) {
                         Text("Добавить категорию")
                     }
@@ -195,7 +214,7 @@ fun MasterMyServices(
                 }
             }
         }
-        if (categories.size > 1) {
+        if (categories!!.size > 1) {
             Spacer(modifier = Modifier.height(12.dp))
             CustomButton(
                 navigateTo = {

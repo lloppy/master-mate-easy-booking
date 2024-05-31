@@ -12,9 +12,9 @@ import java.time.LocalDateTime
 
 object MyRepository {
     private val categories = listOf<Category>(
-        Category("Категория 1", action = {}),
-        Category("Категория 2", action = {}),
-        Category("Категория 3", action = {})
+        Category("Категория 1", description = ""),
+        Category("Категория 2", description = ""),
+        Category("Категория 3", description = "")
     )
 
     private val imageUrls = listOf(

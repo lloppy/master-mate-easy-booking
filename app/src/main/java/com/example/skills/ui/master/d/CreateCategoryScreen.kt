@@ -21,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,14 +34,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.components.CustomOutlinedTextField
 import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateServiceScreen(
-    navController: NavHostController
+fun CreateCategoryScreen(
+    navController: NavHostController,
+    viewModel: MainViewModel
 ) {
     Scaffold(
         topBar = {
@@ -74,16 +77,18 @@ fun CreateServiceScreen(
             )
         },
     ) { innerPadding ->
-        ContentNewPassword(innerPadding, navController)
+        ContentNewPassword(innerPadding, navController, viewModel)
     }
 }
 
 @Composable
 fun ContentNewPassword(
     innerPadding: PaddingValues,
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: MainViewModel
 ) {
     var categoryName by remember { mutableStateOf("") }
+    var addButtonClicked by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -117,10 +122,19 @@ fun ContentNewPassword(
 
             CustomButton(
                 navigateTo = {
-                    navController.popBackStack()
+                    if (categoryName.isNotEmpty() || categoryName.isNotBlank()){
+                        addButtonClicked = true
+                    }
                 },
                 "Добавить"
             )
+
+            if (addButtonClicked) {
+                LaunchedEffect(addButtonClicked) {
+                    viewModel.addCategory(categoryName)
+                    navController.popBackStack()
+                }
+            }
         }
     }
 }
