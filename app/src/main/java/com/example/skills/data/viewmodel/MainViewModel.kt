@@ -16,6 +16,7 @@ import com.example.skills.data.api.AuthRequest
 import com.example.skills.data.api.LogInRequest
 import com.example.skills.data.api.Network
 import com.example.skills.data.api.Network.apiService
+import com.example.skills.data.api.ScheduleCreateRequest
 import com.example.skills.data.entity.Category
 import com.example.skills.data.entity.CategoryRequest
 import com.example.skills.data.entity.Duration
@@ -440,4 +441,16 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
+    fun createSchedule(scheduleCreateRequest: ScheduleCreateRequest) {
+        viewModelScope.launch {
+            try {
+                val response = apiService.createSchedule("Bearer $_userToken", scheduleCreateRequest)
+                if (response.isSuccessful) {
+                    Log.d(MY_LOG, "Schedule created successfully")
+                } else {
+                    Log.e(MY_LOG, "Schedule create fail: " + response.errorBody())
+                }
+            } catch (_: Exception) { }
+        }
+    }
 }

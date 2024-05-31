@@ -1,5 +1,6 @@
 package com.example.skills.ui.master.b.calendar
 
+import android.util.Log
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
@@ -28,18 +29,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import com.example.skills.data.api.ScheduleCreateRequest
+import com.example.skills.data.entity.TimeSlot
+import com.example.skills.data.viewmodel.MY_LOG
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.components.CustomOutlinedTextField
+import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 
 @Composable
-fun SelectDateTime() {
+fun SelectDateTime(viewModel: MainViewModel) {
     val scrollState = rememberScrollState()
 
     var intervals by remember { mutableStateOf(listOf<IntervalData>()) }
     var inEditMode by remember { mutableStateOf(true) }
+
+    var startTime by remember { mutableStateOf("") }
+    var endTime by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -51,8 +62,8 @@ fun SelectDateTime() {
     ) {
         intervals.forEachIndexed { index, interval ->
             Interval(
-                initialStartTime = interval.startTime,
-                initialEndTime = interval.endTime,
+                initialStartTime = interval.from,
+                initialEndTime = interval.to,
                 isEditable = inEditMode,
             )
         }
@@ -71,6 +82,12 @@ fun SelectDateTime() {
             CustomButton(
                 navigateTo = {
                     if (intervals.isNotEmpty()) {
+//                        val dates = getDatesBetween(intervals.first().from, intervals.last().to)
+//                        Log.i(MY_LOG, "dates: " + dates.iterator().next())
+//                        val timeSlots = dates.map { TimeSlot(from = startTime, to = endTime) }
+//                        val scheduleCreateRequest = ScheduleCreateRequest(dates = dates, timeSlots = timeSlots)
+//                        viewModel.createSchedule(scheduleCreateRequest)
+
                         inEditMode = !inEditMode
                     }
                 },
@@ -95,6 +112,28 @@ fun SelectDateTime() {
             }
         }
     }
+}
+
+private fun getDatesBetween(from: String, to: String): List<String> {
+    Log.i(MY_LOG, "getDatesBetween: $from $to")
+
+    val format = SimpleDateFormat("yyyy-MM-dd")
+    val startDates = format.parse(from)
+    val endDates = format.parse(to)
+    val datesInRange = ArrayList<String>()
+    val calendar = Calendar.getInstance()
+    calendar.time = startDates
+
+    val endCalendar = Calendar.getInstance()
+    endCalendar.time = endDates
+
+    while (calendar.before(endCalendar)) {
+        val result = calendar.time
+        datesInRange.add(format.format(result))
+        calendar.add(Calendar.DATE, 1)
+    }
+
+    return datesInRange
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -187,7 +226,7 @@ fun Interval(
                 }
         )
 
-        Spacer(modifier = Modifier.width(10.dp))
+        Spacer(modifier = Modifier.width(8.dp))
 
         CustomOutlinedTextField(
             readOnly = !isEditable,
@@ -209,4 +248,4 @@ fun Interval(
     }
 }
 
-data class IntervalData(var startTime: String, var endTime: String)
+data class IntervalData(var from: String, var to: String)

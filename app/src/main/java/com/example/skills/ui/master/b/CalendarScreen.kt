@@ -17,11 +17,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.master.b.calendar.CalendarView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalendarScreen() {
+fun CalendarScreen(
+    viewModel: MainViewModel
+) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -42,18 +46,19 @@ fun CalendarScreen() {
             )
         },
     ) { innerPadding ->
-        CustomCalendarView(innerPadding)
+        CustomCalendarView(innerPadding, viewModel)
     }
 }
 
 @Composable
 fun CustomCalendarView(
     innerPadding: PaddingValues,
+    viewModel: MainViewModel
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(innerPadding),
         verticalArrangement = Arrangement.Top
-    ) { CalendarView() }
+    ) { CalendarView(viewModel = viewModel) }
 }

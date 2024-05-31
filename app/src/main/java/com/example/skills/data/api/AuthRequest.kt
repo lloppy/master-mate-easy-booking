@@ -1,6 +1,7 @@
 package com.example.skills.data.api
 
 import com.example.skills.data.entity.Address
+import com.example.skills.data.entity.TimeSlot
 import com.example.skills.data.roles.User
 import java.time.LocalDateTime
 
@@ -51,4 +52,14 @@ data class EditClientRequest(
 data class EditClientResponse(
     val message: String,
     val status: String
+)
+
+data class ScheduleChangeRequest(
+    val dates: List<String>,
+    val timeSlots: List<TimeSlot>
+)
+
+data class ScheduleCreateRequest(
+    val dates: List<String>,
+    val timeSlots: List<TimeSlot>
 )

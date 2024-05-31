@@ -50,7 +50,7 @@ fun SetupMasterNavGraph(
 
         //calendar
         composable(route = ScreenMaster.MasterCalendarScreen.route) {
-            CalendarScreen()
+            CalendarScreen(mainViewModel)
         }
         // done checkbox
         composable(route = ScreenMaster.MasterCreateServiceScreen.route) {

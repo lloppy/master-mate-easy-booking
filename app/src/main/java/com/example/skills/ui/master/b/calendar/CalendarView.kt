@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.master.b.calendar.ContinuousSelectionHelper.getSelection
 import com.kizitonwose.calendar.compose.VerticalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
@@ -42,7 +43,7 @@ val selectionColor = primaryColor
 val continuousSelectionColor = Color.LightGray.copy(alpha = 0.3f)
 
 @Composable
-fun CalendarView() {
+fun CalendarView(viewModel: MainViewModel) {
     var currentMonth by remember { mutableStateOf(YearMonth.now()) }
     val startMonth = remember { currentMonth }
     val endMonth = remember { currentMonth.plusMonths(12) }
@@ -110,7 +111,7 @@ fun CalendarView() {
                     monthHeader = { DaysOfWeekHeader() },
                 )
                 if (selection.daysBetween != null || selection.startDate != null) {
-                    SelectDateTime()
+                    SelectDateTime(viewModel = viewModel)
                 }
             }
         }
@@ -172,12 +173,6 @@ fun DaysOfWeekHeader() {
             }
         }
     }
-}
-
-@Preview(heightDp = 800)
-@Composable
-private fun Example2Preview() {
-    CalendarView()
 }
 
 val rusDaysOfWeek = listOf("ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС")

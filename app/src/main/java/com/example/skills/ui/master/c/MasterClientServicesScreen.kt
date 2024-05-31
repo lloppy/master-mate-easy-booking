@@ -71,7 +71,7 @@ fun MasterClientServices(
     innerPadding: PaddingValues,
     viewModel: MainViewModel
 ) {
-    val recordItems by remember { mutableStateOf(getRecordsItemList()) }
+    val recordItems by remember { mutableStateOf(getRecordsItemList()) } //TODO()
     var selectedDate: LocalDate? = null
 
     val twoSegments = remember { listOf("Актуальные", "История") }

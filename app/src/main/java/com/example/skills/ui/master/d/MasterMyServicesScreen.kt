@@ -112,16 +112,7 @@ fun MasterMyServices(
         )
     )
     val services by viewModel.servicesLiveDataMaster.observeAsState()
-    Log.e(MY_LOG, "------services category name " + services?.first()?.name)
-    Log.e(MY_LOG, "------services category id " + services?.first()?.category?.id)
-    Log.e(MY_LOG, "------services category " + services?.first()?.category)
 
-    Log.e(MY_LOG, "------services category name " + services?.last()?.name)
-    Log.e(MY_LOG, "------services category id " + services?.last()?.category?.id)
-    Log.e(MY_LOG, "------services category " + services?.last()?.category)
-    //val selectedServicesByCategory = services?.filter { it.category.id == receivedCategories!!.first{it.name == selectedCategory}.id  }
-//    val selectedCategoryID = receivedCategories?.firstOrNull{it?.name == selectedCategory}?.id
-//    val selectedServicesByCategory = services?.filter { it.category?.id == selectedCategoryID  }
 
     Column(
         modifier = Modifier
@@ -199,9 +190,12 @@ fun MasterMyServices(
                     }
                 }
 
-                if (services != null) {
+                val selectedServicesByCategory =
+                    services?.filter { it.category.name == selectedCategory }
+
+                if (selectedServicesByCategory != null && categories.size > 1) {
                     LazyColumn {
-                        items(services!!) { singleService ->
+                        items(selectedServicesByCategory) { singleService ->
                             SingleServiceCard(singleService, navController)
                         }
                     }
