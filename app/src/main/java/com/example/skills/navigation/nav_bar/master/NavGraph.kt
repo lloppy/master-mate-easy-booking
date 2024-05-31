@@ -1,9 +1,11 @@
 package com.example.skills.navigation.nav_bar.master
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.master.a.MainMasterScreen
 import com.example.skills.ui.master.b.CalendarScreen
@@ -52,7 +54,7 @@ fun SetupMasterNavGraph(
         }
         // done checkbox
         composable(route = ScreenMaster.MasterCreateServiceScreen.route) {
-            MasterClientServicesScreen()
+            MasterClientServicesScreen(mainViewModel)
         }
         // server
         composable(route = ScreenMaster.MasterServerScreen.route) {
@@ -126,10 +128,15 @@ fun SetupMasterNavGraph(
         }
 
         composable(ScreenRole.Master.CreateServiceCard.route) { backStackEntry ->
-            val serviceId = backStackEntry.arguments?.getString("serviceId")
+            val selectedCategoryName = backStackEntry.arguments?.getString("selectedCategoryName")!!
+            Log.e(MY_LOG, "selectedCategoryName is $selectedCategoryName in nav graph")
+
+            val selectedCategory = mainViewModel.getCategoryByName(selectedCategoryName)
+
             CreateServiceCardScreen(
-                serviceId,
-                navController = navHostController
+                selectedCategory,
+                navController = navHostController,
+                viewModel = mainViewModel
             )
         }
 

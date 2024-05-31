@@ -30,9 +30,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.R
 import com.example.skills.data.entity.Service
-import com.example.skills.ui.master.b.calendar.clickable
 import com.example.skills.navigation.ScreenRole
 import com.example.skills.ui.components.CustomButton
+import com.example.skills.ui.master.b.calendar.clickable
 
 
 @Composable
@@ -61,7 +61,7 @@ fun SingleServiceCard(singleService: Service, navController: NavHostController) 
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Text(
-                text = singleService.name,
+                text = singleService.name.capitalize(),
                 color = Color.White,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 14.sp,
@@ -77,7 +77,8 @@ fun SingleServiceCard(singleService: Service, navController: NavHostController) 
             )
             Spacer(modifier = Modifier.height(paddingBetweenText))
             Text(
-                text = singleService.duration.toString() + " мин",
+                text = if (singleService.duration.hours == 0) singleService.duration.minutes.toString() + " мин"
+                else singleService.duration.hours.toString() + " ч" + " " + if (singleService.duration.minutes != 0) singleService.duration.minutes.toString() + " мин" else "",
                 color = Color.White,
                 fontWeight = FontWeight.Normal,
                 fontSize = 14.sp,

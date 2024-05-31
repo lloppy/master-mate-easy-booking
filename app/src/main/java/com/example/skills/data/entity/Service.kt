@@ -1,15 +1,20 @@
 package com.example.skills.data.entity
 
-import com.example.skills.data.roles.User
-
 data class Service(
-    val serviceId: Long,
-    val master: User,
+    val id: Int,
     val name: String,
-    val description: String?,
-    val price: Long?,
-    val duration: Long,
-   // val image: Image?,
-    val category: Category,
-   // val serviceStatus: ServiceStatus
+    val description: String,
+    val price: Long,
+    val duration: Duration,
+    val category: Category
 )
+
+data class ServiceRequest(
+    val name: String,
+    val description: String,
+    val price: Long,
+    val duration: Duration,
+    val category: Category
+)
+
+data class Duration(var hours: Int, var minutes: Int)

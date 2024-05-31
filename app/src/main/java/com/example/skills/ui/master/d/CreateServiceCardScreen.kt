@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -38,6 +38,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.skills.data.entity.Category
+import com.example.skills.data.entity.Duration
+import com.example.skills.data.entity.ServiceRequest
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.components.CustomOutlinedTextField
 import com.example.skills.ui.components.spaceBetweenOutlinedTextField
@@ -46,8 +50,9 @@ import com.example.skills.ui.theme.backgroundMaterial
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateServiceCardScreen(
-    serviceId: String?,
-    navController: NavHostController
+    selectedCategory: Category,
+    navController: NavHostController,
+    viewModel: MainViewModel
 ) {
     Scaffold(
         topBar = {
@@ -70,7 +75,7 @@ fun CreateServiceCardScreen(
                     Row {
                         IconButton(onClick = { navController.popBackStack() }) {
                             Icon(
-                                imageVector = Icons.Filled.ArrowBack,
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 tint = Color.Black,
                                 contentDescription = "Localized description"
                             )
@@ -81,7 +86,7 @@ fun CreateServiceCardScreen(
             )
         },
     ) { innerPadding ->
-        ContentCreateServiceCard(innerPadding, navController, serviceId)
+        ContentCreateServiceCard(innerPadding, navController, selectedCategory, viewModel)
     }
 }
 
@@ -89,7 +94,8 @@ fun CreateServiceCardScreen(
 fun ContentCreateServiceCard(
     innerPadding: PaddingValues,
     navController: NavHostController,
-    serviceId: String?
+    selectedCategory: Category,
+    viewModel: MainViewModel
 ) {
     var name by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
@@ -117,7 +123,7 @@ fun ContentCreateServiceCard(
                     end = 8.dp
                 )
             ) {
-                Text(text = "Категория: " + serviceId!!)
+                Text(text = "Категория: " + selectedCategory.name)
                 Spacer(modifier = Modifier.height(8.dp))
 
                 CustomOutlinedTextField(
@@ -176,7 +182,26 @@ fun ContentCreateServiceCard(
                 Spacer(modifier = Modifier.height(16.dp))
             }
             CustomButton(
-                navigateTo = { navController.popBackStack() }, //TODO тут переделать
+                navigateTo = {
+                    if (name.isNotEmpty() && price.isNotEmpty() && duration.isNotEmpty() && description.isNotEmpty()) {
+                        try {
+                            viewModel.addService(
+                                ServiceRequest(
+                                    name,
+                                    description,
+                                    price.toLong(),
+                                    Duration(0, duration.toInt()),
+                                    category = selectedCategory
+                                ),
+                                selectedCategory.id
+                            ) { successful ->
+                                if (successful) {
+                                    navController.popBackStack()
+                                }
+                            }
+                        } catch (e: Exception) { }
+                    }
+                },
                 buttonText = "Создать"
             )
         }

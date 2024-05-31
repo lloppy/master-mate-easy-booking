@@ -42,7 +42,7 @@ fun SetupClientNavGraph(
     ) {
         // done checkbox
         composable(route = ScreenClient.ClientBookingsScreen.route) {
-            ClientBookingsScreen(navController = navHostController, editBookingViewModel)
+            ClientBookingsScreen(navController = navHostController, editBookingViewModel, viewModel = mainViewModel)
         }
 
         // settings
@@ -95,7 +95,8 @@ fun SetupClientNavGraph(
                 navController = navHostController,
                 navigateToSelectDate = {
                     navHostController.navigate(ScreenRole.Client.SelectDate.route)
-                }
+                },
+                viewModel = mainViewModel
             )
         }
 

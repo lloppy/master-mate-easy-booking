@@ -46,8 +46,6 @@ import androidx.navigation.NavHostController
 import com.example.skills.data.entity.Category
 import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
-import com.example.skills.data.viewmodel.MyRepository.getCategories
-import com.example.skills.data.viewmodel.MyRepository.getServices
 import com.example.skills.navigation.ScreenRole
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.theme.paddingBetweenElements
@@ -102,21 +100,28 @@ fun MasterMyServices(
     navController: NavHostController,
     viewModel: MainViewModel
 ) {
-    val receivedCategories by viewModel.categoriesLiveDataMaster.observeAsState(emptyList())
-    var selectedCategory by remember { mutableStateOf(if (receivedCategories?.isNotEmpty() == true) getCategories().first().name else "") }
+    val receivedCategories by viewModel.categoriesLiveDataMaster.observeAsState()
+    var selectedCategory by remember { mutableStateOf(if (receivedCategories?.isNotEmpty() == true) receivedCategories!!.first().name else "") }
 
     val categories = receivedCategories?.plus(
         Category(
+            Int.MAX_VALUE,
             "Добавить категорию",
             description = "",
             action = navigateToCreateCategory
         )
     )
-    Log.i(MY_LOG, "categories size is ${categories?.size}")
-
     val services by viewModel.servicesLiveDataMaster.observeAsState()
-    Log.i(MY_LOG, "services size is ${services?.size}")
+    Log.e(MY_LOG, "------services category name " + services?.first()?.name)
+    Log.e(MY_LOG, "------services category id " + services?.first()?.category?.id)
+    Log.e(MY_LOG, "------services category " + services?.first()?.category)
 
+    Log.e(MY_LOG, "------services category name " + services?.last()?.name)
+    Log.e(MY_LOG, "------services category id " + services?.last()?.category?.id)
+    Log.e(MY_LOG, "------services category " + services?.last()?.category)
+    //val selectedServicesByCategory = services?.filter { it.category.id == receivedCategories!!.first{it.name == selectedCategory}.id  }
+//    val selectedCategoryID = receivedCategories?.firstOrNull{it?.name == selectedCategory}?.id
+//    val selectedServicesByCategory = services?.filter { it.category?.id == selectedCategoryID  }
 
     Column(
         modifier = Modifier
@@ -184,7 +189,7 @@ fun MasterMyServices(
                         CategoryButton(
                             text = category.name,
                             onClick = {
-                                category.action.invoke()
+                                if (category.name == "Добавить категорию") category.action.invoke() else category.action
                                 selectedCategory = category.name
                             },
                             interactionSource = interactionSource,
@@ -194,12 +199,9 @@ fun MasterMyServices(
                     }
                 }
 
-                val selectedServicesByCategory =
-                    getServices().filter { it.category.name == selectedCategory }
-
-                if (selectedServicesByCategory != null) {
+                if (services != null) {
                     LazyColumn {
-                        items(selectedServicesByCategory) { singleService ->
+                        items(services!!) { singleService ->
                             SingleServiceCard(singleService, navController)
                         }
                     }
@@ -219,11 +221,13 @@ fun MasterMyServices(
             CustomButton(
                 navigateTo = {
                     try {
-                        val serviceId = selectedCategory
+                        val selectedCategoryName = selectedCategory
+                        Log.e(MY_LOG, "selectedCategoryName is $selectedCategoryName")
+
                         navController.navigate(
                             ScreenRole.Master.CreateServiceCard.route.replace(
-                                "{serviceId}",
-                                serviceId
+                                "{selectedCategoryName}",
+                                selectedCategoryName
                             )
                         )
                     } catch (e: IllegalArgumentException) { // нужно блин выбрать категорию, а не тыкать в пустоту 😤😤

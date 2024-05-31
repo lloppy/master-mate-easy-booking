@@ -13,7 +13,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -37,7 +38,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.skills.data.viewmodel.MyRepository
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.viewmodel.route.BookingViewModel
 import com.example.skills.ui.client.a.new_booking.ServiceCardClient
 import com.example.skills.ui.theme.paddingBetweenElements
@@ -47,7 +48,8 @@ import com.example.skills.ui.theme.paddingBetweenElements
 fun MasterServicesScreen(
     bookingViewModel: BookingViewModel,
     navController: NavHostController,
-    navigateToSelectDate: () -> Unit
+    navigateToSelectDate: () -> Unit,
+    viewModel: MainViewModel
 ) {
     Scaffold(
         topBar = {
@@ -69,7 +71,7 @@ fun MasterServicesScreen(
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            imageVector = Icons.Outlined.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = "Localized description"
                         )
                     }
@@ -80,7 +82,8 @@ fun MasterServicesScreen(
         MasterMyServices(
             innerPadding,
             bookingViewModel,
-            navigateToSelectDate
+            navigateToSelectDate,
+            viewModel
         )
     }
 }
@@ -90,16 +93,22 @@ fun MasterServicesScreen(
 fun MasterMyServices(
     innerPadding: PaddingValues,
     bookingViewModel: BookingViewModel,
-    navigateToSelectDate: () -> Unit
+    navigateToSelectDate: () -> Unit,
+    viewModel: MainViewModel
 ) {
     val master = bookingViewModel.data1.value!!
 
-    val categories by remember(master) {
-        val servicesBelongingToMaster = MyRepository.getServices().filter { it.master == master }
-        mutableStateOf(servicesBelongingToMaster.map { it.category }.toSet().toList())
-    }
+//    val categories by remember(master) {
+//        val servicesBelongingToMaster = MyRepository.getServices().filter { it.master == master }
+//        mutableStateOf(servicesBelongingToMaster.map { it.category }.toSet().toList())
+//    }
 
-    var selectedCategory by remember { mutableStateOf(if (categories.isNotEmpty()) categories.first().name else "") }
+    val receivedCategories by viewModel.categoriesLiveDataMaster.observeAsState(emptyList())
+    var selectedCategory by remember { mutableStateOf(if (receivedCategories?.isNotEmpty() == true) receivedCategories!!.first().name else "") }
+
+    val services by viewModel.servicesLiveDataMaster.observeAsState()
+
+    val categories = receivedCategories
 
     Column(
         modifier = Modifier
@@ -111,7 +120,7 @@ fun MasterMyServices(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        if (categories.size <= 1) {
+        if (categories!!.size <= 1) {
             Text(
                 text = "В списке мастера отсутствуют категории услуг",
                 fontSize = 14.sp,
@@ -137,8 +146,8 @@ fun MasterMyServices(
                 }
             }
 
-            val selectedServicesByCategory = MyRepository.getServices()
-                .filter { it.master == master && it.category.name == selectedCategory }
+            val selectedServicesByCategory =
+                services?.filter { it.category.name == selectedCategory }
 
             if (selectedServicesByCategory != null) {
                 LazyColumn(modifier = Modifier.padding(bottom = 100.dp)) {

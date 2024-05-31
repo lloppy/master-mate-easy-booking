@@ -14,7 +14,7 @@ data class RecordItem(
     val comment: String? = null,
     val clientId: String? = null,
     val masterId: String = "123",
-    val serviceId: Long = 123
+    val serviceId: Int = 123
 )
 
 enum class RecordStatus { ACTUAL, ARCHIVE }

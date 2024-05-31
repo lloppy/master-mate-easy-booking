@@ -38,9 +38,9 @@ import androidx.navigation.NavHostController
 import com.example.skills.R
 import com.example.skills.data.entity.RecordItem
 import com.example.skills.data.entity.RecordStatus
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.viewmodel.route.EditBookingViewModel
 import com.example.skills.data.viewmodel.MyRepository.getMaster
-import com.example.skills.data.viewmodel.MyRepository.getService
 import com.example.skills.navigation.ScreenRole
 import com.example.skills.ui.master.d.CustomAlertDialog
 import java.time.ZoneId
@@ -54,7 +54,8 @@ fun RecordItemCard(
     isClient: Boolean = false,
     // возможны нул значения для мастера, для клиента всегда не нул
     navController: NavHostController? = null,
-    editBookingViewModel: EditBookingViewModel? = null
+    editBookingViewModel: EditBookingViewModel? = null,
+    viewModel: MainViewModel
 ) {
     val context = LocalContext.current
     var showDialog by remember { mutableStateOf(false) }
@@ -155,7 +156,7 @@ fun RecordItemCard(
                                 editBookingViewModel!!.data1 =
                                     MutableLiveData(getMaster(recordItem.masterId))
                                 editBookingViewModel.data2 =
-                                    MutableLiveData(getService(recordItem.serviceId))
+                                    MutableLiveData(viewModel.getService(recordItem.serviceId))
 
                                 navController!!.navigate(ScreenRole.Client.EditDate.route)
                             } catch (e: NullPointerException) {

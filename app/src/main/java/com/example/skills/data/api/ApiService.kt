@@ -2,7 +2,9 @@ package com.example.skills.data.api
 
 
 import com.example.skills.data.entity.Category
+import com.example.skills.data.entity.CategoryRequest
 import com.example.skills.data.entity.Service
+import com.example.skills.data.entity.ServiceRequest
 import com.example.skills.data.roles.User
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -59,7 +61,7 @@ interface ApiService {
     suspend fun addServiceImage(@Header("Authorization") token: String, @Path("service_id") serviceId: Int, @Part file: MultipartBody.Part): Response<String>
 
     @POST("/api/masters/me/categories/{category_id}/services")
-    suspend fun addService(@Header("Authorization") token: String, @Path("category_id") categoryId: Int, @Body service: Service): Response<String>
+    suspend fun addService(@Header("Authorization") token: String, @Path("category_id") categoryId: Int, @Body service: ServiceRequest): Response<String>
 
     @GET("/api/masters/{id}/services")
     suspend fun getMasterServicesByMasterId(@Path("id") id: Int): Response<List<Service>>
@@ -84,7 +86,7 @@ interface ApiService {
     suspend fun getMasterCategoriesByToken(@Header("Authorization") token: String): Response<List<Category>>
 
     @POST("/api/masters/me/categories")
-    suspend fun addCategory(@Header("Authorization") token: String, @Body category: Category): Response<ResponseBody>
+    suspend fun addCategory(@Header("Authorization") token: String, @Body categoryRequest: CategoryRequest): Response<ResponseBody>
 
     @GET("/api/masters/{id}/categories")
     suspend fun getMasterCategoriesById(@Path("id") id: Int): Response<List<Category>>

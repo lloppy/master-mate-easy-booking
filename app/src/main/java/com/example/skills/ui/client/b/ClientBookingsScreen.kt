@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.entity.RecordStatus
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.viewmodel.route.EditBookingViewModel
 import com.example.skills.data.viewmodel.MyRepository.getRecordsItemList
 import com.example.skills.ui.master.c.RecordItemCard
@@ -40,7 +41,8 @@ import java.util.Locale
 @Composable
 fun ClientBookingsScreen(
     navController: NavHostController,
-    editBookingViewModel: EditBookingViewModel
+    editBookingViewModel: EditBookingViewModel,
+    viewModel: MainViewModel
 ) {
     Scaffold(
         topBar = {
@@ -62,7 +64,7 @@ fun ClientBookingsScreen(
             )
         }
     ) { innerPadding ->
-        MasterClientServices(innerPadding, navController, editBookingViewModel)
+        MasterClientServices(innerPadding, navController, editBookingViewModel, viewModel)
     }
 }
 
@@ -70,7 +72,8 @@ fun ClientBookingsScreen(
 fun MasterClientServices(
     innerPadding: PaddingValues,
     navController: NavHostController,
-    editBookingViewModel: EditBookingViewModel?
+    editBookingViewModel: EditBookingViewModel?,
+    viewModel: MainViewModel
 ) {
     Column(
         modifier = Modifier.padding(
@@ -118,7 +121,7 @@ fun MasterClientServices(
                 
                 items.forEach { recordItem ->
                     item {
-                        RecordItemCard(recordItem, true, navController, editBookingViewModel)
+                        RecordItemCard(recordItem, true, navController, editBookingViewModel, viewModel)
                     }
                 }
             }

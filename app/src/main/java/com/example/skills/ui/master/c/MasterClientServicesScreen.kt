@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.entity.RecordItem
 import com.example.skills.data.entity.RecordStatus
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.viewmodel.MyRepository.getRecordsItemList
 import com.example.skills.ui.master.b.calendar.clickable
 import com.example.skills.ui.master.d.CustomAlertDialog
@@ -38,7 +39,9 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MasterClientServicesScreen() {
+fun MasterClientServicesScreen(
+    viewModel: MainViewModel
+) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -59,13 +62,14 @@ fun MasterClientServicesScreen() {
             )
         }
     ) { innerPadding ->
-        MasterClientServices(innerPadding)
+        MasterClientServices(innerPadding, viewModel)
     }
 }
 
 @Composable
 fun MasterClientServices(
     innerPadding: PaddingValues,
+    viewModel: MainViewModel
 ) {
     val recordItems by remember { mutableStateOf(getRecordsItemList()) }
     var selectedDate: LocalDate? = null
@@ -142,7 +146,7 @@ fun MasterClientServices(
                     }
                 }
                 items.forEach { bookingItem ->
-                    item { RecordItemCard(bookingItem) }
+                    item { RecordItemCard(bookingItem, viewModel = viewModel) }
                 }
             }
         }

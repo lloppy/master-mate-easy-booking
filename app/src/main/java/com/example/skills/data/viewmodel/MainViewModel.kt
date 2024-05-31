@@ -17,7 +17,10 @@ import com.example.skills.data.api.LogInRequest
 import com.example.skills.data.api.Network
 import com.example.skills.data.api.Network.apiService
 import com.example.skills.data.entity.Category
+import com.example.skills.data.entity.CategoryRequest
+import com.example.skills.data.entity.Duration
 import com.example.skills.data.entity.Service
+import com.example.skills.data.entity.ServiceRequest
 import com.example.skills.data.roles.Role
 import com.example.skills.data.roles.User
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,6 +33,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.net.SocketTimeoutException
+import kotlin.random.Random
 
 const val MY_LOG = "MY_LOG"
 
@@ -45,7 +49,6 @@ class MainViewModel(context: Context) : ViewModel() {
 
     val servicesLiveDataMaster = MutableLiveData<List<Service>?>()
     val categoriesLiveDataMaster = MutableLiveData<List<Category>?>()
-
 
     val userIsAuthenticated = mutableStateOf(false)
     private val preferences: SharedPreferences =
@@ -120,8 +123,6 @@ class MainViewModel(context: Context) : ViewModel() {
 
                         Log.i(MY_LOG, "current User is Master")
                     }
-
-
                     onResponse(true)
                 } else {
                     Log.e(MY_LOG, "Registration failed: ${response.errorBody().toString()}")
@@ -191,6 +192,28 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
+    fun getServicesByCategoryId(categoryId: Int, onActivationComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+
+            try {
+                val response = apiService.getCategoryServices(categoryId)
+
+                if (response.isSuccessful) {
+                    Log.d(MY_LOG, "getServicesByCategoryId isSuccessful")
+                    onActivationComplete(true)
+                } else {
+                    Log.e(MY_LOG, "getServicesByCategoryId failed: ${response.errorBody()?.string()}")
+                    onActivationComplete(false)
+                }
+            } catch (e: Exception) {
+                handleApiException(e)
+                onActivationComplete(false)
+            }
+            _isLoading.emit(false)
+        }
+    }
+
     fun uploadImage(context: Context, selectedImage: Uri) {
         val contentResolver = context.contentResolver
         val parcelFileDescriptor = contentResolver.openFileDescriptor(selectedImage, "r", null)
@@ -218,11 +241,15 @@ class MainViewModel(context: Context) : ViewModel() {
         viewModelScope.launch {
             _isLoading.emit(true)
             try {
-                val response = apiService.addCategory("Bearer $_userToken", Category(name = categoryName, description = ""))
-                if (response.isSuccessful) {
-                    val category = response.body()?.string()
-                    if (category != null) {
+                val categoryIdResponse = apiService.addCategory(
+                    "Bearer $_userToken",
+                    CategoryRequest(name = categoryName, description = "")
+                )
+                if (categoryIdResponse.isSuccessful) {
+                    val categoryId = categoryIdResponse.body()
+                    if (categoryId != null) {
                         loadMasterCategories()
+
                         Log.i(MY_LOG, "Success to add category")
                         onCategoryAddComplete(true)
                     } else {
@@ -240,7 +267,39 @@ class MainViewModel(context: Context) : ViewModel() {
             _isLoading.emit(false)
         }
     }
-    
+
+    fun addService(
+        service: ServiceRequest,
+        categoryId: Int,
+        onServiceAddComplete: (Boolean) -> Unit
+    ) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            try {
+                Log.i(MY_LOG, "categoryId is $categoryId")
+
+                val response = apiService.addService("Bearer $_userToken", categoryId, service)
+                if (response.isSuccessful) {
+                    val idResponse = response.body()
+
+                    if (idResponse != null) {
+                        loadMasterServices()
+
+                        Log.i(MY_LOG, "Service added successful")
+                        onServiceAddComplete(true)
+                    } else {
+                        Log.e(MY_LOG, "service response is null")
+                        onServiceAddComplete(false)
+                    }
+                }
+            } catch (e: Exception) {
+                handleApiException(e)
+                onServiceAddComplete(false)
+            }
+            _isLoading.emit(false)
+        }
+    }
+
     fun getProfilePicture() {
         viewModelScope.launch {
             try {
@@ -281,8 +340,11 @@ class MainViewModel(context: Context) : ViewModel() {
                 try {
                     loadMasterServices()
                     loadMasterCategories()
-                } catch (e: Exception){
-                    Log.e(MY_LOG, "Exception in loadMasterServices() loadMasterCategories()")
+                } catch (e: Exception) {
+                    Log.e(
+                        MY_LOG,
+                        "Exception in loadMasterServices() loadMasterCategories()"
+                    )
                 }
             } else Log.e(MY_LOG, "Failed to load master")
         }
@@ -331,7 +393,7 @@ class MainViewModel(context: Context) : ViewModel() {
         if (response.isSuccessful) {
             val services = response.body()
             if (services != null) {
-                servicesLiveDataMaster.postValue(services)
+                servicesLiveDataMaster.postValue(services.reversed())
             }
         } else {
             Log.d(MY_LOG, "Failed to load services")
@@ -346,7 +408,35 @@ class MainViewModel(context: Context) : ViewModel() {
                 categoriesLiveDataMaster.postValue(categories.reversed())
             }
         } else {
-            Log.d(MY_LOG, "Failed to load services")
+            Log.d(MY_LOG, "Failed to load categories")
+        }
+    }
+
+    fun getCategoryByName(selectedCategoryName: String): Category {
+        val category =
+            categoriesLiveDataMaster.value?.first { it.name == selectedCategoryName }
+
+        if (category == null) {
+            return Category(Random.nextInt(), "", "")
+        } else {
+            return category
+        }
+    }
+
+    fun getService(serviceId: Int): Service {
+        val service = servicesLiveDataMaster.value?.first { it.id == serviceId }
+
+        if (service == null) {
+            return Service(
+                Random.nextInt(),
+                "",
+                "",
+                0,
+                Duration(0, 0),
+                Category(Random.nextInt(), "", "")
+            )
+        } else {
+            return service
         }
     }
 

@@ -131,7 +131,10 @@ fun ContentLogIn(
     navigateToMain: () -> Unit,
     viewModel: MainViewModel
 ) {
-    val email by remember { mutableStateOf("") }
+    val email by remember { mutableStateOf(if (viewModel.userIsAuthenticated.value) viewModel.currentUser?.email else "") }
+    val focusRequester = remember { FocusRequester() }
+    val emailState by rememberSaveable(stateSaver = EmailStateSaver) { mutableStateOf(EmailState(email)) }
+    val passwordState = remember { PasswordState() }
 
     Column(
         modifier = Modifier
@@ -141,12 +144,6 @@ fun ContentLogIn(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        val focusRequester = remember { FocusRequester() }
-        val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
-            mutableStateOf(EmailState(email))
-        }
-        val passwordState = remember { PasswordState() }
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
