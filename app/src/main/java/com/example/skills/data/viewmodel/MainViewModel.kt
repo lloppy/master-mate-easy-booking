@@ -214,6 +214,33 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
+    fun addCategory(categoryName: String, onCategoryAddComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            try {
+                val response = apiService.addCategory("Bearer $_userToken", Category(name = categoryName, description = ""))
+                if (response.isSuccessful) {
+                    val category = response.body()?.string()
+                    if (category != null) {
+                        loadMasterCategories()
+                        Log.i(MY_LOG, "Success to add category")
+                        onCategoryAddComplete(true)
+                    } else {
+                        Log.e(MY_LOG, "category response is null")
+                        onCategoryAddComplete(false)
+                    }
+                } else {
+                    Log.e(MY_LOG, "Failed to add category")
+                    onCategoryAddComplete(false)
+                }
+            } catch (e: Exception) {
+                handleApiException(e)
+                onCategoryAddComplete(false)
+            }
+            _isLoading.emit(false)
+        }
+    }
+    
     fun getProfilePicture() {
         viewModelScope.launch {
             try {
@@ -323,18 +350,4 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
-    suspend fun addCategory(categoryName: String) {
-        val response = apiService.addCategory("Bearer $_userToken", Category(name = categoryName, description = ""))
-        if (response.isSuccessful) {
-            val category = response.body()?.string()
-            if (category != null) {
-                loadMasterCategories()
-                Log.i(MY_LOG, "Success to add category")
-            } else{
-                Log.e(MY_LOG, "category response is null")
-            }
-        } else {
-            Log.e(MY_LOG, "Failed to add category")
-        }
-    }
 }

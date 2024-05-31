@@ -21,7 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +37,7 @@ import androidx.navigation.NavHostController
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.components.CustomOutlinedTextField
+import com.example.skills.ui.components.tools.LoadingScreen
 import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,7 +78,12 @@ fun CreateCategoryScreen(
             )
         },
     ) { innerPadding ->
-        ContentNewPassword(innerPadding, navController, viewModel)
+        val isLoading by viewModel.isLoading.collectAsState()
+        if (isLoading) {
+            LoadingScreen()
+        } else {
+            ContentNewPassword(innerPadding, navController, viewModel)
+        }
     }
 }
 
@@ -88,7 +94,6 @@ fun ContentNewPassword(
     viewModel: MainViewModel
 ) {
     var categoryName by remember { mutableStateOf("") }
-    var addButtonClicked by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -122,19 +127,16 @@ fun ContentNewPassword(
 
             CustomButton(
                 navigateTo = {
-                    if (categoryName.isNotEmpty() || categoryName.isNotBlank()){
-                        addButtonClicked = true
+                    if (categoryName.isNotEmpty() || categoryName.isNotBlank()) {
+                        viewModel.addCategory(categoryName) { successful ->
+                            if (successful) {
+                                navController.popBackStack()
+                            }
+                        }
                     }
                 },
-                "Добавить"
+                buttonText = "Добавить"
             )
-
-            if (addButtonClicked) {
-                LaunchedEffect(addButtonClicked) {
-                    viewModel.addCategory(categoryName)
-                    navController.popBackStack()
-                }
-            }
         }
     }
 }
