@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -42,19 +43,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.components.CustomOutlinedTextField
 import com.example.skills.ui.components.Email
+import com.example.skills.ui.components.ProfilePicturePicker
 import com.example.skills.ui.components.spaceBetweenOutlinedTextField
 import com.example.skills.ui.components.tools.EmailState
 import com.example.skills.ui.components.tools.EmailStateSaver
@@ -64,7 +66,8 @@ import com.example.skills.ui.components.tools.EmailStateSaver
 @Composable
 fun EditProfileScreen(
     navController: NavHostController,
-    navigateToMain: () -> Unit
+    navigateToMain: () -> Unit,
+    viewModel: MainViewModel
 ) {
     Scaffold(
         topBar = {
@@ -98,7 +101,7 @@ fun EditProfileScreen(
             )
         },
     ) { innerPadding ->
-        AddMasterAccountInfo(innerPadding, navigateToMain, navController)
+        AddMasterAccountInfo(innerPadding, navigateToMain, navController, viewModel)
     }
 }
 
@@ -106,20 +109,21 @@ fun EditProfileScreen(
 private fun AddMasterAccountInfo(
     innerPadding: PaddingValues,
     navigateToMain: () -> Unit,
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: MainViewModel
 ) {
     val scrollState = rememberScrollState()
 
-    var email by remember { mutableStateOf("") }
-    var firstName by remember { mutableStateOf("") }
-    var secondName by remember { mutableStateOf("") }
-    var phone by remember { mutableStateOf("") }
-    val focusRequester = remember { FocusRequester() }
+    var email by remember { mutableStateOf(viewModel.currentUser!!.email) }
+    var firstName by remember { mutableStateOf(viewModel.currentUser!!.firstName) }
+    var secondName by remember { mutableStateOf(viewModel.currentUser!!.lastName) }
+    var phone by remember { mutableStateOf(viewModel.currentUser!!.phone) }
+
     val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
         mutableStateOf(EmailState(email))
     }
     var profileDescription by remember { mutableStateOf("") }
-    var adress by remember { mutableStateOf("") }
+    var address by remember { mutableStateOf("") }
     var link by remember { mutableStateOf("") }
 
     Column(
@@ -135,12 +139,11 @@ private fun AddMasterAccountInfo(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        ProfilePicturePicker()
+        ProfilePicturePicker(viewModel, LocalContext.current)
         Spacer(modifier = Modifier.height(6.dp))
 
-        TextButton(onClick = { /*TODO*/ }) {
-            Text(text = "Изменить фото профиля", fontSize = 16.sp, color = Color.Gray)
-        }
+        Text(text = "Изменить фото профиля", fontSize = 16.sp, color = Color.Gray)
+
         Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField.plus(12.dp)))
         CustomOutlinedTextField(
             value = firstName,
@@ -154,7 +157,7 @@ private fun AddMasterAccountInfo(
             label = "Фамилия"
         )
         Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
-        Email(emailState, onImeAction = { focusRequester.requestFocus() })
+        Email(emailState, readOnly = true)
 
         Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
         OutlinedTextField(
@@ -167,7 +170,8 @@ private fun AddMasterAccountInfo(
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedLabelColor = Color.Gray,
                 unfocusedBorderColor = Color.Gray
-            )
+            ),
+            shape = RoundedCornerShape(16.dp)
         )
 
         Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
@@ -184,14 +188,15 @@ private fun AddMasterAccountInfo(
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedLabelColor = Color.Gray,
                 unfocusedBorderColor = Color.Gray
-            )
+            ),
+            shape = RoundedCornerShape(16.dp)
         )
         Spacer(modifier = Modifier.height(6.dp))
 
         OutlinedTextField(
-            value = adress,
+            value = address,
             onValueChange = {
-                adress = it
+                address = it
             },
             label = { Text(text = "Адрес") },
             modifier = Modifier.fillMaxWidth(),
@@ -199,7 +204,8 @@ private fun AddMasterAccountInfo(
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedLabelColor = Color.Gray,
                 unfocusedBorderColor = Color.Gray
-            )
+            ),
+            shape = RoundedCornerShape(16.dp)
         )
 
         Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
@@ -215,7 +221,8 @@ private fun AddMasterAccountInfo(
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedLabelColor = Color.Gray,
                 unfocusedBorderColor = Color.Gray
-            )
+            ),
+            shape = RoundedCornerShape(16.dp)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -231,46 +238,5 @@ private fun AddMasterAccountInfo(
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
-    }
-}
-
-
-@Composable
-fun ProfilePicturePicker() {
-    var selectedImage by remember { mutableStateOf<Uri?>(null) }
-    val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        selectedImage = uri
-    }
-
-    Column {
-        if (selectedImage != null) {
-            Image(
-                painter = rememberAsyncImagePainter(selectedImage),
-                contentDescription = "Selected profile pic",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .height(120.dp)
-                    .width(120.dp)
-                    .clip(CircleShape)
-            )
-        } else {
-            IconButton(
-                onClick = { imagePickerLauncher.launch("image/*") },
-                colors = IconButtonDefaults.iconButtonColors(containerColor = Color.Black),
-                modifier = Modifier
-                    .height(120.dp)
-                    .width(120.dp)
-                    .clip(CircleShape)
-                    .border(1.dp, Color.Gray)
-            ) {
-                Icon(
-                    Icons.Default.PhotoCamera,
-                    "Добавьте фото профиля",
-                    tint = Color.White
-                )
-            }
-        }
     }
 }

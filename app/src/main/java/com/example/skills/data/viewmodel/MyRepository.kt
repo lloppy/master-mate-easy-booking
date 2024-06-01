@@ -28,7 +28,7 @@ object MyRepository {
 
     private val listMasters = listOf(
         User(
-            "123",
+            "H27SqD8f",
             "masterivan@gmail.com",
             "79503223232",
             "Иван",

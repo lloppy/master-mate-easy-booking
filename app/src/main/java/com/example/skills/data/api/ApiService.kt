@@ -62,7 +62,6 @@ interface ApiService {
 
 
     // Service controller
-
     @PUT("/api/masters/me/services/{id}")
     suspend fun changeService(
         @Header("Authorization") token: String,

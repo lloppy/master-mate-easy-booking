@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
+import com.example.skills.data.viewmodel.MyRepository
 import com.example.skills.ui.master.a.MainMasterScreen
 import com.example.skills.ui.master.b.CalendarScreen
 import com.example.skills.ui.master.c.MasterClientServicesScreen
@@ -44,7 +45,7 @@ fun SetupMasterNavGraph(
         composable(ScreenRole.Master.ShareProfile.route) {
             ShareProfileScreen(
                 navController = navHostController,
-                masterCode = mainViewModel.currentUser!!.master!!.linkCode.toString()
+                masterCode = MyRepository.getMaster().token // mainViewModel.currentUser!!.master!!.linkCode.toString()
             )
         }
 
@@ -104,7 +105,8 @@ fun SetupMasterNavGraph(
                 navController = navHostController,
                 navigateToMain = {
                     navHostController.navigate(ScreenMaster.MasterHomeScreen.route)
-                }
+                },
+                viewModel = mainViewModel
             )
         }
 
