@@ -1,10 +1,5 @@
 package com.example.skills.ui.master.e
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,27 +9,23 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,16 +33,16 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import coil.compose.rememberAsyncImagePainter
+import com.example.skills.data.api.EditMasterRequest
+import com.example.skills.data.entity.Address
+import com.example.skills.data.roles.UserRequest
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.components.CustomOutlinedTextField
@@ -60,6 +51,7 @@ import com.example.skills.ui.components.ProfilePicturePicker
 import com.example.skills.ui.components.spaceBetweenOutlinedTextField
 import com.example.skills.ui.components.tools.EmailState
 import com.example.skills.ui.components.tools.EmailStateSaver
+import com.example.skills.ui.components.tools.LoadingScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -101,7 +93,12 @@ fun EditProfileScreen(
             )
         },
     ) { innerPadding ->
-        AddMasterAccountInfo(innerPadding, navigateToMain, navController, viewModel)
+        val isLoading by viewModel.isLoading.collectAsState()
+        if (isLoading) {
+            LoadingScreen()
+        } else {
+            AddMasterAccountInfo(innerPadding, navigateToMain, viewModel)
+        }
     }
 }
 
@@ -109,7 +106,6 @@ fun EditProfileScreen(
 private fun AddMasterAccountInfo(
     innerPadding: PaddingValues,
     navigateToMain: () -> Unit,
-    navController: NavHostController,
     viewModel: MainViewModel
 ) {
     val scrollState = rememberScrollState()
@@ -232,8 +228,25 @@ private fun AddMasterAccountInfo(
                 .height(60.dp)
         ) {
             CustomButton(
-                // { navController.popBackStack() },
-                navigateToMain,
+                {
+                    viewModel.editMasterProfile(
+                        EditMasterRequest(
+                            user = UserRequest(
+                                firstName = firstName,
+                                lastName = secondName,
+                                phone = phone
+                            ),
+                            description = profileDescription,
+                            address = Address(city = address),
+                            linkCode = link
+                        )
+                    ) { successful ->
+                        if (successful) {
+                            navigateToMain.invoke()
+                            //navController.popBackStack()
+                        }
+                    }
+                },
                 "Сохранить"
             )
         }

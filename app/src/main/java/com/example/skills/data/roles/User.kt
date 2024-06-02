@@ -31,3 +31,9 @@ class User(
         var address: Address? = null,
     )
 }
+
+class UserRequest(
+    var firstName: String,
+    var lastName: String,
+    var phone: String
+)

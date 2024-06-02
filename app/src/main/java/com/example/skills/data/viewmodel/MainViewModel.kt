@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.skills.data.api.ActivationRequest
 import com.example.skills.data.api.AuthRequest
+import com.example.skills.data.api.EditMasterRequest
 import com.example.skills.data.api.LogInRequest
 import com.example.skills.data.api.Network
 import com.example.skills.data.api.Network.apiService
@@ -373,6 +374,38 @@ class MainViewModel(context: Context) : ViewModel() {
             } catch (e: Exception) {
                 handleApiException(e)
                 onServiceEditComplete(false)
+            }
+            _isLoading.emit(false)
+        }
+    }
+
+    fun editMasterProfile(
+        newMasterInfo: EditMasterRequest,
+        onProfileEditComplete: (Boolean) -> Unit
+    ) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            try {
+                val response = apiService.editMasterProfile("Bearer $_userToken", newMasterInfo)
+                if (response.isSuccessful) {
+                    val body = response.body()
+
+                    if (body != null) {
+                        loadCurrentUser(_userToken!!)
+
+                        Log.i(MY_LOG, "Master profile edit successful")
+                        onProfileEditComplete(true)
+                    } else {
+                        Log.e(MY_LOG, "response is null")
+                        onProfileEditComplete(false)
+                    }
+                } else{
+                    Log.e(MY_LOG, "Error is ${response.errorBody()}")
+
+                }
+            } catch (e: Exception) {
+                handleApiException(e)
+                onProfileEditComplete(false)
             }
             _isLoading.emit(false)
         }

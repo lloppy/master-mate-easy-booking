@@ -3,6 +3,7 @@ package com.example.skills.data.api
 import com.example.skills.data.entity.Address
 import com.example.skills.data.entity.TimeSlot
 import com.example.skills.data.roles.User
+import com.example.skills.data.roles.UserRequest
 import java.time.LocalDateTime
 
 data class AuthRequest(
@@ -33,7 +34,7 @@ data class ActivationResponse(
 )
 
 data class EditMasterRequest(
-    val user: User,
+    val user: UserRequest,
     val description: String,
     val address: Address,
     val linkCode: String

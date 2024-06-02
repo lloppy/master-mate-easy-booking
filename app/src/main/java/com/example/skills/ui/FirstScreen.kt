@@ -71,7 +71,7 @@ fun RoleScreen(
                 lineHeight = 22.sp,
                 modifier = Modifier.padding(start = 8.dp, end = 8.dp)
             )
-            Spacer(modifier = Modifier.padding(18.dp))
+            Spacer(modifier = Modifier.padding(16.dp))
 
             Column {
                 CustomButton(
@@ -84,6 +84,7 @@ fun RoleScreen(
                     "Я мастер",
                     color = Color.Transparent
                 )
+                Spacer(modifier = Modifier.padding(6.dp))
             }
         }
     }
