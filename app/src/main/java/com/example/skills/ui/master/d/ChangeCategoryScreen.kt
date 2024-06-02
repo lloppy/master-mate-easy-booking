@@ -1,5 +1,6 @@
 package com.example.skills.ui.master.d
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,13 +35,19 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.skills.data.entity.Category
+import com.example.skills.data.viewmodel.MY_LOG
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.components.CustomOutlinedTextField
+import com.example.skills.ui.components.tools.LoadingScreen
 import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChangeCategoryScreen( navController: NavHostController
+fun ChangeCategoryScreen(
+    navController: NavHostController,
+    viewModel: MainViewModel
 ) {
     Scaffold(
         topBar = {
@@ -73,15 +81,23 @@ fun ChangeCategoryScreen( navController: NavHostController
             )
         },
     ) { innerPadding ->
-        ContentChangeCategory(innerPadding, navController)
+        val isLoading by viewModel.isLoading.collectAsState()
+        if (isLoading) {
+            LoadingScreen()
+        } else {
+            ContentChangeCategory(innerPadding, navController, viewModel, )
+        }
     }
 }
 
 @Composable
 fun ContentChangeCategory(
     innerPadding: PaddingValues,
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: MainViewModel,
+    //selectedCategory: Category
 ) {
+   // var categoryName by remember { mutableStateOf(selectedCategory.name) }
     var categoryName by remember { mutableStateOf("") }
 
     Column(
@@ -102,7 +118,7 @@ fun ContentChangeCategory(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp),
+                    .padding(start = 8.dp, end = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
@@ -123,7 +139,15 @@ fun ContentChangeCategory(
             Spacer(modifier = Modifier.height(8.dp))
             CustomButton(
                 navigateTo = {
-                    navController.popBackStack()
+                    try {
+//                        viewModel.deleteCategory(categoryId = selectedCategory.id) { successful ->
+//                            if (successful) {
+//                                navController.popBackStack()
+//                            }
+//                        }
+                    } catch (e: Exception) {
+                        Log.e(MY_LOG, "deleteService Exception " + e.message.toString())
+                    }
                 },
                 color = Color.Transparent,
                 buttonText = "Удалить"

@@ -407,6 +407,35 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
+    fun deleteCategory(categoryId: Int, onCategoryRemoveComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            try {
+                val response = apiService.deleteCategory("Bearer $_userToken", categoryId)
+                if (response.isSuccessful) {
+                    val body = response.body()
+
+                    if (body != null) {
+                        loadMasterCategories()
+
+                        Log.i(MY_LOG, "Category remove successful")
+                        onCategoryRemoveComplete(true)
+                    } else {
+                        Log.e(MY_LOG, "Remove category response is null")
+                        onCategoryRemoveComplete(false)
+                    }
+                } else {
+                    Log.e(MY_LOG, "Error occurred while removing category: ${response.errorBody()}")
+                    onCategoryRemoveComplete(false)
+                }
+            } catch (e: Exception) {
+                handleApiException(e)
+                onCategoryRemoveComplete(false)
+            }
+            _isLoading.emit(false)
+        }
+    }
+
     fun getProfilePicture() {
         viewModelScope.launch {
             try {
@@ -519,15 +548,8 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
-    fun getCategoryByName(selectedCategoryName: String): Category {
-        val category =
-            categoriesLiveDataMaster.value?.first { it.name == selectedCategoryName }
-
-        if (category == null) {
-            return Category(Random.nextInt(), "", "")
-        } else {
-            return category
-        }
+    fun getCategoryByName(selectedCategoryName: String?): Category? {
+        return categoriesLiveDataMaster.value?.first { it.name == selectedCategoryName }
     }
 
     fun getService(serviceId: Int): Service {

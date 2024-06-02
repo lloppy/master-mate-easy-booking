@@ -220,7 +220,14 @@ fun MasterMyServices(
                 }
             }
         }
-        if (categories!!.size > 1) {
+
+        var isCategoriesNull = true
+        try {
+            categories!!.size > 1
+            isCategoriesNull = false
+        } catch (e: Exception) {}
+
+        if (!isCategoriesNull) {
             Spacer(modifier = Modifier.height(12.dp))
             CustomButton(
                 navigateTo = {

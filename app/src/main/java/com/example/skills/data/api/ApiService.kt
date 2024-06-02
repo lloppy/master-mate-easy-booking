@@ -111,13 +111,13 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("id") id: Int,
         @Body category: Category
-    ): Response<String>
+    ): Response<ResponseBody>
 
     @DELETE("/api/masters/me/categories/{id}")
-    suspend fun removeCategory(
+    suspend fun deleteCategory(
         @Header("Authorization") token: String,
         @Path("id") id: Int
-    ): Response<String>
+    ): Response<ResponseBody>
 
     @GET("/api/masters/me/categories")
     suspend fun getMasterCategoriesByToken(@Header("Authorization") token: String): Response<List<Category>>

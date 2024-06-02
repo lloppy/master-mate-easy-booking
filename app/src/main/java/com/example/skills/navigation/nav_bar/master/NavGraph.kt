@@ -124,22 +124,25 @@ fun SetupMasterNavGraph(
         }
 
         composable(ScreenRole.Master.ChangeCategory.route) {
-            ChangeCategoryScreen(
-                navController = navHostController
-            )
+
+                ChangeCategoryScreen(
+                    navController = navHostController,
+                    viewModel = mainViewModel
+                )
+
         }
 
         composable(ScreenRole.Master.CreateServiceCard.route) { backStackEntry ->
-            val selectedCategoryName = backStackEntry.arguments?.getString("selectedCategoryName")!!
-            Log.e(MY_LOG, "selectedCategoryName is $selectedCategoryName in nav graph")
-
+            val selectedCategoryName = backStackEntry.arguments?.getString("selectedCategoryName")
             val selectedCategory = mainViewModel.getCategoryByName(selectedCategoryName)
 
-            CreateServiceCardScreen(
-                selectedCategory,
-                navController = navHostController,
-                viewModel = mainViewModel
-            )
+            if (selectedCategory!= null) {
+                CreateServiceCardScreen(
+                    selectedCategory,
+                    navController = navHostController,
+                    viewModel = mainViewModel
+                )
+            }
         }
 
         composable(ScreenRole.Master.EditServiceCard.route) { backStackEntry ->
