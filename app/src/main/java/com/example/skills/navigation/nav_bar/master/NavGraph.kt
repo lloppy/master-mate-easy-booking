@@ -145,8 +145,9 @@ fun SetupMasterNavGraph(
         composable(ScreenRole.Master.EditServiceCard.route) { backStackEntry ->
             val serviceId = backStackEntry.arguments?.getString("serviceId")
             EditServiceCardScreen(
-                serviceId,
-                navController = navHostController
+                serviceName = serviceId,
+                navController = navHostController,
+                viewModel = mainViewModel
             )
         }
 

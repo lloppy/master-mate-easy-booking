@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -48,6 +49,7 @@ import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.navigation.ScreenRole
 import com.example.skills.ui.components.CustomButton
+import com.example.skills.ui.components.tools.LoadingScreen
 import com.example.skills.ui.theme.paddingBetweenElements
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -81,13 +83,18 @@ fun MasterMyServicesScreen(
             )
         }
     ) { innerPadding ->
-        MasterMyServices(
-            innerPadding,
-            navigateToCreateCategory,
-            navigateToChangeCategory,
-            navController,
-            viewModel
-        )
+        val isLoading by viewModel.isLoading.collectAsState()
+        if (isLoading) {
+            LoadingScreen()
+        } else {
+            MasterMyServices(
+                innerPadding,
+                navigateToCreateCategory,
+                navigateToChangeCategory,
+                navController,
+                viewModel
+            )
+        }
     }
 }
 
@@ -113,7 +120,6 @@ fun MasterMyServices(
     )
     val services by viewModel.servicesLiveDataMaster.observeAsState()
 
-
     Column(
         modifier = Modifier
             .padding(
@@ -131,82 +137,86 @@ fun MasterMyServices(
                     end = 16.dp
                 )
         ) {
-            if (categories!!.size <= 1) {
-                Column(modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.23f)) {
-                    Button(onClick = navigateToCreateCategory, Modifier.weight(1f)) {
-                        Text("Добавить категорию")
+            if (!categories.isNullOrEmpty()) {
+                if (categories.size <= 1) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(0.23f)
+                    ) {
+                        Button(onClick = navigateToCreateCategory, Modifier.weight(1f)) {
+                            Text("Добавить категорию")
+                        }
+                        Text(
+                            text = "В вашем списке отсутствуют категории услуг. Чтобы добавить категорию, воспользуйтесь кнопкой выше.",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Normal,
+                            color = Color.Gray,
+                            modifier = Modifier.padding(start = 12.dp, top = 25.dp)
+                        )
                     }
-                    Text(
-                        text = "В вашем списке отсутствуют категории услуг. Чтобы добавить категорию, воспользуйтесь кнопкой выше.",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(start = 12.dp, top = 25.dp)
-                    )
-                }
-            } else {
-                LazyRow(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 12.dp)
-                ) {
-                    items(categories) { category ->
-                        val interactionSource = remember { MutableInteractionSource() }
-                        val viewConfiguration = LocalViewConfiguration.current
+                } else {
+                    LazyRow(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 12.dp)
+                    ) {
+                        items(categories) { category ->
+                            val interactionSource = remember { MutableInteractionSource() }
+                            val viewConfiguration = LocalViewConfiguration.current
 
-                        LaunchedEffect(interactionSource) {
-                            var isLongClick = false
-                            interactionSource.interactions.collectLatest { interaction ->
-                                when (interaction) {
-                                    is PressInteraction.Press -> {
-                                        isLongClick = false
-                                        delay(viewConfiguration.longPressTimeoutMillis)
-                                        isLongClick = true
-                                        // categories = categories.filter { it.name != category.name }
-                                        navigateToChangeCategory.invoke()
-                                        // Toast.makeText(context, "Long click", Toast.LENGTH_SHORT).show()
-                                    }
+                            LaunchedEffect(interactionSource) {
+                                var isLongClick = false
+                                interactionSource.interactions.collectLatest { interaction ->
+                                    when (interaction) {
+                                        is PressInteraction.Press -> {
+                                            isLongClick = false
+                                            delay(viewConfiguration.longPressTimeoutMillis)
+                                            isLongClick = true
+                                            // categories = categories.filter { it.name != category.name }
+                                            navigateToChangeCategory.invoke()
+                                            // Toast.makeText(context, "Long click", Toast.LENGTH_SHORT).show()
+                                        }
 
-                                    is PressInteraction.Release -> {
-                                        if (isLongClick.not()) {
-                                            // Toast.makeText(context, "click", Toast.LENGTH_SHORT).show()
+                                        is PressInteraction.Release -> {
+                                            if (isLongClick.not()) {
+                                                // Toast.makeText(context, "click", Toast.LENGTH_SHORT).show()
+                                            }
                                         }
                                     }
                                 }
                             }
+                            CategoryButton(
+                                text = category.name,
+                                onClick = {
+                                    if (category.name == "Добавить категорию") category.action.invoke() else category.action
+                                    selectedCategory = category.name
+                                },
+                                interactionSource = interactionSource,
+                                containerColor = if (category.name == selectedCategory) Color.Black else Color.White,
+                                contentColor = if (category.name == selectedCategory) Color.White else Color.Gray
+                            )
                         }
-                        CategoryButton(
-                            text = category.name,
-                            onClick = {
-                                if (category.name == "Добавить категорию") category.action.invoke() else category.action
-                                selectedCategory = category.name
-                            },
-                            interactionSource = interactionSource,
-                            containerColor = if (category.name == selectedCategory) Color.Black else Color.White,
-                            contentColor = if (category.name == selectedCategory) Color.White else Color.Gray
+                    }
+
+                    val selectedServicesByCategory =
+                        services?.filter { it.category.name == selectedCategory }
+
+                    if (selectedServicesByCategory != null && categories.size > 1) {
+                        LazyColumn {
+                            items(selectedServicesByCategory) { singleService ->
+                                SingleServiceCard(singleService, navController, viewModel)
+                            }
+                        }
+                    } else {
+                        Text(
+                            text = "В этой категории пока нет услуг. \nЧтобы создать их, воспользуйтесь кнопкой ниже.",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Normal,
+                            color = Color.Gray,
+                            modifier = Modifier.padding(start = 12.dp, top = 25.dp)
                         )
                     }
-                }
-
-                val selectedServicesByCategory =
-                    services?.filter { it.category.name == selectedCategory }
-
-                if (selectedServicesByCategory != null && categories.size > 1) {
-                    LazyColumn {
-                        items(selectedServicesByCategory) { singleService ->
-                            SingleServiceCard(singleService, navController)
-                        }
-                    }
-                } else {
-                    Text(
-                        text = "В этой категории пока нет услуг. \nЧтобы создать их, воспользуйтесь кнопкой ниже.",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(start = 12.dp, top = 25.dp)
-                    )
                 }
             }
         }

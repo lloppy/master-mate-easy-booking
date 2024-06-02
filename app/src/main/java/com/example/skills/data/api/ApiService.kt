@@ -3,6 +3,7 @@ package com.example.skills.data.api
 
 import com.example.skills.data.entity.Category
 import com.example.skills.data.entity.CategoryRequest
+import com.example.skills.data.entity.EditServiceRequest
 import com.example.skills.data.entity.Schedule
 import com.example.skills.data.entity.Service
 import com.example.skills.data.entity.ServiceRequest
@@ -14,6 +15,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Headers
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -38,6 +40,7 @@ interface ApiService {
     @GET("api/users/me")
     suspend fun getUserByToken(@Header("Authorization") token: String): Response<User>
 
+    //TODO()
     @Multipart
     @POST("api/users/me/edit/profilePicture")
     suspend fun uploadProfilePicture(
@@ -62,18 +65,25 @@ interface ApiService {
 
 
     // Service controller
-    @PUT("/api/masters/me/services/{id}")
-    suspend fun changeService(
+    @POST("/api/masters/me/categories/{category_id}/services")
+    suspend fun addService(
+        @Header("Authorization") token: String,
+        @Path("category_id") categoryId: Int,
+        @Body service: ServiceRequest
+    ): Response<String>
+
+    @PUT("api/masters/me/services/{id}")
+    suspend fun editService(
         @Header("Authorization") token: String,
         @Path("id") id: Int,
-        @Body service: Service
-    ): Response<String>
+        @Body service: EditServiceRequest
+    ): Response<ResponseBody>
 
     @DELETE("/api/masters/me/services/{id}")
     suspend fun removeService(
         @Header("Authorization") token: String,
         @Path("id") id: Int
-    ): Response<String>
+    ): Response<ResponseBody>
 
     @Multipart
     @POST("/api/masters/me/services/{service_id}/edit/image")
@@ -81,13 +91,6 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("service_id") serviceId: Int,
         @Part file: MultipartBody.Part
-    ): Response<String>
-
-    @POST("/api/masters/me/categories/{category_id}/services")
-    suspend fun addService(
-        @Header("Authorization") token: String,
-        @Path("category_id") categoryId: Int,
-        @Body service: ServiceRequest
     ): Response<String>
 
     @GET("/api/masters/{id}/services")

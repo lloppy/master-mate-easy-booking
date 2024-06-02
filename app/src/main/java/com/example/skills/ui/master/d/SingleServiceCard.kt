@@ -1,5 +1,6 @@
 package com.example.skills.ui.master.d
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -30,13 +31,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.R
 import com.example.skills.data.entity.Service
+import com.example.skills.data.viewmodel.MY_LOG
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.navigation.ScreenRole
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.master.b.calendar.clickable
 
-
 @Composable
-fun SingleServiceCard(singleService: Service, navController: NavHostController) {
+fun SingleServiceCard(singleService: Service, navController: NavHostController, viewModel: MainViewModel) {
     var showDialog by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
 
@@ -46,7 +48,15 @@ fun SingleServiceCard(singleService: Service, navController: NavHostController) 
                 showDialog = false
             },
             onExit = {
-                showDialog = false
+                try {
+                    viewModel.deleteService(singleService.id) { successful ->
+                        if (successful) {
+                            showDialog = false
+                        }
+                    }
+                }catch (e: Exception) {
+                    Log.e(MY_LOG, "deleteService Exception " + e.message.toString())
+                }
             },
             "Удалить услугу",
             "Услуга будет удалена навсегда без возможности восстановления"

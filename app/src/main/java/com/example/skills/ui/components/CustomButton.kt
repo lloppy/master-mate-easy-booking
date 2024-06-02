@@ -38,11 +38,11 @@ fun CustomButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = color,
             contentColor = if (color == Color.Black) Color.White else Color.Black,
-            disabledContainerColor = Color.White ,
-            disabledContentColor = Color.Black
+            disabledContainerColor = Color.LightGray ,
+            disabledContentColor = Color.White
         ),
         enabled = enabled,
-        border = BorderStroke(1.dp, Color.Black)
+        border = if(enabled)BorderStroke(1.dp, Color.Black) else BorderStroke(1.dp, Color.LightGray)
     ) {
         Text(text = buttonText)
     }

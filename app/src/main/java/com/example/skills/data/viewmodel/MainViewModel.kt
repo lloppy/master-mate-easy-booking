@@ -3,11 +3,8 @@ package com.example.skills.data.viewmodel
 import android.content.ContentResolver
 import android.content.Context
 import android.content.SharedPreferences
-import android.database.Cursor
 import android.net.Uri
-import android.provider.MediaStore
 import android.provider.OpenableColumns
-import android.util.Base64
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,6 +21,7 @@ import com.example.skills.data.api.ScheduleCreateRequest
 import com.example.skills.data.entity.Category
 import com.example.skills.data.entity.CategoryRequest
 import com.example.skills.data.entity.Duration
+import com.example.skills.data.entity.EditServiceRequest
 import com.example.skills.data.entity.Service
 import com.example.skills.data.entity.ServiceRequest
 import com.example.skills.data.roles.Role
@@ -31,13 +29,9 @@ import com.example.skills.data.roles.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
-import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.net.SocketTimeoutException
@@ -134,6 +128,7 @@ class MainViewModel(context: Context) : ViewModel() {
                     onResponse(true)
                 } else {
                     Log.e(MY_LOG, "Registration failed: ${response.errorBody().toString()}")
+                    Log.e(MY_LOG, "Try to reinstall app")
                     onResponse(false)
                 }
             } catch (e: Exception) {
@@ -251,9 +246,10 @@ class MainViewModel(context: Context) : ViewModel() {
             }
         }
     }
+
     fun getRealPathFromURI(uri: Uri, context: Context): String? {
         val returnCursor = context.contentResolver.query(uri, null, null, null, null)
-        val nameIndex =  returnCursor!!.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+        val nameIndex = returnCursor!!.getColumnIndex(OpenableColumns.DISPLAY_NAME)
         val sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE)
         returnCursor.moveToFirst()
         val name = returnCursor.getString(nameIndex)
@@ -344,6 +340,68 @@ class MainViewModel(context: Context) : ViewModel() {
             } catch (e: Exception) {
                 handleApiException(e)
                 onServiceAddComplete(false)
+            }
+            _isLoading.emit(false)
+        }
+    }
+
+    fun editService(
+        service: EditServiceRequest,
+        id: Int,
+        onServiceEditComplete: (Boolean) -> Unit
+    ) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            try {
+                val response = apiService.editService("Bearer $_userToken", id, service)
+                if (response.isSuccessful) {
+                    val body = response.body()?.string()
+
+                    if (body != null) {
+                        loadMasterServices()
+
+                        Log.i(MY_LOG, "Service edit successful")
+                        onServiceEditComplete(true)
+                    } else {
+                        Log.e(MY_LOG, "service response is null")
+                        onServiceEditComplete(false)
+                    }
+                } else{
+                    Log.e(MY_LOG, "Error is ${response.errorBody()}")
+
+                }
+            } catch (e: Exception) {
+                handleApiException(e)
+                onServiceEditComplete(false)
+            }
+            _isLoading.emit(false)
+        }
+    }
+
+    fun deleteService(serviceId: Int, onServiceRemoveComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            try {
+                val response = apiService.removeService("Bearer $_userToken", serviceId)
+                if (response.isSuccessful) {
+                    val body = response.body()
+
+                    if (body != null) {
+                        loadMasterServices()
+
+                        Log.i(MY_LOG, "Service remove successful")
+                        onServiceRemoveComplete(true)
+                    } else {
+                        Log.e(MY_LOG, "Remove service response is null")
+                        onServiceRemoveComplete(false)
+                    }
+                } else {
+                    Log.e(MY_LOG, "Error occurred while removing service: ${response.errorBody()}")
+                    onServiceRemoveComplete(false)
+                }
+            } catch (e: Exception) {
+                handleApiException(e)
+                onServiceRemoveComplete(false)
             }
             _isLoading.emit(false)
         }
@@ -514,5 +572,19 @@ class MainViewModel(context: Context) : ViewModel() {
             returnCursor.close()
         }
         return name
+    }
+
+    fun getServiceByName(serviceName: String?): Service? {
+        if (serviceName != null) {
+            Log.d(MY_LOG, "currentService name is $serviceName")
+            servicesLiveDataMaster.value?.forEach {
+                Log.d(MY_LOG, "servicesLiveDataMaster ${it.name}")
+            }
+
+            return servicesLiveDataMaster.value?.firstOrNull {
+                it.name.capitalize() == serviceName.capitalize()
+            }
+        }
+        return null
     }
 }

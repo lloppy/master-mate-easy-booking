@@ -25,6 +25,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +46,7 @@ import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.components.CustomOutlinedTextField
 import com.example.skills.ui.components.spaceBetweenOutlinedTextField
+import com.example.skills.ui.components.tools.LoadingScreen
 import com.example.skills.ui.theme.backgroundMaterial
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,7 +88,12 @@ fun CreateServiceCardScreen(
             )
         },
     ) { innerPadding ->
-        ContentCreateServiceCard(innerPadding, navController, selectedCategory, viewModel)
+        val isLoading by viewModel.isLoading.collectAsState()
+        if (isLoading) {
+            LoadingScreen()
+        } else {
+            ContentCreateServiceCard(innerPadding, navController, selectedCategory, viewModel)
+        }
     }
 }
 
@@ -189,7 +196,7 @@ fun ContentCreateServiceCard(
                                 ServiceRequest(
                                     name,
                                     description,
-                                    price.toLong(),
+                                    price.toInt(),
                                     Duration(0, duration.toInt()),
                                     category = selectedCategory
                                 ),
@@ -199,9 +206,11 @@ fun ContentCreateServiceCard(
                                     navController.popBackStack()
                                 }
                             }
-                        } catch (e: Exception) { }
+                        } catch (e: Exception) {
+                        }
                     }
                 },
+                enabled = if (name.isNotEmpty() && description.isNotEmpty() && price.isNotEmpty() && duration.isNotEmpty()) true else false,
                 buttonText = "Создать"
             )
         }

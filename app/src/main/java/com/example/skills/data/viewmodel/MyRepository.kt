@@ -28,7 +28,7 @@ object MyRepository {
 
     private val listMasters = listOf(
         User(
-            "H27SqD8f",
+            "123",
             "masterivan@gmail.com",
             "79503223232",
             "Иван",
@@ -155,6 +155,7 @@ object MyRepository {
     fun getMaster(id: String): User = listMasters.first { it.token == id }
     fun getMaster(): User = listMasters.first()
     fun getMastersList(): List<User> = listMasters
+    // fun getService(serviceId: Long): Service = services.find { it.serviceId == serviceId }!!
     fun getRecordsItemList(): MutableList<RecordItem> = recordsItemList
     //fun getServices(): List<Service> = services
 }

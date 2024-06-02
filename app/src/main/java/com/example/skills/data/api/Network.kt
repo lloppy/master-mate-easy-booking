@@ -4,15 +4,20 @@ import android.util.Log
 import com.example.skills.data.viewmodel.MY_LOG
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object Network {
+    val loggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
 
     private val defaultClient = OkHttpClient.Builder()
         .readTimeout(40, TimeUnit.SECONDS)
         .connectTimeout(40, TimeUnit.SECONDS)
+        .addInterceptor(loggingInterceptor)
         .build()
 
     private var customClient: OkHttpClient? = null
@@ -39,6 +44,7 @@ object Network {
 
             customClient = defaultClient
                 .newBuilder()
+                .addInterceptor(loggingInterceptor)
                 .addNetworkInterceptor(authTokenInterceptor)
                 .build()
         } else {
