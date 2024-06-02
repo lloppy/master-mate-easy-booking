@@ -107,10 +107,10 @@ interface ApiService {
 
     // Category controller
     @PUT("/api/masters/me/categories/{id}")
-    suspend fun changeCategory(
+    suspend fun editCategory(
         @Header("Authorization") token: String,
         @Path("id") id: Int,
-        @Body category: Category
+        @Body category: CategoryRequest
     ): Response<ResponseBody>
 
     @DELETE("/api/masters/me/categories/{id}")

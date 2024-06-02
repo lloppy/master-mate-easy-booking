@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.entity.Category
+import com.example.skills.data.entity.CategoryRequest
 import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.CustomButton
@@ -47,7 +48,8 @@ import com.example.skills.ui.theme.backgroundMaterial
 @Composable
 fun ChangeCategoryScreen(
     navController: NavHostController,
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    selectedCategory: Category
 ) {
     Scaffold(
         topBar = {
@@ -85,7 +87,7 @@ fun ChangeCategoryScreen(
         if (isLoading) {
             LoadingScreen()
         } else {
-            ContentChangeCategory(innerPadding, navController, viewModel, )
+            ContentChangeCategory(innerPadding, navController, viewModel, selectedCategory)
         }
     }
 }
@@ -95,10 +97,10 @@ fun ContentChangeCategory(
     innerPadding: PaddingValues,
     navController: NavHostController,
     viewModel: MainViewModel,
-    //selectedCategory: Category
+    selectedCategory: Category
 ) {
-   // var categoryName by remember { mutableStateOf(selectedCategory.name) }
-    var categoryName by remember { mutableStateOf("") }
+    var categoryName by remember { mutableStateOf(selectedCategory.name) }
+    // var categoryName by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -131,7 +133,14 @@ fun ContentChangeCategory(
             Spacer(modifier = Modifier.height(16.dp))
             CustomButton(
                 navigateTo = {
-                    navController.popBackStack()
+                    viewModel.editCategory(
+                        selectedCategory.id,
+                        CategoryRequest(name = categoryName, description = "")
+                    ) { successful ->
+                        if (successful) {
+                            navController.popBackStack()
+                        }
+                    }
                 },
                 "Сохранить"
             )
@@ -140,11 +149,11 @@ fun ContentChangeCategory(
             CustomButton(
                 navigateTo = {
                     try {
-//                        viewModel.deleteCategory(categoryId = selectedCategory.id) { successful ->
-//                            if (successful) {
-//                                navController.popBackStack()
-//                            }
-//                        }
+                        viewModel.deleteCategory(categoryId = selectedCategory.id) { successful ->
+                            if (successful) {
+                                navController.popBackStack()
+                            }
+                        }
                     } catch (e: Exception) {
                         Log.e(MY_LOG, "deleteService Exception " + e.message.toString())
                     }

@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.skills.data.entity.Category
 import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.viewmodel.MyRepository
@@ -123,12 +124,20 @@ fun SetupMasterNavGraph(
             )
         }
 
-        composable(ScreenRole.Master.ChangeCategory.route) {
+        composable(ScreenRole.Master.ChangeCategory.route) { backStackEntry ->
+            val selectedCategoryName = backStackEntry.arguments?.getString("selectedCategoryName")
 
+            val selectedCategory = selectedCategoryName?.let {
+                mainViewModel.getCategoryByName(it)
+            }
+
+            if (selectedCategory != null) {
                 ChangeCategoryScreen(
+                    selectedCategory = selectedCategory,
                     navController = navHostController,
                     viewModel = mainViewModel
                 )
+            }
 
         }
 
@@ -136,7 +145,7 @@ fun SetupMasterNavGraph(
             val selectedCategoryName = backStackEntry.arguments?.getString("selectedCategoryName")
             val selectedCategory = mainViewModel.getCategoryByName(selectedCategoryName)
 
-            if (selectedCategory!= null) {
+            if (selectedCategory != null) {
                 CreateServiceCardScreen(
                     selectedCategory,
                     navController = navHostController,

@@ -436,6 +436,39 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
+    fun editCategory(
+        id: Int,
+        category: CategoryRequest,
+        onCategoryEditComplete: (Boolean) -> Unit
+    ) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            try {
+                val response = apiService.editCategory("Bearer $_userToken", id, category)
+                if (response.isSuccessful) {
+                    val body = response.body()?.string()
+
+                    if (body != null) {
+                        loadMasterCategories()
+
+                        Log.i(MY_LOG, "Category edit successful")
+                        onCategoryEditComplete(true)
+                    } else {
+                        Log.e(MY_LOG, "Category response is null")
+                        onCategoryEditComplete(false)
+                    }
+                } else{
+                    Log.e(MY_LOG, "Error is ${response.errorBody()}")
+
+                }
+            } catch (e: Exception) {
+                handleApiException(e)
+                onCategoryEditComplete(false)
+            }
+            _isLoading.emit(false)
+        }
+    }
+
     fun getProfilePicture() {
         viewModelScope.launch {
             try {
@@ -549,7 +582,10 @@ class MainViewModel(context: Context) : ViewModel() {
     }
 
     fun getCategoryByName(selectedCategoryName: String?): Category? {
-        return categoriesLiveDataMaster.value?.first { it.name == selectedCategoryName }
+        try {
+            return categoriesLiveDataMaster.value?.first { it.name == selectedCategoryName }
+        } catch (e: Exception) {}
+        return null
     }
 
     fun getService(serviceId: Int): Service {

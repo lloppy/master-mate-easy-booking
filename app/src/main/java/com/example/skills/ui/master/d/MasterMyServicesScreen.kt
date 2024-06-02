@@ -173,9 +173,18 @@ fun MasterMyServices(
                                             isLongClick = false
                                             delay(viewConfiguration.longPressTimeoutMillis)
                                             isLongClick = true
-                                            // categories = categories.filter { it.name != category.name }
-                                            navigateToChangeCategory.invoke()
-                                            // Toast.makeText(context, "Long click", Toast.LENGTH_SHORT).show()
+
+                                            try {
+                                                val selectedCategoryName = selectedCategory
+                                                Log.e(MY_LOG, "selectedCategoryName is $selectedCategoryName")
+
+                                                navController.navigate(
+                                                    ScreenRole.Master.ChangeCategory.route.replace(
+                                                        "{selectedCategoryName}",
+                                                        selectedCategoryName
+                                                    )
+                                                )
+                                            } catch (e: IllegalArgumentException) {  }
                                         }
 
                                         is PressInteraction.Release -> {
