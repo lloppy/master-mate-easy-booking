@@ -18,17 +18,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.example.skills.R
-import com.example.skills.data.viewmodel.MainViewModel
-import com.example.skills.navigation.ScreenRole
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.theme.fontFamilyInter
 
 @Composable
 fun RoleScreen(
-    navigateToClientLogin: ()-> Unit,
-    navigateToMasterLogin: ()-> Unit,
+    navigateToClientLogin: () -> Unit,
+    navigateToMasterLogin: () -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -62,7 +59,7 @@ fun RoleScreen(
                 fontSize = 32.sp,
                 fontFamily = fontFamilyInter,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(start = 8.dp, end = 8.dp),
+                modifier = Modifier.padding(start = 8.dp, end = 8.dp)
             )
             Spacer(modifier = Modifier.padding(8.dp))
             Text(
@@ -72,21 +69,22 @@ fun RoleScreen(
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Center,
                 lineHeight = 22.sp,
-                modifier = Modifier.padding(start = 8.dp, end = 8.dp),
+                modifier = Modifier.padding(start = 8.dp, end = 8.dp)
+            )
+            Spacer(modifier = Modifier.padding(18.dp))
 
+            Column {
+                CustomButton(
+                    navigateToClientLogin,
+                    "Я клиент"
                 )
-            Spacer(modifier = Modifier.padding(12.dp))
-
-            CustomButton(
-                navigateToClientLogin,
-                "Я клиент"
-            )
-            Spacer(modifier = Modifier.padding(2.dp))
-            CustomButton(
-                navigateToMasterLogin,
-                "Я мастер",
-                color = Color.Transparent
-            )
+                Spacer(modifier = Modifier.padding(2.dp))
+                CustomButton(
+                    navigateToMasterLogin,
+                    "Я мастер",
+                    color = Color.Transparent
+                )
+            }
         }
     }
 }

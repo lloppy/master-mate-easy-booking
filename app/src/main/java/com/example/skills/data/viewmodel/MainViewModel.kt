@@ -459,7 +459,6 @@ class MainViewModel(context: Context) : ViewModel() {
                     }
                 } else{
                     Log.e(MY_LOG, "Error is ${response.errorBody()}")
-
                 }
             } catch (e: Exception) {
                 handleApiException(e)
