@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,13 +21,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.example.skills.R
 import com.example.skills.data.roles.User
 import com.example.skills.ui.components.CustomButton
@@ -37,10 +42,17 @@ import com.example.skills.ui.theme.fontFamilyInter
 fun ViewMasterHead(user: User, navigateToServices: () -> Unit) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
-    val imageName = user.master?.profileImageId ?: "master"
 
-    val imageId = context.resources.getIdentifier(imageName, "drawable", context.packageName)
-    val painter = if (imageId != 0) painterResource(id = imageId) else painterResource(id = R.drawable.master)
+    val imageFile = user.master?.profileImage
+    val painter = if (imageFile != null) {
+        rememberAsyncImagePainter(
+            model = imageFile,
+            placeholder = painterResource(id = R.drawable.master),
+            error = painterResource(id = R.drawable.master)
+        )
+    } else {
+        painterResource(id = R.drawable.master)
+    }
 
     val uri = Uri.parse(user.master?.linkCode)
     val intent = Intent(Intent.ACTION_VIEW, uri)
@@ -62,7 +74,9 @@ fun ViewMasterHead(user: User, navigateToServices: () -> Unit) {
             Image(
                 painter = painter,
                 contentDescription = "Master image",
-                Modifier.height(120.dp),
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(120.dp)
+                    .clip(CircleShape),
                 alignment = Alignment.TopCenter
             )
         }

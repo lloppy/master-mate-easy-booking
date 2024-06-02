@@ -59,7 +59,6 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun MasterMyServicesScreen(
     navigateToCreateCategory: () -> Unit,
-    navigateToChangeCategory: () -> Unit,
     navController: NavHostController,
     viewModel: MainViewModel
 ) {
@@ -90,7 +89,6 @@ fun MasterMyServicesScreen(
             MasterMyServices(
                 innerPadding,
                 navigateToCreateCategory,
-                navigateToChangeCategory,
                 navController,
                 viewModel
             )
@@ -103,7 +101,6 @@ fun MasterMyServicesScreen(
 fun MasterMyServices(
     innerPadding: PaddingValues,
     navigateToCreateCategory: () -> Unit,
-    navigateToChangeCategory: () -> Unit,
     navController: NavHostController,
     viewModel: MainViewModel
 ) {
@@ -137,12 +134,12 @@ fun MasterMyServices(
                     end = 16.dp
                 )
         ) {
-            if (!categories.isNullOrEmpty()) {
+            if (categories != null) {
                 if (categories.size <= 1) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .fillMaxHeight(0.23f)
+                            .fillMaxHeight(0.26f)
                     ) {
                         Button(onClick = navigateToCreateCategory, Modifier.weight(1f)) {
                             Text("Добавить категорию")

@@ -64,9 +64,6 @@ fun SetupMasterNavGraph(
                 navigateToCreateCategory = {
                     navHostController.navigate(ScreenRole.Master.CreateCategory.route)
                 },
-                navigateToChangeCategory = {
-                    navHostController.navigate(ScreenRole.Master.ChangeCategory.route)
-                },
                 navController = navHostController,
                 viewModel = mainViewModel
             )

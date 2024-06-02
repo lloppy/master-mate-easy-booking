@@ -2,6 +2,7 @@ package com.example.skills.data.roles
 
 import android.net.Uri
 import com.example.skills.data.entity.Address
+import java.io.File
 
 class User(
     val token: String,
@@ -22,7 +23,7 @@ class User(
     )
 
     class Master(
-        var profileImageId: String? = null,
+        var profileImage: File? = null,
         var images: List<Uri>? = null,
 
         var description: String? = null,

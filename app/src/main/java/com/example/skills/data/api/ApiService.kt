@@ -9,6 +9,7 @@ import com.example.skills.data.entity.Service
 import com.example.skills.data.entity.ServiceRequest
 import com.example.skills.data.roles.User
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -40,13 +41,12 @@ interface ApiService {
     @GET("api/users/me")
     suspend fun getUserByToken(@Header("Authorization") token: String): Response<User>
 
-    //TODO()
     @Multipart
     @POST("api/users/me/edit/profilePicture")
     suspend fun uploadProfilePicture(
         @Header("Authorization") token: String,
         @Part file: MultipartBody.Part
-    ): Response<String>
+    ): Response<ResponseBody>
 
     @POST("api/users/me/get/profilePicture")
     suspend fun getProfilePicture(@Header("Authorization") token: String): Response<String>

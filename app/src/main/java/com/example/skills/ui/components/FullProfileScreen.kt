@@ -1,7 +1,10 @@
 package com.example.skills.ui.components
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
+import android.provider.OpenableColumns
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -43,7 +46,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -54,9 +56,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.skills.data.entity.Address
+import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.tools.EmailState
 import com.example.skills.ui.components.tools.EmailStateSaver
+import java.io.File
+import java.io.FileOutputStream
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -109,7 +114,7 @@ private fun AddMasterAccountInfo(
 ) {
     val scrollState = rememberScrollState()
 
-    var email by remember { mutableStateOf(viewModel.currentUser!!.email) }
+    val email by remember { mutableStateOf(viewModel.currentUser!!.email) }
     var firstName by remember { mutableStateOf(viewModel.currentUser!!.firstName) }
     var secondName by remember { mutableStateOf(viewModel.currentUser!!.lastName) }
     var phone by remember { mutableStateOf(viewModel.currentUser!!.phone) }
@@ -140,7 +145,7 @@ private fun AddMasterAccountInfo(
         Text(text = "Добавьте фото профиля", fontSize = 16.sp, color = Color.Gray)
         Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField.plus(12.dp)))
 
-        Column (modifier = Modifier.padding(start = 8.dp, end = 8.dp)) {
+        Column(modifier = Modifier.padding(start = 8.dp, end = 8.dp)) {
             CustomOutlinedTextField(
                 value = firstName,
                 onValueChange = { firstName = it },
@@ -246,7 +251,14 @@ fun ProfilePicturePicker(viewModel: MainViewModel, context: Context) {
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         selectedImage = uri
-        selectedImage?.let { viewModel.uploadImage(context, it) }
+        selectedImage?.let { uriNonNull ->
+            val file = getFileFromUri(context, uriNonNull)
+            if (file != null) {
+                viewModel.uploadImage(file)
+            } else {
+                Log.e(MY_LOG, "File conversion failed")
+            }
+        }
     }
 
     Column {
@@ -278,4 +290,41 @@ fun ProfilePicturePicker(viewModel: MainViewModel, context: Context) {
             }
         }
     }
+}
+
+fun getFileFromUri(context: Context, uri: Uri): File? {
+    val file = File(context.cacheDir, getFileName(context, uri))
+    try {
+        val inputStream = context.contentResolver.openInputStream(uri)
+        val outputStream = FileOutputStream(file)
+        inputStream?.use {
+            outputStream.use {
+                inputStream.copyTo(outputStream)
+            }
+        }
+    } catch (e: Exception) {
+        Log.e(MY_LOG, "Exception in getFileFromUri: ${e.message}")
+        return null
+    }
+    return file
+}
+
+@SuppressLint("Range")
+fun getFileName(context: Context, uri: Uri): String {
+    var result: String? = null
+    if (uri.scheme == "content") {
+        context.contentResolver.query(uri, null, null, null, null)?.use {
+            if (it.moveToFirst()) {
+                result = it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+            }
+        }
+    }
+    if (result == null) {
+        result = uri.path
+        val cut = result?.lastIndexOf('/')
+        if (cut != null && cut != -1) {
+            result = result?.substring(cut + 1)
+        }
+    }
+    return result!!
 }

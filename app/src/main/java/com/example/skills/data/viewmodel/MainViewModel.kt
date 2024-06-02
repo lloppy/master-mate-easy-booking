@@ -30,13 +30,20 @@ import com.example.skills.data.roles.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.ResponseBody
 import retrofit2.Response
+import java.io.BufferedReader
+import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
+import java.io.InputStreamReader
 import java.net.SocketTimeoutException
+import java.util.zip.GZIPInputStream
 import kotlin.random.Random
 
 const val MY_LOG = "MY_LOG"
@@ -221,23 +228,18 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
-    fun uploadImage(context: Context, uri: Uri) {
-        val stringPath = getRealPathFromURI(uri, context)
-        if (stringPath == null) {
-            Log.e(MY_LOG, "String path is null")
-            return
-        }
-        val file = File(stringPath)
-        Log.i(MY_LOG, "File " + file.absolutePath)
-
-        val requestFile = RequestBody.create(MultipartBody.FORM, file);
-        val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
+    fun uploadImage(file: File) {
+        val requestBody = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val multipartBody = MultipartBody.Part.createFormData("file", file.name, requestBody)
 
         viewModelScope.launch {
             try {
-                val response = apiService.uploadProfilePicture("Bearer $_userToken", body)
+                val response = apiService.uploadProfilePicture(
+                    token = "Bearer $_userToken",
+                    file = multipartBody
+                )
                 if (response.isSuccessful) {
-                    currentUser?.master?.profileImageId = response.body() //TODO()
+                    currentUser?.master?.profileImage = file
                     Log.d(MY_LOG, "Upload image success")
                 } else {
                     Log.e(MY_LOG, "Upload image fail: ${response.errorBody()}")
@@ -246,41 +248,6 @@ class MainViewModel(context: Context) : ViewModel() {
                 Log.e(MY_LOG, "Exception. Upload image fail: ${e.message}")
             }
         }
-    }
-
-    fun getRealPathFromURI(uri: Uri, context: Context): String? {
-        val returnCursor = context.contentResolver.query(uri, null, null, null, null)
-        val nameIndex = returnCursor!!.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-        val sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE)
-        returnCursor.moveToFirst()
-        val name = returnCursor.getString(nameIndex)
-        val size = returnCursor.getLong(sizeIndex).toString()
-        val file = File(context.filesDir, name)
-        try {
-            val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
-            val outputStream = FileOutputStream(file)
-            var read = 0
-            val maxBufferSize = 1 * 1024 * 1024
-            val bytesAvailable: Int = inputStream?.available() ?: 0
-            //int bufferSize = 1024;
-            val bufferSize = Math.min(bytesAvailable, maxBufferSize)
-            val buffers = ByteArray(bufferSize)
-            while (inputStream?.read(buffers).also {
-                    if (it != null) {
-                        read = it
-                    }
-                } != -1) {
-                outputStream.write(buffers, 0, read)
-            }
-            Log.e("File Size", "Size " + file.length())
-            inputStream?.close()
-            outputStream.close()
-            Log.e("File Path", "Path " + file.path)
-
-        } catch (e: java.lang.Exception) {
-            Log.e("Exception", e.message!!)
-        }
-        return file.path
     }
 
     fun addCategory(categoryName: String, onCategoryAddComplete: (Boolean) -> Unit) {
@@ -515,22 +482,6 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
-    fun getProfilePicture() {
-        viewModelScope.launch {
-            try {
-                val response = apiService.getProfilePicture(token = "Bearer $_userToken")
-                if (response.isSuccessful) {
-                    currentUser!!.master!!.profileImageId = response.body()
-                } else {
-                    Log.e(MY_LOG, "Get image fail, response is not Successful")
-                }
-            } catch (e: Exception) {
-                Log.e(MY_LOG, "Exception. Get image fail: ${e.message}")
-            }
-        }
-    }
-
-
     fun getCategoryByName(selectedCategoryName: String?): Category? {
         try {
             return categoriesLiveDataMaster.value?.first { it.name == selectedCategoryName }
@@ -679,5 +630,24 @@ class MainViewModel(context: Context) : ViewModel() {
             returnCursor.close()
         }
         return name
+    }
+
+    private fun decodeGzipResponse(encodedResponse: ResponseBody): String {
+        val stringBuilder = StringBuilder()
+        val bais = ByteArrayInputStream(encodedResponse.bytes())
+        val gzis = GZIPInputStream(bais)
+        val reader = InputStreamReader(gzis)
+        val bufferedReader = BufferedReader(reader)
+
+        var line: String?
+        while (bufferedReader.readLine().also { line = it } != null) {
+            stringBuilder.append(line)
+        }
+
+        bufferedReader.close()
+        reader.close()
+        gzis.close()
+
+        return stringBuilder.toString()
     }
 }
