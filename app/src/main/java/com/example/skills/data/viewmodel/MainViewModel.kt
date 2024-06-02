@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.Response
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -151,7 +152,6 @@ class MainViewModel(context: Context) : ViewModel() {
                 if (route == "client" && currentUser?.client != null
                     || route == "master" && currentUser?.master != null
                 ) {
-
                     if (response.isSuccessful && response.body()?.token != null) {
                         _userToken = response.body()!!.token
                         saveTokenToPreferences(_userToken!!)
@@ -411,6 +411,20 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
+    fun getServiceByName(serviceName: String?): Service? {
+        if (serviceName != null) {
+            Log.d(MY_LOG, "currentService name is $serviceName")
+            servicesLiveDataMaster.value?.forEach {
+                Log.d(MY_LOG, "servicesLiveDataMaster ${it.name}")
+            }
+
+            return servicesLiveDataMaster.value?.firstOrNull {
+                it.name.capitalize() == serviceName.capitalize()
+            }
+        }
+        return null
+    }
+
     fun deleteService(serviceId: Int, onServiceRemoveComplete: (Boolean) -> Unit) {
         viewModelScope.launch {
             _isLoading.emit(true)
@@ -516,6 +530,46 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
+
+    fun getCategoryByName(selectedCategoryName: String?): Category? {
+        try {
+            return categoriesLiveDataMaster.value?.first { it.name == selectedCategoryName }
+        } catch (_: Exception) {}
+        return null
+    }
+
+    fun getService(serviceId: Int): Service {
+        val service = servicesLiveDataMaster.value?.first { it.id == serviceId }
+
+        if (service == null) {
+            return Service(
+                Random.nextInt(),
+                "",
+                "",
+                0,
+                Duration(0, 0),
+                Category(Random.nextInt(), "", "")
+            )
+        } else {
+            return service
+        }
+    }
+
+    fun createSchedule(scheduleCreateRequest: ScheduleCreateRequest) {
+        viewModelScope.launch {
+            try {
+                val response =
+                    apiService.createSchedule("Bearer $_userToken", scheduleCreateRequest)
+                if (response.isSuccessful) {
+                    Log.d(MY_LOG, "Schedule created successfully")
+                } else {
+                    Log.e(MY_LOG, "Schedule create fail: " + response.errorBody())
+                }
+            } catch (_: Exception) {
+            }
+        }
+    }
+
     fun logout() {
         Log.d(MY_LOG, "Logging out user")
         preferences.edit().remove("token").apply()
@@ -527,6 +581,8 @@ class MainViewModel(context: Context) : ViewModel() {
         userIsAuthenticated.value = false
         Network.updateToken(null)
     }
+
+
 
     // ---------------- PRIVATE FUN ------------------------------------------------
     private fun loadCurrentUser(token: String) {
@@ -613,45 +669,6 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
-    fun getCategoryByName(selectedCategoryName: String?): Category? {
-        try {
-            return categoriesLiveDataMaster.value?.first { it.name == selectedCategoryName }
-        } catch (e: Exception) {}
-        return null
-    }
-
-    fun getService(serviceId: Int): Service {
-        val service = servicesLiveDataMaster.value?.first { it.id == serviceId }
-
-        if (service == null) {
-            return Service(
-                Random.nextInt(),
-                "",
-                "",
-                0,
-                Duration(0, 0),
-                Category(Random.nextInt(), "", "")
-            )
-        } else {
-            return service
-        }
-    }
-
-    fun createSchedule(scheduleCreateRequest: ScheduleCreateRequest) {
-        viewModelScope.launch {
-            try {
-                val response =
-                    apiService.createSchedule("Bearer $_userToken", scheduleCreateRequest)
-                if (response.isSuccessful) {
-                    Log.d(MY_LOG, "Schedule created successfully")
-                } else {
-                    Log.e(MY_LOG, "Schedule create fail: " + response.errorBody())
-                }
-            } catch (_: Exception) {
-            }
-        }
-    }
-
     private fun ContentResolver.getFileName(fileUri: Uri): String {
         var name = ""
         val returnCursor = this.query(fileUri, null, null, null, null)
@@ -662,19 +679,5 @@ class MainViewModel(context: Context) : ViewModel() {
             returnCursor.close()
         }
         return name
-    }
-
-    fun getServiceByName(serviceName: String?): Service? {
-        if (serviceName != null) {
-            Log.d(MY_LOG, "currentService name is $serviceName")
-            servicesLiveDataMaster.value?.forEach {
-                Log.d(MY_LOG, "servicesLiveDataMaster ${it.name}")
-            }
-
-            return servicesLiveDataMaster.value?.firstOrNull {
-                it.name.capitalize() == serviceName.capitalize()
-            }
-        }
-        return null
     }
 }
