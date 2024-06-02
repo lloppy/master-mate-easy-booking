@@ -13,7 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -82,7 +82,7 @@ fun EditProfileScreen(
                     Row {
                         IconButton(onClick = { navController.popBackStack() }) {
                             Icon(
-                                imageVector = Icons.Filled.ArrowBack,
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 tint = Color.Black,
                                 contentDescription = "Localized description"
                             )
@@ -109,18 +109,19 @@ private fun AddMasterAccountInfo(
     viewModel: MainViewModel
 ) {
     val scrollState = rememberScrollState()
+    val master = viewModel.currentUser!!
 
-    var email by remember { mutableStateOf(viewModel.currentUser!!.email) }
-    var firstName by remember { mutableStateOf(viewModel.currentUser!!.firstName) }
-    var secondName by remember { mutableStateOf(viewModel.currentUser!!.lastName) }
-    var phone by remember { mutableStateOf(viewModel.currentUser!!.phone) }
+    val email by remember { mutableStateOf(master.email) }
+    var firstName by remember { mutableStateOf(master.firstName) }
+    var secondName by remember { mutableStateOf(master.lastName) }
+    var phone by remember { mutableStateOf(master.phone) }
 
     val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
         mutableStateOf(EmailState(email))
     }
-    var profileDescription by remember { mutableStateOf("") }
-    var address by remember { mutableStateOf("") }
-    var link by remember { mutableStateOf("") }
+    var profileDescription by remember { mutableStateOf(checkAndInsert(master.master?.description)) }
+    var address by remember { mutableStateOf(checkAndInsert(master.master?.address.toString())) }
+    var link by remember { mutableStateOf(checkAndInsert(master.master?.messenger)) }
 
     Column(
         modifier = Modifier
@@ -238,12 +239,11 @@ private fun AddMasterAccountInfo(
                             ),
                             description = profileDescription,
                             address = Address(city = address),
-                            linkCode = link
+                            linkCode = link // it`s messenger
                         )
                     ) { successful ->
                         if (successful) {
                             navigateToMain.invoke()
-                            //navController.popBackStack()
                         }
                     }
                 },
@@ -251,5 +251,13 @@ private fun AddMasterAccountInfo(
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+private fun checkAndInsert(text: String?): String {
+    return if (text.isNullOrEmpty()) {
+        ""
+    } else {
+        text
     }
 }
