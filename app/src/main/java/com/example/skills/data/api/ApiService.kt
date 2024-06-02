@@ -48,8 +48,8 @@ interface ApiService {
         @Part file: MultipartBody.Part
     ): Response<ResponseBody>
 
-    @POST("api/users/me/get/profilePicture")
-    suspend fun getProfilePicture(@Header("Authorization") token: String): Response<String>
+    @GET("api/users/me/get/profilePicture")
+    suspend fun getProfilePicture(@Header("Authorization") token: String): Response<ResponseBody>
 
     @POST("api/masters/me/edit")
     suspend fun editMasterProfile(

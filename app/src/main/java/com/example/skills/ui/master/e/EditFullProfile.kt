@@ -1,5 +1,6 @@
 package com.example.skills.ui.master.e
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -97,7 +98,7 @@ fun EditProfileScreen(
         if (isLoading) {
             LoadingScreen()
         } else {
-            AddMasterAccountInfo(innerPadding, navigateToMain, viewModel)
+            AddMasterAccountInfo(innerPadding, navigateToMain, viewModel, LocalContext.current)
         }
     }
 }
@@ -106,7 +107,8 @@ fun EditProfileScreen(
 private fun AddMasterAccountInfo(
     innerPadding: PaddingValues,
     navigateToMain: () -> Unit,
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    context: Context
 ) {
     val scrollState = rememberScrollState()
     val master = viewModel.currentUser!!
@@ -240,7 +242,8 @@ private fun AddMasterAccountInfo(
                             description = profileDescription,
                             address = Address(city = address),
                             linkCode = link // it`s messenger
-                        )
+                        ),
+                        context = context
                     ) { successful ->
                         if (successful) {
                             navigateToMain.invoke()

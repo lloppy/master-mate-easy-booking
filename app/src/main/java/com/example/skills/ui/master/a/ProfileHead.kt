@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import com.example.skills.R
 import com.example.skills.data.roles.User
 import com.example.skills.data.viewmodel.MainViewModel
@@ -47,15 +48,17 @@ fun ProfileHead(user: User) {
     var expanded by remember { mutableStateOf(false) }
 
     val imageFile = user.master?.profileImage
-    val painter = if (imageFile != null) {
+    val painter = if (imageFile != null && imageFile.exists()) {
         rememberAsyncImagePainter(
-            model = imageFile,
-            placeholder = painterResource(id = R.drawable.ic_bin),
-            error = painterResource(id = R.drawable.logo)
+            ImageRequest.Builder(LocalContext.current).data(data = imageFile).apply(block = fun ImageRequest.Builder.() {
+                placeholder(R.drawable.ic_bin)
+                error(R.drawable.logo)
+            }).build()
         )
     } else {
         painterResource(id = R.drawable.master)
     }
+
 
     Column(
         modifier = Modifier

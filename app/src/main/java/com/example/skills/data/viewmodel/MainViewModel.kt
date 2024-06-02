@@ -3,12 +3,15 @@ package com.example.skills.data.viewmodel
 import android.content.ContentResolver
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -78,7 +81,7 @@ class MainViewModel(context: Context) : ViewModel() {
             _userToken?.let {
                 Network.updateToken(it)
                 userIsAuthenticated.value = true
-                loadCurrentUser(it)
+                loadCurrentUser(it, context)
             }
         } else {
             Log.d(MY_LOG, "Gg, it`s old deprecated session 💩💩")
@@ -348,6 +351,7 @@ class MainViewModel(context: Context) : ViewModel() {
 
     fun editMasterProfile(
         newMasterInfo: EditMasterRequest,
+        context: Context,
         onProfileEditComplete: (Boolean) -> Unit
     ) {
         viewModelScope.launch {
@@ -358,7 +362,7 @@ class MainViewModel(context: Context) : ViewModel() {
                     val body = response.body()
 
                     if (body != null) {
-                        loadCurrentUser(_userToken!!)
+                        loadCurrentUser(_userToken!!, context)
 
                         Log.i(MY_LOG, "Master profile edit successful")
                         onProfileEditComplete(true)
@@ -536,7 +540,7 @@ class MainViewModel(context: Context) : ViewModel() {
 
 
     // ---------------- PRIVATE FUN ------------------------------------------------
-    private fun loadCurrentUser(token: String) {
+    private fun loadCurrentUser(token: String, context: Context) {
         viewModelScope.launch {
             Log.d(MY_LOG, "Attempting to load user by token")
             val response = apiService.getUserByToken("Bearer $token")
@@ -548,6 +552,7 @@ class MainViewModel(context: Context) : ViewModel() {
                 try {
                     loadMasterServices()
                     loadMasterCategories()
+                    loadMasterImage(context)
                 } catch (e: Exception) {
                     Log.e(
                         MY_LOG,
@@ -584,18 +589,6 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
-    private fun getFileName(context: Context, uri: Uri): String {
-        var name = ""
-        val returnCursor = context.contentResolver.query(uri, null, null, null, null)
-        if (returnCursor != null) {
-            val nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-            returnCursor.moveToFirst()
-            name = returnCursor.getString(nameIndex)
-            returnCursor.close()
-        }
-        return name
-    }
-
     private suspend fun loadMasterServices() {
         val response = apiService.getMasterServicesByToken("Bearer $_userToken")
         if (response.isSuccessful) {
@@ -620,34 +613,34 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
-    private fun ContentResolver.getFileName(fileUri: Uri): String {
-        var name = ""
-        val returnCursor = this.query(fileUri, null, null, null, null)
-        if (returnCursor != null) {
-            val nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-            returnCursor.moveToFirst()
-            name = returnCursor.getString(nameIndex)
-            returnCursor.close()
+    private suspend fun loadMasterImage(context: Context) {
+        val response = apiService.getProfilePicture("Bearer $_userToken")
+        if (response.isSuccessful) {
+            response.body()?.let { responseBody ->
+                val bitmap = BitmapFactory.decodeStream(responseBody.byteStream())
+                val file = saveBitmapToFile(bitmap, context)
+                file?.let {
+                    currentUser?.master?.profileImage = it
+                }
+            }
+            Log.d(MY_LOG, "Success to loadMasterImage")
+
+        } else {
+            Log.d(MY_LOG, "Failed to loadMasterImage")
         }
-        return name
     }
 
-    private fun decodeGzipResponse(encodedResponse: ResponseBody): String {
-        val stringBuilder = StringBuilder()
-        val bais = ByteArrayInputStream(encodedResponse.bytes())
-        val gzis = GZIPInputStream(bais)
-        val reader = InputStreamReader(gzis)
-        val bufferedReader = BufferedReader(reader)
-
-        var line: String?
-        while (bufferedReader.readLine().also { line = it } != null) {
-            stringBuilder.append(line)
+    private fun saveBitmapToFile(bitmap: Bitmap, context: Context): File? {
+        val file = File(context.cacheDir, "profile_picture.png")
+        try {
+            val outputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            outputStream.flush()
+            outputStream.close()
+            return file
+        } catch (e: Exception) {
+            Log.e(MY_LOG, "Failed to save bitmap to file: ${e.message}")
+            return null
         }
-
-        bufferedReader.close()
-        reader.close()
-        gzis.close()
-
-        return stringBuilder.toString()
     }
 }
