@@ -18,7 +18,7 @@
 
 
 
-### Description
+## Description
 **MasterMate** is a service for the self-employed (hairdressers, tutors, etc.), who take clients at home, enabling them to schedule appointments and manage these appointments efficiently.
 
 Take a hairdresser, for example. A specialist keeps track of client appointments in a paper diary. After each haircut or by phone, through messengers, clients can schedule their next visit to the master. In this scenario, the client must remember their schedule; there is a risk that the client will forget the appointment and not show up. Also, if the master needs to cancel appointments, they have to call or send messages to everyone and rearrange.
@@ -28,7 +28,7 @@ The goal is to automate the appointment booking process with a web service integ
 
 
 
-### Features
+## Features
 
 - Client booking using QR code
 - Master's account with a description of services on a personal page.
