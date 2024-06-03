@@ -8,7 +8,6 @@
 1. ####  Launch online, without install with [Appetize service](https://appetize.io/app/zum4pjobuilzfqsf7degyduijm?device=pixel7&osVersion=13.0)
 
 2. ####  APK install
-To install the app, follow the steps below:
    - Open Google drive at [Google drive](https://drive.google.com/drive/u/0/folders/10UHVCAwOTWVzNMxHMmq8H1EpR8hKntv-)
    - Download the "MasterMate" file.
    - Click "Install".
