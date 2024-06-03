@@ -101,19 +101,8 @@ interface ApiService {
         @Path("id") id: Int
     ): Response<ResponseBody>
 
-    @Multipart
-    @POST("/api/masters/me/services/{service_id}/edit/image")
-    suspend fun addServiceImage(
-        @Header("Authorization") token: String,
-        @Path("service_id") serviceId: Int,
-        @Part file: MultipartBody.Part
-    ): Response<String>
-
     @GET("/api/masters/{id}/services")
     suspend fun getMasterServicesByMasterId(@Path("id") id: Int): Response<List<Service>>
-
-    @GET("/api/masters/services/{id}/image")
-    suspend fun getServiceImage(@Path("id") id: Int): Response<String>
 
     @GET("/api/masters/me/services")
     suspend fun getMasterServicesByToken(@Header("Authorization") token: String): Response<List<Service>> // было MasterServices

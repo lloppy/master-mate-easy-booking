@@ -48,11 +48,10 @@ fun RoleScreen(
         }
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .padding(start = 8.dp, end = 8.dp, bottom = 6.dp),
+                .fillMaxSize()
+                .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceAround
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
                 text = "Добро пожаловать!",
@@ -61,7 +60,7 @@ fun RoleScreen(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(start = 8.dp, end = 8.dp)
             )
-            Spacer(modifier = Modifier.padding(8.dp))
+            Spacer(modifier = Modifier.padding(1.dp))
             Text(
                 text = "Как мастер, создавайте своё идеальное расписание, предлагайте услуги и управляйте записями клиентов. Как клиет, записывайтесь на услуги к разным специалистам и управляйте своими записями. Легко синхронизируйте свои данные и следите за своим расписанием в удобном Google Календаре.",
                 fontSize = 14.sp,
@@ -71,7 +70,7 @@ fun RoleScreen(
                 lineHeight = 22.sp,
                 modifier = Modifier.padding(start = 8.dp, end = 8.dp)
             )
-            Spacer(modifier = Modifier.padding(16.dp))
+            Spacer(modifier = Modifier.padding(2.dp))
 
             Column {
                 CustomButton(
@@ -84,7 +83,6 @@ fun RoleScreen(
                     "Я мастер",
                     color = Color.Transparent
                 )
-                Spacer(modifier = Modifier.padding(6.dp))
             }
         }
     }
