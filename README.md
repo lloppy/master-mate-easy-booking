@@ -1,14 +1,30 @@
-# MasterMate [Google drive](https://drive.google.com/drive/folders/1u6M8L59bWF_lmf-P9Ckc-K3p9vyZkTzm?usp=sharing)
-## Launch online, without install [Appetize link](https://appetize.io/app/gntuq6hkyyiubeb3ps2d4qvt34?device=pixel7&osVersion=13.0)
-Attention: The application uses two languages. The language of the application is set automatically, make sure that your device uses the language you need
+# MasterMate 
+
+
+
+## Installation
+
+
+#### Launch online, without install [Appetize link](https://appetize.io/app/zum4pjobuilzfqsf7degyduijm?device=pixel7&osVersion=13.0)
+
+#### APK install
+To install the app, follow the steps below:
+
+1. Open Google drive at [Google drive](https://drive.google.com/drive/u/0/folders/10UHVCAwOTWVzNMxHMmq8H1EpR8hKntv-)
+2. Download the "MasterMate" file.
+3. Click "Install".
+
+
 
 
 ## Description
-
-### **MasterMate** is a service for the self-employed (hairdressers, tutors, etc.), who take clients at home, enabling them to schedule appointments and manage these appointments efficiently.
+**MasterMate** is a service for the self-employed (hairdressers, tutors, etc.), who take clients at home, enabling them to schedule appointments and manage these appointments efficiently.
 
 Take a hairdresser, for example. A specialist keeps track of client appointments in a paper diary. After each haircut or by phone, through messengers, clients can schedule their next visit to the master. In this scenario, the client must remember their schedule; there is a risk that the client will forget the appointment and not show up. Also, if the master needs to cancel appointments, they have to call or send messages to everyone and rearrange.
 The goal is to automate the appointment booking process with a web service integrated with Google Calendar, mailing services, and Telegram, easing the master's management of appointments for their services.
+
+
+
 
 
 ## Features
@@ -21,13 +37,7 @@ The goal is to automate the appointment booking process with a web service integ
 - The ability for the master to cancel all appointments for specific days. Notifications to clients to reschedule at a different time.
 - Additional waiting list feature: clients can join a waiting list if their preferred time is taken. If an earlier booked client cancels their appointment, the waiting list client will be notified that the time has become available and can confirm or decline their booking.
 
-## Installation
 
-To install the app, follow the steps below:
-
-1. Open Google drive at [Google drive](https://drive.google.com/drive/folders/1u6M8L59bWF_lmf-P9Ckc-K3p9vyZkTzm?usp=sharing)
-2. Download the "MasterMate" file.
-3. Click "Install".
 
 
 ## Support
