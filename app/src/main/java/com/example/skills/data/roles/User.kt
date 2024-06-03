@@ -24,7 +24,7 @@ class User(
 
     class Master(
         var profileImage: File? = null,
-        var images: List<Uri>? = null,
+        var images: MutableList<File>? = null,
 
         var description: String? = null,
         var linkCode: String? = null,

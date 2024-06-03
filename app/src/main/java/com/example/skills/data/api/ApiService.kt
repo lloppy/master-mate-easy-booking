@@ -48,8 +48,24 @@ interface ApiService {
         @Part file: MultipartBody.Part
     ): Response<ResponseBody>
 
+    @Multipart
+    @POST("/api/masters/me/upload_image")
+    suspend fun uploadMastersPicture(
+        @Header("Authorization") token: String,
+        @Part picture: MultipartBody.Part
+    ): Response<ResponseBody>
+
     @GET("api/users/me/get/profilePicture")
     suspend fun getProfilePicture(@Header("Authorization") token: String): Response<ResponseBody>
+
+    @GET("/api/masters/me/additional_images")
+    suspend fun getMastersWorksId(@Header("Authorization") token: String): Response<List<Int>>
+
+    @GET("/api/masters/additional_images/{id}")
+    suspend fun getMastersWorkById(
+        @Path("id") id: Int
+    ): Response<ResponseBody>
+
 
     @POST("api/masters/me/edit")
     suspend fun editMasterProfile(

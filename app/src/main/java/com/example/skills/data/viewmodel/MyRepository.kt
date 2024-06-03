@@ -8,6 +8,7 @@ import com.example.skills.data.entity.RecordItem
 import com.example.skills.data.entity.Service
 import com.example.skills.data.entity.RecordStatus
 import com.example.skills.data.roles.User
+import java.io.File
 import java.time.LocalDateTime
 
 object MyRepository {
@@ -17,13 +18,6 @@ object MyRepository {
 //        Category("Категория 3", description = "")
 //    )
 
-    private val imageUrls = listOf(
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-        Uri.parse("https://img.freepik.com/free-vector/aesthetic-background-vector-dried-flower-with-shadow-glitter-design_53876-157555.jpg"),
-    )
 
 
     private val listMasters = listOf(
@@ -38,8 +32,7 @@ object MyRepository {
             master = User.Master(
                 description = "Ведущий мастер в области макияжа и стилистики с более чем десятилетним опытом. Сотрудничал с известными брендами, работала на крупнейших модных показах и обучала начинающих визажистов.",
                 messenger = "https://t.me/lloppy",
-                address = Address("Россия", "Москва", "Маяковская", "10", "2"),
-                images = imageUrls
+                address = Address("Россия", "Москва", "Маяковская", "10", "2")
             )
         )
     )

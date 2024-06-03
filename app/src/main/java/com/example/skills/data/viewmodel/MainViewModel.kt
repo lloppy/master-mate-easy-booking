@@ -30,6 +30,8 @@ import com.example.skills.data.entity.Service
 import com.example.skills.data.entity.ServiceRequest
 import com.example.skills.data.roles.Role
 import com.example.skills.data.roles.User
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -45,7 +47,9 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
+import java.net.URL
 import java.util.zip.GZIPInputStream
 import kotlin.random.Random
 
@@ -253,6 +257,42 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
+    fun uploadWorkPicture(file: File, context: Context) {
+        val requestBody = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val multipartBody = MultipartBody.Part.createFormData("file", file.name, requestBody)
+
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            try {
+                val response = apiService.uploadMastersPicture(
+                    token = "Bearer $_userToken",
+                    picture = multipartBody
+                )
+                if (response.isSuccessful) {
+                    currentUser?.master?.images?.add(file)
+                    Log.d(MY_LOG, "Upload image success: ${response.body()}")
+                    loadMasterWorks(context)
+                } else {
+                    Log.e(MY_LOG, "Upload image fail: ${response.code()} - ${response.message()}")
+                    printErrorBody(response)
+
+                }
+            } catch (e: Exception) {
+                Log.e(MY_LOG, "Exception. Upload image fail: ${e.message}")
+            }
+            _isLoading.emit(false)
+        }
+    }
+    private fun printErrorBody(response: Response<*>) {
+        try {
+            response.errorBody()?.let { errorBody ->
+                val content = errorBody.string()
+                Log.e(MY_LOG, "Error Body: $content")
+            }
+        } catch (e: Exception) {
+            Log.e(MY_LOG, "Failed to read error body: ${e.message}")
+        }
+    }
     fun addCategory(categoryName: String, onCategoryAddComplete: (Boolean) -> Unit) {
         viewModelScope.launch {
             _isLoading.emit(true)
@@ -553,6 +593,7 @@ class MainViewModel(context: Context) : ViewModel() {
                     loadMasterServices()
                     loadMasterCategories()
                     loadMasterImage(context)
+                    loadMasterWorks(context)
                 } catch (e: Exception) {
                     Log.e(
                         MY_LOG,
@@ -601,6 +642,67 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
+    private suspend fun saveResponseBodyToDisk(responseBody: ResponseBody, context: Context, fileName: String): File? {
+        return try {
+            val file = File(context.cacheDir, fileName)
+            var inputStream: InputStream? = null
+            var outputStream: FileOutputStream? = null
+
+            try {
+                inputStream = responseBody.byteStream()
+                outputStream = FileOutputStream(file)
+                val buffer = ByteArray(4096)
+                var read: Int
+
+                while (inputStream.read(buffer).also { read = it } != -1) {
+                    outputStream.write(buffer, 0, read)
+                }
+
+                outputStream.flush()
+                file
+            } catch (e: Exception) {
+                Log.e(MY_LOG, "Failed to save file: ${e.message}")
+                null
+            } finally {
+                inputStream?.close()
+                outputStream?.close()
+            }
+        } catch (e: Exception) {
+            Log.e(MY_LOG, "Error writing file to disk: ${e.message}")
+            null
+        }
+    }
+
+    private suspend fun loadMasterWorks(context: Context) {
+        val response = apiService.getMastersWorksId("Bearer $_userToken")
+        if (response.isSuccessful) {
+            val imageIds = response.body()
+            imageIds?.let {
+                Log.d(MY_LOG, "Fetched images id: $it")
+                val imageFiles = mutableListOf<File>()
+
+                for (id in it) {
+                    val picResponse = apiService.getMastersWorkById(id)
+                    if (picResponse.isSuccessful) {
+                        picResponse.body()?.let { responseBody ->
+                            val fileName = "image_$id.jpeg" // Или другое расширение в зависимости от формата изображения
+                            val imageFile = saveResponseBodyToDisk(responseBody, context, fileName)
+                            imageFile?.let { file ->
+                                imageFiles.add(file)
+                            }
+                        }
+                    } else {
+                        Log.d(MY_LOG, "Failed to fetch image for id: $id")
+                    }
+                }
+
+                currentUser?.master?.images = imageFiles.toMutableList()
+            }
+        } else {
+            Log.d(MY_LOG, "Failed to loadMastersWorks")
+        }
+    }
+
     private suspend fun loadMasterCategories() {
         val response = apiService.getMasterCategoriesByToken("Bearer $_userToken")
         if (response.isSuccessful) {
@@ -641,6 +743,25 @@ class MainViewModel(context: Context) : ViewModel() {
         } catch (e: Exception) {
             Log.e(MY_LOG, "Failed to save bitmap to file: ${e.message}")
             return null
+        }
+    }
+
+    private fun getFileFromUrl(url: String, context: Context): File? {
+        return try {
+            val uri = Uri.parse(url)
+            val fileName = uri.lastPathSegment ?: return null
+            val tempFile = File(context.cacheDir, fileName)
+
+            val urlConnection = URL(url).openConnection() as HttpURLConnection
+            urlConnection.inputStream.use { input ->
+                FileOutputStream(tempFile).use { output ->
+                    input.copyTo(output)
+                }
+            }
+            tempFile
+        } catch (e: Exception) {
+            Log.e(MY_LOG, "Error downloading file: ${e.message}")
+            null
         }
     }
 }

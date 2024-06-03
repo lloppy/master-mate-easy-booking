@@ -15,10 +15,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import com.example.skills.R
+import java.io.File
 
 @Composable
-fun MasterGallery(images: List<Uri>) {
+fun MasterGallery(images: MutableList<File>) {
     LazyVerticalGrid(
         modifier = Modifier
             .fillMaxWidth()
@@ -28,7 +31,7 @@ fun MasterGallery(images: List<Uri>) {
         content = {
             items(images.size) { index ->
                 Image(
-                    painter = painterResource(id = R.drawable.nails), // rememberImagePainter(data = images[index]),
+                    painter = rememberAsyncImagePainter(model = images[index]),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier

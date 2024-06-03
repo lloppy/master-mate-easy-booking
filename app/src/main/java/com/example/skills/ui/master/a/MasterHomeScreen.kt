@@ -1,5 +1,9 @@
 package com.example.skills.ui.master.a
 
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,14 +21,23 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import com.example.skills.data.roles.User
+import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
+import com.example.skills.ui.components.getFileFromUri
+import com.example.skills.ui.components.tools.LoadingScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,8 +75,25 @@ fun MainMasterScreen(
                     }
                 },
                 navigationIcon = {
+                    var selectedImage by remember { mutableStateOf<Uri?>(null) }
+                    val context = LocalContext.current
+
+                    val imagePickerLauncher = rememberLauncherForActivityResult(
+                        contract = ActivityResultContracts.GetContent()
+                    ) { uri: Uri? ->
+                        selectedImage = uri
+
+                        selectedImage?.let { uriNonNull ->
+                            val file = getFileFromUri(context, uriNonNull)
+                            if (file != null) {
+                                viewModel.uploadWorkPicture(file, context)
+                            } else {
+                                Log.e(MY_LOG, "File conversion failed")
+                            }
+                        }
+                    }
                     IconButton(onClick = {
-                        //TODO add pictures in feed
+                        imagePickerLauncher.launch("image/*")
                     }) {
                         Icon(
                             imageVector = Icons.Outlined.Add,
@@ -74,10 +104,15 @@ fun MainMasterScreen(
             )
         },
     ) { innerPadding ->
-        MasterHomeScreen(
-            innerPadding,
-            master
-        )
+        val isLoading by viewModel.isLoading.collectAsState()
+        if (isLoading) {
+            LoadingScreen()
+        } else {
+            MasterHomeScreen(
+                innerPadding,
+                master
+            )
+        }
     }
 }
 
