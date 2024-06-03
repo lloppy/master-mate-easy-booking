@@ -156,7 +156,10 @@ interface ApiService {
     suspend fun changeSchedule(@Header("Authorization") token: String, @Body scheduleChangeRequest: ScheduleChangeRequest): Response<String>
 
     @POST("/api/masters/me/schedules")
-    suspend fun createSchedule(@Header("Authorization") token: String, @Body scheduleCreateRequest: ScheduleCreateRequest): Response<String>
+    suspend fun createSchedule(
+        @Header("Authorization") token: String,
+        @Body scheduleCreateRequest: ScheduleCreateRequest
+    ): Response<ResponseBody>
 
     @DELETE("/api/masters/me/schedules")
     suspend fun deleteSchedule(@Header("Authorization") token: String, @Body dates: List<String>): Response<String>

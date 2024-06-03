@@ -35,22 +35,18 @@ import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.components.CustomOutlinedTextField
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import java.util.Calendar
+import java.util.Locale
 
 
 @Composable
-fun SelectDateTime(viewModel: MainViewModel) {
+fun SelectDateTime(viewModel: MainViewModel, selection: DateSelection) {
     val scrollState = rememberScrollState()
 
     var intervals by remember { mutableStateOf(listOf<IntervalData>()) }
     var inEditMode by remember { mutableStateOf(true) }
-
-    var startTime by remember { mutableStateOf("") }
-    var endTime by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -65,7 +61,8 @@ fun SelectDateTime(viewModel: MainViewModel) {
                 initialStartTime = interval.from,
                 initialEndTime = interval.to,
                 isEditable = inEditMode,
-            )
+            ) { updatedInterval -> intervals = intervals.toMutableList().also { it[index] = updatedInterval } }
+
         }
 
         if (inEditMode) {
@@ -82,11 +79,19 @@ fun SelectDateTime(viewModel: MainViewModel) {
             CustomButton(
                 navigateTo = {
                     if (intervals.isNotEmpty()) {
-//                        val dates = getDatesBetween(intervals.first().from, intervals.last().to)
-//                        Log.i(MY_LOG, "dates: " + dates.iterator().next())
-//                        val timeSlots = dates.map { TimeSlot(from = startTime, to = endTime) }
-//                        val scheduleCreateRequest = ScheduleCreateRequest(dates = dates, timeSlots = timeSlots)
-//                        viewModel.createSchedule(scheduleCreateRequest)
+                        Log.d(
+                            MY_LOG,
+                            "selection: " + selection.startDate!! + " " + selection.endDate
+                        )
+                        val dates = getDatesBetween(selection.startDate, selection.endDate)
+                        val timeSlots = intervals.map { TimeSlot(from = it.from, to = it.to) }
+
+                        val scheduleRequest = ScheduleCreateRequest(
+                            dates = dates,
+                            timeSlots = timeSlots
+                            //listOf(TimeSlot(from = "14:30:00", to = "15:30:00"))
+                        )
+                        viewModel.createSchedule(scheduleRequest)
 
                         inEditMode = !inEditMode
                     }
@@ -114,26 +119,23 @@ fun SelectDateTime(viewModel: MainViewModel) {
     }
 }
 
-private fun getDatesBetween(from: String, to: String): List<String> {
-    Log.i(MY_LOG, "getDatesBetween: $from $to")
+private fun getDatesBetween(from: LocalDate?, to: LocalDate?): List<String> {
+    val format = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault())
 
-    val format = SimpleDateFormat("yyyy-MM-dd")
-    val startDates = format.parse(from)
-    val endDates = format.parse(to)
-    val datesInRange = ArrayList<String>()
-    val calendar = Calendar.getInstance()
-    calendar.time = startDates
-
-    val endCalendar = Calendar.getInstance()
-    endCalendar.time = endDates
-
-    while (calendar.before(endCalendar)) {
-        val result = calendar.time
-        datesInRange.add(format.format(result))
-        calendar.add(Calendar.DATE, 1)
+    if (from == null) {
+        return listOf(to?.format(format).orEmpty())
     }
+    if (to == null) {
+        return listOf(from.format(format))
+    }
+    val dates = mutableListOf<String>()
 
-    return datesInRange
+    var currentDate = from
+    while (!currentDate!!.isAfter(to)) {
+        dates.add(currentDate.format(format))
+        currentDate = currentDate.plusDays(1)
+    }
+    return dates
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -142,6 +144,7 @@ fun Interval(
     initialStartTime: String,
     initialEndTime: String,
     isEditable: Boolean,
+    onIntervalChange: (IntervalData) -> Unit
 ) {
     var startTime by remember { mutableStateOf(initialStartTime) }
     var endTime by remember { mutableStateOf(initialEndTime) }
@@ -149,6 +152,10 @@ fun Interval(
     val timePickerState = rememberTimePickerState()
     var showTimePickerStart by remember { mutableStateOf(false) }
     var showTimePickerEnd by remember { mutableStateOf(false) }
+
+    LaunchedEffect(startTime, endTime) {
+        onIntervalChange(IntervalData(startTime, endTime))
+    }
 
     if (isEditable && showTimePickerStart) {
         TimePickerDialog(

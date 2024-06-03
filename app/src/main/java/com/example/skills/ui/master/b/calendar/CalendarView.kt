@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skills.data.viewmodel.MainViewModel
@@ -111,7 +110,7 @@ fun CalendarView(viewModel: MainViewModel) {
                     monthHeader = { DaysOfWeekHeader() },
                 )
                 if (selection.daysBetween != null || selection.startDate != null) {
-                    SelectDateTime(viewModel = viewModel)
+                    SelectDateTime(viewModel = viewModel, selection)
                 }
             }
         }

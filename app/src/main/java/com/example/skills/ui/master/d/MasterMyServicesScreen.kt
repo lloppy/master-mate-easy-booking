@@ -139,7 +139,7 @@ fun MasterMyServices(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .fillMaxHeight(0.26f)
+                            .fillMaxHeight(0.23f)
                     ) {
                         Button(onClick = navigateToCreateCategory, Modifier.weight(1f)) {
                             Text("Добавить категорию")
@@ -233,25 +233,27 @@ fun MasterMyServices(
             isCategoriesNull = false
         } catch (e: Exception) {}
 
-        if (!isCategoriesNull) {
-            Spacer(modifier = Modifier.height(12.dp))
-            CustomButton(
-                navigateTo = {
-                    try {
-                        val selectedCategoryName = selectedCategory
-                        Log.e(MY_LOG, "selectedCategoryName is $selectedCategoryName")
+        if (!isCategoriesNull ) {
+            if (categories!!.size > 1) {
+                Spacer(modifier = Modifier.height(12.dp))
+                CustomButton(
+                    navigateTo = {
+                        try {
+                            val selectedCategoryName = selectedCategory
+                            Log.e(MY_LOG, "selectedCategoryName is $selectedCategoryName")
 
-                        navController.navigate(
-                            ScreenRole.Master.CreateServiceCard.route.replace(
-                                "{selectedCategoryName}",
-                                selectedCategoryName
+                            navController.navigate(
+                                ScreenRole.Master.CreateServiceCard.route.replace(
+                                    "{selectedCategoryName}",
+                                    selectedCategoryName
+                                )
                             )
-                        )
-                    } catch (e: IllegalArgumentException) { // нужно блин выбрать категорию, а не тыкать в пустоту 😤😤
-                    }
-                },
-                buttonText = "Добавить услугу"
-            )
+                        } catch (e: IllegalArgumentException) { // нужно блин выбрать категорию, а не тыкать в пустоту 😤😤
+                        }
+                    },
+                    buttonText = "Добавить услугу"
+                )
+            }
         }
     }
 }

@@ -37,6 +37,18 @@ object ContinuousSelectionHelper {
             DateSelection(startDate = clickedDate, endDate = null)
         }
     }
+    fun getSelections(clickedDate: LocalDate, dateSelections: List<DateSelection>): MutableList<DateSelection> {
+        val newSelections = dateSelections.toMutableList()
+
+        if (newSelections.isEmpty() || newSelections.last().endDate != null) {
+            newSelections.add(DateSelection(startDate = clickedDate))
+        } else {
+            val lastSelection = newSelections.removeLast()
+            newSelections.add(lastSelection.copy(endDate = clickedDate))
+        }
+
+        return newSelections
+    }
 
     fun isInDateBetweenSelection(
         inDate: LocalDate,
