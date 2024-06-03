@@ -22,8 +22,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -50,6 +52,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -91,13 +94,12 @@ fun FullProfileScreen(
                     Row {
                         IconButton(onClick = { navController.popBackStack() }) {
                             Icon(
-                                imageVector = Icons.Filled.ArrowBack,
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 tint = Color.Black,
                                 contentDescription = "Localized description"
                             )
                         }
                     }
-
                 }
             )
         },
@@ -181,6 +183,9 @@ private fun AddMasterAccountInfo(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Next
+                ),
                 textStyle = MaterialTheme.typography.bodyMedium,
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedLabelColor = Color.Gray,
@@ -195,6 +200,9 @@ private fun AddMasterAccountInfo(
                 onValueChange = {
                     address = it
                 },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Next
+                ),
                 label = { Text(text = "Адрес") },
                 modifier = Modifier.fillMaxWidth(),
                 textStyle = MaterialTheme.typography.bodyMedium,
@@ -211,6 +219,9 @@ private fun AddMasterAccountInfo(
                 onValueChange = {
                     link = it
                 },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Next
+                ),
                 label = { Text(text = "Ссылка") },
                 modifier = Modifier.fillMaxWidth(),
                 textStyle = MaterialTheme.typography.bodyMedium,

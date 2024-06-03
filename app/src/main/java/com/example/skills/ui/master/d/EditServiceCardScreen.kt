@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -158,7 +159,10 @@ fun ContentEditServiceCard(
                             unfocusedLabelColor = Color.Gray,
                             unfocusedBorderColor = Color.Gray
                         ),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next,
+                            keyboardType = KeyboardType.Number
+                        ),
                         shape = RoundedCornerShape(16.dp)
                     )
                     Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
@@ -174,7 +178,10 @@ fun ContentEditServiceCard(
                             unfocusedLabelColor = Color.Gray,
                             unfocusedBorderColor = Color.Gray
                         ),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next,
+                            keyboardType = KeyboardType.Number
+                        ),
                         shape = RoundedCornerShape(16.dp)
                     )
                     Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
@@ -190,6 +197,9 @@ fun ContentEditServiceCard(
                         colors = OutlinedTextFieldDefaults.colors(
                             unfocusedLabelColor = Color.Gray,
                             unfocusedBorderColor = Color.Gray
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done,
                         ),
                         shape = RoundedCornerShape(16.dp)
                     )

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -37,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -122,7 +124,7 @@ private fun AddMasterAccountInfo(
         mutableStateOf(EmailState(email))
     }
     var profileDescription by remember { mutableStateOf(checkAndInsert(master.master?.description)) }
-    var address by remember { mutableStateOf(checkAndInsert(master.master?.address?.city.toString())) }
+    var address by remember { mutableStateOf(checkAndInsert(master.master?.address?.city)) }
     var link by remember { mutableStateOf(checkAndInsert(master.master?.linkCode)) }
 
     Column(
@@ -166,6 +168,9 @@ private fun AddMasterAccountInfo(
             modifier = Modifier.fillMaxWidth(),
             textStyle = MaterialTheme.typography.bodyMedium,
             singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Next
+            ),
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedLabelColor = Color.Gray,
                 unfocusedBorderColor = Color.Gray
@@ -179,6 +184,9 @@ private fun AddMasterAccountInfo(
             onValueChange = {
                 profileDescription = it
             },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Next
+            ),
             label = { Text(text = "Описание профиля") },
             modifier = Modifier
                 .fillMaxWidth()
@@ -197,6 +205,9 @@ private fun AddMasterAccountInfo(
             onValueChange = {
                 address = it
             },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Next
+            ),
             label = { Text(text = "Адрес") },
             modifier = Modifier.fillMaxWidth(),
             textStyle = MaterialTheme.typography.bodyMedium,
@@ -213,6 +224,9 @@ private fun AddMasterAccountInfo(
             onValueChange = {
                 link = it
             },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Next
+            ),
             label = { Text(text = "Ссылка") },
             modifier = Modifier.fillMaxWidth(),
             textStyle = MaterialTheme.typography.bodyMedium,
@@ -241,7 +255,7 @@ private fun AddMasterAccountInfo(
                             ),
                             description = profileDescription,
                             address = Address(city = address),
-                            linkCode = link // it`s messenger
+                            linkCode = link                         // it`s messenger
                         ),
                         context = context
                     ) { successful ->

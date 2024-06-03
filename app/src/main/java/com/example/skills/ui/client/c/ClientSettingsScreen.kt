@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -130,7 +131,10 @@ private fun EditClientAccountInfo(
                 value = birthday,
                 onValueChange = { birthday = it },
                 label = { Text(text = "Дата рождения (dd.MM.yyyy)") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Number
+                ),
                 modifier = Modifier.fillMaxWidth(),
                 textStyle = MaterialTheme.typography.bodyMedium,
                 singleLine = true,
@@ -148,6 +152,10 @@ private fun EditClientAccountInfo(
                 onValueChange = { phone = it },
                 label = { Text(text = "Номер телефона") },
                 modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Number
+                ),
                 textStyle = MaterialTheme.typography.bodyMedium,
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(

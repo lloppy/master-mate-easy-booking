@@ -26,8 +26,8 @@ object Network {
 
     val apiService: ApiService by lazy {
         Retrofit.Builder()
-            .baseUrl("http://localhost:8080/")
-            //.baseUrl("http://158.160.136.24:8080/")
+            //.baseUrl("http://localhost:8080/")
+            .baseUrl("http://158.160.136.24:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(provideClient())
             .build()

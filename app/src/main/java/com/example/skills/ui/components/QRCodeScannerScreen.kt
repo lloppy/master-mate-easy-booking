@@ -107,6 +107,7 @@ class QRCodeScannerScreen : ComponentActivity() {
                                         context = context
                                     ) { result ->
                                         code = result
+                                        Toast.makeText(context, "master id is ${result.substring(7)}", Toast.LENGTH_SHORT).show()
                                         //TODO  addMAsterFromQR(code)
                                     })
                                 try {
@@ -149,7 +150,7 @@ class QRCodeScannerScreen : ComponentActivity() {
                             shape = RoundedCornerShape(16.dp),
                             keyboardActions = KeyboardActions(onDone = {
                                 // сделать сохранения
-                                Toast.makeText(context, "Мастер добавлен", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, "Мастер добавлен, id is ${mastersCode.substring(7)}", Toast.LENGTH_LONG).show()
                             }),
                             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                         )

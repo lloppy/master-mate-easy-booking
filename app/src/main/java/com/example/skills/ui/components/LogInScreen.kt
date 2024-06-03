@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -81,7 +82,7 @@ fun LogInScreen(
                 ),
                 title = {
                     Text(
-                        "Вход " + routeLogIn.take(6), // master or client route
+                        "Вход", // + routeLogIn.take(6), // master or client route
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
@@ -93,13 +94,12 @@ fun LogInScreen(
                     Row {
                         IconButton(onClick = { navController.popBackStack() }) {
                             Icon(
-                                imageVector = Icons.Filled.ArrowBack,
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 tint = Color.Black,
                                 contentDescription = "Localized description"
                             )
                         }
                     }
-
                 }
             )
         },
@@ -113,7 +113,6 @@ fun LogInScreen(
                 navigateToMain,
                 mainViewModel
             )
-
             val isLoading by mainViewModel.isLoading.collectAsState()
             if (isLoading) {
                 LoadingScreen()
@@ -191,7 +190,8 @@ fun ContentLogIn(
                         Log.e(MY_LOG, "emailState.isValid && passwordState.isValid not valid")
                     }
                 },
-                "Войти"
+                enabled = if (passwordState.text.trim().isNotEmpty() && emailState.text.trim().isNotEmpty()) true else false,
+                buttonText = "Войти"
             )
             Spacer(modifier = Modifier.height(8.dp))
 

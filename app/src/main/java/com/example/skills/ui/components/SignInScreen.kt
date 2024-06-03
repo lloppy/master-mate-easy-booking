@@ -39,6 +39,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -166,7 +167,10 @@ fun ContentSingIn(
                         value = birthday,
                         onValueChange = { birthday = it },
                         label = { Text(text = "Дата рождения (dd.MM.yyyy)") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            imeAction = ImeAction.Next,
+                            keyboardType = KeyboardType.Number
+                        ),
                         modifier = Modifier.fillMaxWidth(),
                         textStyle = MaterialTheme.typography.bodyMedium,
                         singleLine = true,
@@ -188,6 +192,9 @@ fun ContentSingIn(
                     modifier = Modifier.fillMaxWidth(),
                     textStyle = MaterialTheme.typography.bodyMedium,
                     singleLine = true,
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Next
+                    ),
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedLabelColor = Color.Gray,
                         unfocusedBorderColor = Color.Gray
@@ -241,6 +248,7 @@ fun ContentSingIn(
                         Log.e(MY_LOG, "emailState.isValid && passwordState.isValid not valid")
                     }
                 },
+                enabled = if (firstName.isNotEmpty() && phone.isNotEmpty() && passwordState.text.trim().isNotEmpty() && emailState.text.trim().isNotEmpty() && passwordStateRepeat.text.trim().isNotEmpty() && (passwordStateRepeat.text == passwordState.text)) true else false,
                 buttonText = "Зарегистрироваться"
             )
         }

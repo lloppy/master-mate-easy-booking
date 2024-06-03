@@ -142,7 +142,6 @@ fun ContentForgotPassword(
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
         )
-
         CustomButton(
             {
                 val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
