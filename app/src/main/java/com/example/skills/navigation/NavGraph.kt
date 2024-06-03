@@ -1,5 +1,6 @@
 package com.example.skills.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -7,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
+import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.RoleScreen
 import com.example.skills.ui.client.MainClientLayout
@@ -229,6 +231,7 @@ fun SetupRoleNavGraph(navHostController: NavHostController, mainViewModel: MainV
     NavHost(navController = navHostController, startDestination = ScreenRole.RoleLayout.route) {
 
         composable(ScreenRole.RoleLayout.route) {
+            Log.d(MY_LOG, "master route is " + ScreenRole.Master.LogIn.route.toString())
             RoleScreen(
                 navigateToClientLogin = { navHostController.navigate(ScreenRole.Client.LogIn.route) },
                 navigateToMasterLogin = { navHostController.navigate(ScreenRole.Master.LogIn.route) }

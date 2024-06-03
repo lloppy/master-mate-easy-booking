@@ -1,14 +1,11 @@
 package com.example.skills.navigation.nav_bar.master
 
-import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.skills.data.entity.Category
-import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
-import com.example.skills.data.viewmodel.MyRepository
 import com.example.skills.ui.master.a.MainMasterScreen
 import com.example.skills.ui.master.b.CalendarScreen
 import com.example.skills.ui.master.c.MasterClientServicesScreen
@@ -46,7 +43,7 @@ fun SetupMasterNavGraph(
         composable(ScreenRole.Master.ShareProfile.route) {
             ShareProfileScreen(
                 navController = navHostController,
-                masterCode = MyRepository.getMaster().token // mainViewModel.currentUser!!.master!!.linkCode.toString()
+                viewModel = mainViewModel
             )
         }
 
@@ -83,8 +80,7 @@ fun SetupMasterNavGraph(
                     navHostController.navigate(ScreenRole.Master.Notifications.route)
                 },
                 exit = {
-                    // крашится, потому что другой роут, нужно потом полностью закрывать приложение
-                    navHostController.navigate(ScreenRole.Master.LogIn.route)
+                   //TODO()
                 }
             )
         }

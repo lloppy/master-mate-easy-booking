@@ -1,14 +1,10 @@
 package com.example.skills.data.viewmodel
 
-import android.net.Uri
 import com.example.skills.data.entity.Address
 import com.example.skills.data.roles.Role
-import com.example.skills.data.entity.Category
 import com.example.skills.data.entity.RecordItem
-import com.example.skills.data.entity.Service
 import com.example.skills.data.entity.RecordStatus
 import com.example.skills.data.roles.User
-import java.io.File
 import java.time.LocalDateTime
 
 object MyRepository {
@@ -22,6 +18,7 @@ object MyRepository {
 
     private val listMasters = listOf(
         User(
+            124,
             "123",
             "masterivan@gmail.com",
             "79503223232",
@@ -31,7 +28,7 @@ object MyRepository {
             Role.MASTER,
             master = User.Master(
                 description = "Ведущий мастер в области макияжа и стилистики с более чем десятилетним опытом. Сотрудничал с известными брендами, работала на крупнейших модных показах и обучала начинающих визажистов.",
-                messenger = "https://t.me/lloppy",
+                linkCode = "https://t.me/lloppy",
                 address = Address("Россия", "Москва", "Маяковская", "10", "2")
             )
         )

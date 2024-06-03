@@ -5,7 +5,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Context.CLIPBOARD_SERVICE
 import android.graphics.Bitmap
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,7 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -29,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,9 +47,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.CustomButton
+import com.example.skills.ui.components.tools.LoadingScreen
 import com.example.skills.ui.theme.backgroundMaterial
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
@@ -62,10 +62,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun ShareProfileScreen(
     navController: NavHostController,
-    masterCode: String
+    viewModel: MainViewModel
 ) {
-    Log.i(MY_LOG, "masterCode is $masterCode")
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -86,7 +84,7 @@ fun ShareProfileScreen(
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             tint = Color.Black,
                             contentDescription = "Localized description"
                         )
@@ -95,15 +93,32 @@ fun ShareProfileScreen(
             )
         },
     ) { innerPadding ->
-        ContentForgotPassword(innerPadding, masterCode, LocalContext.current)
+        val isLoading by viewModel.isLoading.collectAsState()
+        var masterCode by remember { mutableStateOf<String?>(null) }
+
+        LaunchedEffect(Unit) {
+            viewModel.getMasterCode { code ->
+                masterCode = code
+            }
+        }
+
+        if (isLoading) {
+            LoadingScreen()
+        } else {
+            if (masterCode != null) {
+                ContentForgotPassword(innerPadding, LocalContext.current, masterCode!!)
+            } else {
+                Text("Не удалось сгенерировать код")
+            }
+        }
     }
 }
 
 @Composable
 fun ContentForgotPassword(
     innerPadding: PaddingValues,
-    masterCode: String,
-    context: Context
+    context: Context,
+    masterCode: String
 ) {
     Column(
         modifier = Modifier
@@ -133,13 +148,13 @@ fun ContentForgotPassword(
                 val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                 val clip = ClipData.newPlainText("label", masterCode)
                 clipboard.setPrimaryClip(clip)
-
                 Toast.makeText(context, "Код скопирован!", Toast.LENGTH_SHORT).show()
             },
             "Скопировать код"
         )
     }
 }
+
 
 
 @Composable
@@ -170,7 +185,10 @@ fun rememberQrBitmapPainter(
                 qrCodeWriter.encode(
                     content, BarcodeFormat.QR_CODE,
                     sizePx, sizePx, encodeHints
-                ) } catch (ex: WriterException) { null }
+                )
+            } catch (ex: WriterException) {
+                null
+            }
 
             val matrixWidth = bitmapMatrix?.width ?: sizePx
             val matrixHeight = bitmapMatrix?.height ?: sizePx
@@ -188,7 +206,6 @@ fun rememberQrBitmapPainter(
                         if (shouldColorPixel) Color.Black.toArgb() else Color.White.toArgb()
 
                     newBitmap.setPixel(x, y, pixelColor)
-
                 }
             }
             bitmap = newBitmap

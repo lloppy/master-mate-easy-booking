@@ -33,7 +33,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.ResponseBody
-import retrofit2.Response
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -470,6 +469,22 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
+    fun getMasterCode(onComplete: (String?) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            val masterId = currentUser?.id
+
+            val masterCode = if (masterId != null) {
+                generateCode(masterId)
+            } else {
+                null
+            }
+
+            onComplete(masterCode)
+            _isLoading.emit(false)
+        }
+    }
+
     fun editCategory(
         id: Int,
         category: CategoryRequest,
@@ -612,6 +627,8 @@ class MainViewModel(context: Context) : ViewModel() {
             val services = response.body()
             if (services != null) {
                 servicesLiveDataMaster.postValue(services.reversed())
+            } else {
+                servicesLiveDataMaster.postValue(emptyList())
             }
         } else {
             Log.d(MY_LOG, "Failed to load services")
@@ -653,6 +670,20 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
+    private fun generateCode(specificDigit: Int?): String {
+        if (specificDigit == null) return "Something went wrong. Please try agan"
+
+        fun getRandomChar(): Char {
+            val chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+            return chars.random()
+        }
+
+        val firstPart = (1..7).map { getRandomChar() }.joinToString("")
+        val masterCode = firstPart + specificDigit
+
+        return masterCode
+    }
+
     private suspend fun loadMasterWorks(context: Context) {
         val response = apiService.getMastersWorksId("Bearer $_userToken")
         if (response.isSuccessful) {
@@ -690,6 +721,8 @@ class MainViewModel(context: Context) : ViewModel() {
             val categories = response.body()
             if (categories != null) {
                 categoriesLiveDataMaster.postValue(categories.reversed())
+            } else {
+                categoriesLiveDataMaster.postValue(emptyList())
             }
         } else {
             Log.d(MY_LOG, "Failed to load categories")

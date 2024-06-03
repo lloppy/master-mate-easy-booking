@@ -1,10 +1,10 @@
 package com.example.skills.data.roles
 
-import android.net.Uri
 import com.example.skills.data.entity.Address
 import java.io.File
 
 class User(
+    var id: Int? = null,
     val token: String,
     var email: String,
     var password: String,
@@ -28,7 +28,7 @@ class User(
 
         var description: String? = null,
         var linkCode: String? = null,
-        var messenger: String? = null,
+        var personalCode: String? = null,
         var address: Address? = null,
     )
 }

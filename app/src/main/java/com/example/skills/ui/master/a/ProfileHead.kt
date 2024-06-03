@@ -122,7 +122,7 @@ fun ProfileHead(user: User) {
                 )
             }
         }
-        if (user.master?.messenger != null) {
+        if (user.master?.linkCode != null) {
             Spacer(modifier = Modifier.height(paddingBetweenText))
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -135,7 +135,7 @@ fun ProfileHead(user: User) {
                     tint = Color(0, 122, 255),
                 )
                 Text(
-                    text = user.master!!.messenger!!,
+                    text = user.master!!.linkCode!!,
                     fontSize = 14.sp,
                     fontFamily = fontFamilyInter,
                     fontWeight = FontWeight.Normal,

@@ -98,16 +98,10 @@ fun MasterMyServices(
 ) {
     val master = bookingViewModel.data1.value!!
 
-//    val categories by remember(master) {
-//        val servicesBelongingToMaster = MyRepository.getServices().filter { it.master == master }
-//        mutableStateOf(servicesBelongingToMaster.map { it.category }.toSet().toList())
-//    }
-
     val receivedCategories by viewModel.categoriesLiveDataMaster.observeAsState(emptyList())
     var selectedCategory by remember { mutableStateOf(if (receivedCategories?.isNotEmpty() == true) receivedCategories!!.first().name else "") }
 
     val services by viewModel.servicesLiveDataMaster.observeAsState()
-
     val categories = receivedCategories
 
     Column(
