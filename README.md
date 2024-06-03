@@ -13,6 +13,7 @@
    - Click "Install".
 
 
+![Иллюстрация к проекту](https://github.com/lloppy/SkillSched/blob/main/cover.png)
 
 
 
