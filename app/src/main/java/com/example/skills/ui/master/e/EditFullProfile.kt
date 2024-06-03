@@ -122,7 +122,7 @@ private fun AddMasterAccountInfo(
         mutableStateOf(EmailState(email))
     }
     var profileDescription by remember { mutableStateOf(checkAndInsert(master.master?.description)) }
-    var address by remember { mutableStateOf(checkAndInsert(master.master?.address.toString())) }
+    var address by remember { mutableStateOf(checkAndInsert(master.master?.address?.city.toString())) }
     var link by remember { mutableStateOf(checkAndInsert(master.master?.messenger)) }
 
     Column(

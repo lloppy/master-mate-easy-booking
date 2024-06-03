@@ -1,17 +1,13 @@
 package com.example.skills.data.viewmodel
 
-import android.content.ContentResolver
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
-import android.provider.OpenableColumns
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -30,27 +26,18 @@ import com.example.skills.data.entity.Service
 import com.example.skills.data.entity.ServiceRequest
 import com.example.skills.data.roles.Role
 import com.example.skills.data.roles.User
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
-import java.io.BufferedReader
-import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
-import java.net.URL
-import java.util.zip.GZIPInputStream
 import kotlin.random.Random
 
 const val MY_LOG = "MY_LOG"
@@ -274,8 +261,6 @@ class MainViewModel(context: Context) : ViewModel() {
                     loadMasterWorks(context)
                 } else {
                     Log.e(MY_LOG, "Upload image fail: ${response.code()} - ${response.message()}")
-                    printErrorBody(response)
-
                 }
             } catch (e: Exception) {
                 Log.e(MY_LOG, "Exception. Upload image fail: ${e.message}")
@@ -283,16 +268,7 @@ class MainViewModel(context: Context) : ViewModel() {
             _isLoading.emit(false)
         }
     }
-    private fun printErrorBody(response: Response<*>) {
-        try {
-            response.errorBody()?.let { errorBody ->
-                val content = errorBody.string()
-                Log.e(MY_LOG, "Error Body: $content")
-            }
-        } catch (e: Exception) {
-            Log.e(MY_LOG, "Failed to read error body: ${e.message}")
-        }
-    }
+
     fun addCategory(categoryName: String, onCategoryAddComplete: (Boolean) -> Unit) {
         viewModelScope.launch {
             _isLoading.emit(true)
@@ -377,7 +353,7 @@ class MainViewModel(context: Context) : ViewModel() {
                         Log.e(MY_LOG, "service response is null")
                         onServiceEditComplete(false)
                     }
-                } else{
+                } else {
                     Log.e(MY_LOG, "Error is ${response.errorBody()}")
 
                 }
@@ -410,7 +386,7 @@ class MainViewModel(context: Context) : ViewModel() {
                         Log.e(MY_LOG, "response is null")
                         onProfileEditComplete(false)
                     }
-                } else{
+                } else {
                     Log.e(MY_LOG, "Error is ${response.errorBody()}")
 
                 }
@@ -515,7 +491,7 @@ class MainViewModel(context: Context) : ViewModel() {
                         Log.e(MY_LOG, "Category response is null")
                         onCategoryEditComplete(false)
                     }
-                } else{
+                } else {
                     Log.e(MY_LOG, "Error is ${response.errorBody()}")
                 }
             } catch (e: Exception) {
@@ -529,7 +505,8 @@ class MainViewModel(context: Context) : ViewModel() {
     fun getCategoryByName(selectedCategoryName: String?): Category? {
         try {
             return categoriesLiveDataMaster.value?.first { it.name == selectedCategoryName }
-        } catch (_: Exception) {}
+        } catch (_: Exception) {
+        }
         return null
     }
 
@@ -576,7 +553,6 @@ class MainViewModel(context: Context) : ViewModel() {
         userIsAuthenticated.value = false
         Network.updateToken(null)
     }
-
 
 
     // ---------------- PRIVATE FUN ------------------------------------------------
@@ -642,7 +618,11 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
-    private suspend fun saveResponseBodyToDisk(responseBody: ResponseBody, context: Context, fileName: String): File? {
+    private fun saveResponseBodyToDisk(
+        responseBody: ResponseBody,
+        context: Context,
+        fileName: String
+    ): File? {
         return try {
             val file = File(context.cacheDir, fileName)
             var inputStream: InputStream? = null
@@ -685,7 +665,8 @@ class MainViewModel(context: Context) : ViewModel() {
                     val picResponse = apiService.getMastersWorkById(id)
                     if (picResponse.isSuccessful) {
                         picResponse.body()?.let { responseBody ->
-                            val fileName = "image_$id.jpeg" // Или другое расширение в зависимости от формата изображения
+                            val fileName =
+                                "image_$id.jpeg" // Или другое расширение в зависимости от формата изображения
                             val imageFile = saveResponseBodyToDisk(responseBody, context, fileName)
                             imageFile?.let { file ->
                                 imageFiles.add(file)
@@ -743,25 +724,6 @@ class MainViewModel(context: Context) : ViewModel() {
         } catch (e: Exception) {
             Log.e(MY_LOG, "Failed to save bitmap to file: ${e.message}")
             return null
-        }
-    }
-
-    private fun getFileFromUrl(url: String, context: Context): File? {
-        return try {
-            val uri = Uri.parse(url)
-            val fileName = uri.lastPathSegment ?: return null
-            val tempFile = File(context.cacheDir, fileName)
-
-            val urlConnection = URL(url).openConnection() as HttpURLConnection
-            urlConnection.inputStream.use { input ->
-                FileOutputStream(tempFile).use { output ->
-                    input.copyTo(output)
-                }
-            }
-            tempFile
-        } catch (e: Exception) {
-            Log.e(MY_LOG, "Error downloading file: ${e.message}")
-            null
         }
     }
 }
