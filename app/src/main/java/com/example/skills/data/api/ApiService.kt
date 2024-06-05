@@ -9,14 +9,12 @@ import com.example.skills.data.entity.Service
 import com.example.skills.data.entity.ServiceRequest
 import com.example.skills.data.roles.User
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.http.Headers
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -155,5 +153,11 @@ interface ApiService {
 
     @GET("/api/masters/{id}/schedules")
     suspend fun getScheduleByMasterId(@Path("id") id: Long): Response<List<Schedule>>
+
+    @GET("/api/masters/{id}")
+    suspend fun getMasterById(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): Response<MasterForClientResponse>
 
 }

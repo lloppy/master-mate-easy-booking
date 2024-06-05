@@ -110,7 +110,8 @@ fun MainMasterScreen(
         } else {
             MasterHomeScreen(
                 innerPadding,
-                master
+                master,
+                viewModel
             )
         }
     }
@@ -121,6 +122,7 @@ fun MainMasterScreen(
 fun MasterHomeScreen(
     innerPadding: PaddingValues,
     user: User,
+    viewModel: MainViewModel
 ) {
     Column(
         modifier = Modifier
@@ -130,6 +132,13 @@ fun MasterHomeScreen(
         verticalArrangement = Arrangement.Top
     ) {
         ProfileHead(user)
-        if (user.master?.images != null) MasterGallery(user.master!!.images!!)
+        if (user.master?.images != null) {
+            val isLoading by viewModel.isLoading.collectAsState()
+            if (isLoading) {
+                LoadingScreen()
+            } else {
+                MasterGallery(user.master!!.images!!)
+            }
+        }
     }
 }

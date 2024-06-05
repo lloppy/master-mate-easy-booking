@@ -1,7 +1,9 @@
 package com.example.skills.ui.client.a
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,6 +22,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,16 +34,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityOptionsCompat
-import com.example.skills.data.roles.User
-import com.example.skills.data.viewmodel.MyRepository.getMastersList
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.viewmodel.route.BookingViewModel
 import com.example.skills.ui.components.QRCodeScannerScreen
+import com.example.skills.ui.components.tools.LoadingScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ClientMastersScreen(
     bookingViewModel: BookingViewModel,
+    mainViewModel: MainViewModel,
     navigateToSelectedMasterProfile: () -> Unit
 ) {
     val context = LocalContext.current
@@ -76,7 +82,17 @@ fun ClientMastersScreen(
                 })
         }
     ) { innerPadding ->
-        ClientMastersContent(innerPadding, navigateToSelectedMasterProfile, bookingViewModel)
+        val isLoading by mainViewModel.isLoading.collectAsState()
+        if (isLoading) {
+            LoadingScreen()
+        } else {
+            ClientMastersContent(
+                innerPadding,
+                navigateToSelectedMasterProfile,
+                bookingViewModel,
+                mainViewModel
+            )
+        }
     }
 }
 
@@ -85,10 +101,39 @@ fun ClientMastersScreen(
 fun ClientMastersContent(
     innerPadding: PaddingValues,
     navigateToSelectedMasterProfile: () -> Unit,
-    bookingViewModel: BookingViewModel
+    bookingViewModel: BookingViewModel,
+    mainViewModel: MainViewModel
 ) {
-    //val masters = emptyList<User>()
-    val masters = getMastersList()
+    val context = LocalContext.current
+    val masters by mainViewModel.mastersForClient.collectAsState()
+
+    LaunchedEffect(Unit) {
+        val sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+        val masterId = sharedPreferences.getInt("master_id", 0)
+
+        Toast.makeText(context, "Сохраненный master_id: $masterId", Toast.LENGTH_SHORT).show()
+
+        if (masterId != 0) {
+            try {
+                mainViewModel.addMasterById(masterId) { successful ->
+                    if (successful) {
+                        Toast.makeText(
+                            context,
+                            "Мастер добавлен. master id is $masterId",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Ошибка 1. master id is $masterId",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            } catch (e: Exception) {
+            }
+        }
+    }
 
     Column(
         modifier = Modifier

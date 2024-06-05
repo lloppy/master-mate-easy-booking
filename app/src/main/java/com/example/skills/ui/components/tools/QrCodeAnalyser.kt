@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import com.example.skills.data.viewmodel.MainViewModel
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.BinaryBitmap
 import com.google.zxing.DecodeHintType
@@ -46,14 +47,21 @@ class QrCodeAnalyser(
                 }.decode(binaryBmp)
                 onQrCodeScanner(result.text)
                 Log.e("qr", "result in camera is ${result.text}")
-                // TODO add master: addMasterFromQR(result.text)
 
                 try {
-                    //  BillRepository.addBill(newBill, context)
+                    val id = result.text.toInt()
+                    val sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+                    val editor = sharedPreferences.edit()
+                    editor.putInt("master_id", id.toInt())
+                    editor.apply()
+
+                } catch (e: Exception){}
+
+                try {
                     image.close()
                     activity.finish()
                 } catch (e: IllegalArgumentException) {
-                    Toast.makeText(context, "Не получилось добавить чек", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Не получилось добавить мастера", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,6 +16,7 @@ import com.example.skills.data.api.ActivationRequest
 import com.example.skills.data.api.AuthRequest
 import com.example.skills.data.api.EditMasterRequest
 import com.example.skills.data.api.LogInRequest
+import com.example.skills.data.api.MasterForClientResponse
 import com.example.skills.data.api.Network
 import com.example.skills.data.api.Network.apiService
 import com.example.skills.data.api.ScheduleCreateRequest
@@ -60,6 +62,9 @@ class MainViewModel(context: Context) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
     var isLoading: StateFlow<Boolean> = _isLoading
+
+    private val _mastersForClient = MutableStateFlow<List<MasterForClientResponse>>(emptyList())
+    val mastersForClient: StateFlow<List<MasterForClientResponse>> = _mastersForClient
 
     init {
         Log.d(MY_LOG, "Initializing ViewModel, reading user credentials")
@@ -259,6 +264,7 @@ class MainViewModel(context: Context) : ViewModel() {
                     Log.d(MY_LOG, "Upload image success: ${response.body()}")
                     loadMasterWorks(context)
                 } else {
+                    Toast.makeText(context, "Upload image fail", Toast.LENGTH_SHORT).show()
                     Log.e(MY_LOG, "Upload image fail: ${response.code()} - ${response.message()}")
                 }
             } catch (e: Exception) {
@@ -394,6 +400,42 @@ class MainViewModel(context: Context) : ViewModel() {
                 onProfileEditComplete(false)
             }
             _isLoading.emit(false)
+        }
+    }
+
+    fun addMasterById(id: Int, onAddComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+//            _isLoading.emit(true)
+            try {
+                val response = apiService.getMasterById(id = id, token = "Bearer $_userToken")
+
+                if (response.isSuccessful) {
+                    response.body()?.let { data ->
+
+                        val masterResponse =  MasterForClientResponse(
+                            id = id,
+                            fullName = data.fullName,
+                            description = data.description,
+                            address = data.address,
+                            messenger = data.messenger,
+                            profilePictureId = data.profilePictureId,
+                            additionalImagesIds = data.additionalImagesIds,
+                            phoneNumber = data.phoneNumber,
+                            services = data.services,
+                            categories = data.categories,
+                            schedule = data.schedule
+                        )
+
+                        if (_mastersForClient.value.all { it.id != id }){
+                            _mastersForClient.value += masterResponse
+                        }
+                    }
+                } else { }
+            } catch (e: Exception) {
+                handleApiException(e)
+                onAddComplete(false)
+            }
+            //_isLoading.emit(false)
         }
     }
 

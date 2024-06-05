@@ -51,10 +51,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.example.skills.R
+import com.example.skills.data.api.Network.apiService
 import com.example.skills.ui.components.tools.QrCodeAnalyser
 import com.example.skills.ui.theme.SkillsTheme
 
-class QRCodeScannerScreen : ComponentActivity() {
+class QRCodeScannerScreen() : ComponentActivity() {
     @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,8 +108,16 @@ class QRCodeScannerScreen : ComponentActivity() {
                                         context = context
                                     ) { result ->
                                         code = result
-                                        Toast.makeText(context, "master id is ${result.substring(7)}", Toast.LENGTH_SHORT).show()
-                                        //TODO  addMAsterFromQR(code)
+
+                                        val masterId = result.substring(7).toIntOrNull()
+                                        if (masterId != null) {
+                                            val sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+                                            val editor = sharedPreferences.edit()
+                                            editor.putInt("master_id", masterId)
+                                            editor.apply()
+                                        } else {
+                                            Toast.makeText(context, "Ошибка: Невозможно извлечь ID мастера из результата", Toast.LENGTH_SHORT).show()
+                                        }
                                     })
                                 try {
                                     cameraProviderFuture.get().bindToLifecycle(

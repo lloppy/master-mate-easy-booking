@@ -80,6 +80,10 @@ fun SetupMasterNavGraph(
                     navHostController.navigate(ScreenRole.Master.Notifications.route)
                 },
                 exit = {
+//                    navHostController.popBackStack(
+//                        route = ScreenMaster.MasterHomeScreen.route,
+//                        inclusive = true
+//                    )
                    //TODO()
                 }
             )

@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
+import com.example.skills.data.api.MasterForClientResponse
 import com.example.skills.data.entity.Service
 import com.example.skills.data.roles.User
 import com.example.skills.data.viewmodel.route.BookingViewModel
@@ -29,7 +30,7 @@ import com.example.skills.ui.master.b.calendar.clickable
 fun ServiceCardClient(
     singleService: Service,
     navigateToSelectDate: () -> Unit,
-    user: User,
+    user: MasterForClientResponse,
     bookingViewModel: BookingViewModel
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -88,7 +89,7 @@ fun ServiceCardClient(
             } else {
                 Spacer(modifier = Modifier.height(paddingBetweenText))
                 Text(
-                    text = "Адрес: " + user.master!!.address,
+                    text = "Адрес: " + user.address?.city.toString(),
                     color = Color.LightGray,
                     fontWeight = FontWeight.Normal,
                     fontSize = 12.sp,

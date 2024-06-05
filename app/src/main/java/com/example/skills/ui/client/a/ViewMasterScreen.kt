@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.skills.data.api.MasterForClientResponse
 import com.example.skills.data.roles.User
 import com.example.skills.data.viewmodel.route.BookingViewModel
 import com.example.skills.ui.master.a.MasterGallery
@@ -52,7 +53,7 @@ fun ViewMasterScreen(
                 ),
                 title = {
                     Text(
-                        "${master.firstName} ${master.lastName}",
+                        master.fullName.toString(),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
@@ -107,7 +108,7 @@ fun ViewMasterScreen(
 @Composable
 fun MasterHomeScreen(
     innerPadding: PaddingValues,
-    user: User,
+    user: MasterForClientResponse,
     navigateToServices: () -> Unit
 ) {
 
@@ -118,7 +119,7 @@ fun MasterHomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        ViewMasterHead(user, navigateToServices)
-        if (user.master?.images != null) MasterGallery(user.master!!.images!!)
+       // ViewMasterHead(user, navigateToServices)
+       //TODO if (user.master?.images != null) MasterGallery(user.master!!.images!!)
     }
 }

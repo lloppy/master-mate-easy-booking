@@ -71,6 +71,7 @@ fun SetupClientNavGraph(
         composable(route = ScreenClient.ClientMastersScreen.route) {
             ClientMastersScreen(
                 bookingViewModel = bookingViewModel,
+                mainViewModel = mainViewModel,
                 navigateToSelectedMasterProfile = {
                     navHostController.navigate(ScreenRole.Client.ViewMaster.route)
                 }

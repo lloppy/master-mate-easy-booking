@@ -25,13 +25,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import com.example.skills.R
+import com.example.skills.data.api.MasterForClientResponse
 import com.example.skills.data.roles.User
 import com.example.skills.data.viewmodel.route.BookingViewModel
 
 
 @Composable
 fun SimpleMasterCard(
-    master: User,
+    master: MasterForClientResponse,
     navigateToSelectedMasterProfile: () -> Unit,
     bookingViewModel: BookingViewModel
 ) {
@@ -63,7 +64,7 @@ fun SimpleMasterCard(
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
-                    text = "${master.firstName} ${master.lastName}",
+                    text = master.fullName.toString(),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -72,9 +73,8 @@ fun SimpleMasterCard(
                 bookingViewModel.data1 = MutableLiveData(master)
                 Log.e(
                     "bookingViewModel",
-                    "SimpleMasterCard bookingViewModel masterId is ${bookingViewModel.data1.value!!.token}"
+                    "SimpleMasterCard bookingViewModel fullName is ${bookingViewModel.data1.value!!.fullName}"
                 )
-
                 navigateToSelectedMasterProfile.invoke()
             }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowForwardIos, contentDescription = "icon")
