@@ -153,7 +153,12 @@ fun ClientMastersContent(
         } else {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(masters) { master ->
-                    SimpleMasterCard(master, navigateToSelectedMasterProfile, bookingViewModel)
+                    SimpleMasterCard(
+                        master,
+                        navigateToSelectedMasterProfile,
+                        bookingViewModel,
+                        mainViewModel
+                    )
                 }
             }
         }

@@ -25,16 +25,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import com.example.skills.R
-import com.example.skills.data.api.MasterForClientResponse
-import com.example.skills.data.roles.User
+import com.example.skills.data.api.MasterForClient
+import com.example.skills.data.viewmodel.MY_LOG
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.viewmodel.route.BookingViewModel
 
 
 @Composable
 fun SimpleMasterCard(
-    master: MasterForClientResponse,
+    master: MasterForClient,
     navigateToSelectedMasterProfile: () -> Unit,
-    bookingViewModel: BookingViewModel
+    bookingViewModel: BookingViewModel,
+    mainViewModel: MainViewModel
 ) {
     Column(
         modifier = Modifier
@@ -45,8 +47,26 @@ fun SimpleMasterCard(
         verticalArrangement = Arrangement.Center
     ) {
         val painter =
-            //  if (imageId != 0) painterResource(id = imageId) else
-            painterResource(id = R.drawable.master)
+            if (master.profilePictureId != null) {
+                try {
+                    mainViewModel.getImageById(master.profilePictureId) { successful ->
+                        if (successful) {
+                            Log.e(MY_LOG, "img is successful")
+
+                        } else {
+                            Log.e(MY_LOG, "img is error")
+
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e(MY_LOG, "img is error")
+
+                }
+
+
+                painterResource(id = R.drawable.master)
+                // painterResource(id = )
+            } else painterResource(id = R.drawable.master)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,

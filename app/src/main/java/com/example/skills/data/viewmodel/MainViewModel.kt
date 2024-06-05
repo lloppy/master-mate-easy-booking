@@ -16,6 +16,7 @@ import com.example.skills.data.api.ActivationRequest
 import com.example.skills.data.api.AuthRequest
 import com.example.skills.data.api.EditMasterRequest
 import com.example.skills.data.api.LogInRequest
+import com.example.skills.data.api.MasterForClient
 import com.example.skills.data.api.MasterForClientResponse
 import com.example.skills.data.api.Network
 import com.example.skills.data.api.Network.apiService
@@ -63,8 +64,8 @@ class MainViewModel(context: Context) : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
     var isLoading: StateFlow<Boolean> = _isLoading
 
-    private val _mastersForClient = MutableStateFlow<List<MasterForClientResponse>>(emptyList())
-    val mastersForClient: StateFlow<List<MasterForClientResponse>> = _mastersForClient
+    private val _mastersForClient = MutableStateFlow<List<MasterForClient>>(emptyList())
+    val mastersForClient: StateFlow<List<MasterForClient>> = _mastersForClient
 
     init {
         Log.d(MY_LOG, "Initializing ViewModel, reading user credentials")
@@ -412,7 +413,7 @@ class MainViewModel(context: Context) : ViewModel() {
                 if (response.isSuccessful) {
                     response.body()?.let { data ->
 
-                        val masterResponse =  MasterForClientResponse(
+                        val masterResponse = MasterForClient(
                             id = id,
                             fullName = data.fullName,
                             description = data.description,
@@ -423,7 +424,11 @@ class MainViewModel(context: Context) : ViewModel() {
                             phoneNumber = data.phoneNumber,
                             services = data.services,
                             categories = data.categories,
-                            schedule = data.schedule
+                            schedule = data.schedule,
+
+                            //TODO
+                            profileImage = null,
+                            images = null
                         )
 
                         if (_mastersForClient.value.all { it.id != id }){
@@ -436,6 +441,24 @@ class MainViewModel(context: Context) : ViewModel() {
                 onAddComplete(false)
             }
             //_isLoading.emit(false)
+        }
+    }
+
+    fun getImageById(id: Int, onAddComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val response = apiService.getImageById(id = id, token = "Bearer $_userToken")
+
+                if (response.isSuccessful) {
+                    response.body()?.let { data ->
+                        Log.e(MY_LOG ,"img is ${data}")
+
+                    }
+                } else { }
+            } catch (e: Exception) {
+                handleApiException(e)
+                onAddComplete(false)
+            }
         }
     }
 
@@ -518,9 +541,7 @@ class MainViewModel(context: Context) : ViewModel() {
 
             val masterCode = if (masterId != null) {
                 generateCode(masterId)
-            } else {
-                null
-            }
+            } else { null }
 
             onComplete(masterCode)
             _isLoading.emit(false)

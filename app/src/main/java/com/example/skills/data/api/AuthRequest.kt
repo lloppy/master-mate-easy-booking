@@ -1,13 +1,10 @@
 package com.example.skills.data.api
 
 import com.example.skills.data.entity.Address
-import com.example.skills.data.entity.Category
-import com.example.skills.data.entity.Duration
-import com.example.skills.data.entity.Schedule
-import com.example.skills.data.entity.Service
 import com.example.skills.data.entity.TimeSlot
 import com.example.skills.data.roles.User
 import com.example.skills.data.roles.UserRequest
+import java.io.File
 import java.time.LocalDateTime
 
 data class AuthRequest(
@@ -82,6 +79,24 @@ data class MasterForClientResponse(
     val categories: List<CategoryResponse>? = null,
     val schedule: List<ScheduleResponse>? = null
 )
+
+data class MasterForClient(
+    val id: Int,
+    val fullName: String? = null,
+    val description: String? = null,
+    val address: AddressResponse? = null,
+    val messenger: String? = null,
+    val profilePictureId: Int? = null,
+    val additionalImagesIds: List<Int>? = null,
+    val phoneNumber: String? = null,
+    val services: List<ServiceResponse>? = null,
+    val categories: List<CategoryResponse>? = null,
+    val schedule: List<ScheduleResponse>? = null,
+
+    var profileImage: File? = null,
+    var images: MutableList<File>? = null
+)
+
 
 data class ServiceResponse(
     val name: String? = null,

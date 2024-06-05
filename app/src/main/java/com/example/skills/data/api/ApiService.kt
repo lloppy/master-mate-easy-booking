@@ -160,4 +160,13 @@ interface ApiService {
         @Path("id") id: Int
     ): Response<MasterForClientResponse>
 
+
+    // image-controller
+    @GET("/api/images/{id}")
+    suspend fun getImageById(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): Response<ResponseBody>
+
+
 }
