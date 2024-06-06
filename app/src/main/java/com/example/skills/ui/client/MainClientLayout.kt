@@ -16,6 +16,7 @@ fun MainClientLayout(navController: NavHostController, mainViewmodel: MainViewMo
     val hideList = setOf(
         ScreenRole.Client.EditProfile.route,
         ScreenRole.Client.Notifications.route,
+        ScreenRole.Client.QRCodeScanner.route,
         ScreenRole.Client.PasswordSettings.route
     )
 

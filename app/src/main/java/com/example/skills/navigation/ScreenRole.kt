@@ -16,7 +16,7 @@ sealed class ScreenRole(val route: String) {
         object PasswordSettings : Master("password_settings_screen")
         object EditProfile : Master("edit_profile_screen")
         object Notifications : Master("notifications_screen")
-
+        object QRCodeScanner : Client("qr_scanner_screen")
         object ViewMaster : Client("view_master")
         object ViewMasterServices : Client("view_master_services")
         object SelectDate : Client("select_date_screen")

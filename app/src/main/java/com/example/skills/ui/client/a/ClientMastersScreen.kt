@@ -33,10 +33,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityOptionsCompat
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.viewmodel.route.BookingViewModel
-import com.example.skills.ui.components.QRCodeScannerScreen
 import com.example.skills.ui.components.tools.LoadingScreen
 
 
@@ -45,7 +43,8 @@ import com.example.skills.ui.components.tools.LoadingScreen
 fun ClientMastersScreen(
     bookingViewModel: BookingViewModel,
     mainViewModel: MainViewModel,
-    navigateToSelectedMasterProfile: () -> Unit
+    navigateToSelectedMasterProfile: () -> Unit,
+    navigateToQr: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -68,10 +67,11 @@ fun ClientMastersScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        val intent = Intent(context, QRCodeScannerScreen::class.java)
-                        val options =
-                            ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity)
-                        context.startActivity(intent, options.toBundle())
+                        navigateToQr.invoke()
+//                        val intent = Intent(context, QRCodeScannerScreen::class.java)
+//                        val options =
+//                            ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity)
+//                        context.startActivity(intent, options.toBundle())
                     }
                     ) {
                         Icon(
@@ -103,36 +103,7 @@ fun ClientMastersContent(
     bookingViewModel: BookingViewModel,
     mainViewModel: MainViewModel
 ) {
-    val context = LocalContext.current
     val masters by mainViewModel.mastersForClient.collectAsState()
-
-    LaunchedEffect(Unit) {
-        val sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
-        val masterId = sharedPreferences.getInt("master_id", 0)
-
-        Toast.makeText(context, "Сохраненный master_id: $masterId", Toast.LENGTH_SHORT).show()
-
-        if (masterId != 0) {
-            try {
-                mainViewModel.addMasterById(masterId) { successful ->
-                    if (successful) {
-                        Toast.makeText(
-                            context,
-                            "Мастер добавлен. master id is $masterId",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        Toast.makeText(
-                            context,
-                            "Ошибка 1. master id is $masterId",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            } catch (e: Exception) {
-            }
-        }
-    }
 
     Column(
         modifier = Modifier

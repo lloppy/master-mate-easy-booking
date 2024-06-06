@@ -1,6 +1,9 @@
 package com.example.skills.navigation.nav_bar.client
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -23,6 +26,7 @@ import com.example.skills.data.viewmodel.route.BookingViewModel
 import com.example.skills.data.viewmodel.route.EditBookingViewModel
 import com.example.skills.navigation.ScreenRole
 import com.example.skills.navigation.ScreenClient
+import com.example.skills.ui.client.a.QRCodeScannerComposable
 import com.example.skills.ui.master.e.EditPasswordScreen
 import com.example.skills.ui.master.e.MasterSettingsScreen
 import com.example.skills.ui.master.e.NotificationSettingsScreen
@@ -35,6 +39,7 @@ fun SetupClientNavGraph(
     // BookingViewModel
     val bookingViewModel: BookingViewModel = viewModel()
     val editBookingViewModel: EditBookingViewModel = viewModel()
+    val context = LocalContext.current
 
     NavHost(
         navController = navHostController,
@@ -74,8 +79,21 @@ fun SetupClientNavGraph(
                 mainViewModel = mainViewModel,
                 navigateToSelectedMasterProfile = {
                     navHostController.navigate(ScreenRole.Client.ViewMaster.route)
+                },
+                navigateToQr = {
+                    navHostController.navigate(ScreenRole.Client.QRCodeScanner.route)
                 }
             )
+        }
+
+        // Qr код экран
+        composable(route = ScreenRole.Client.QRCodeScanner.route) {
+            QRCodeScannerComposable (
+                viewModel = mainViewModel,
+                navController = navHostController
+            ) { result ->
+                navHostController.navigateUp()
+            }
         }
 
         // нажимаем на кнопку записаться в профиле выбранного мастера

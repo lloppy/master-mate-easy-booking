@@ -1,4 +1,4 @@
-package com.example.skills.ui.components.tools
+package com.example.skills.ui.client.a
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.BinaryBitmap
@@ -20,6 +21,7 @@ import java.nio.ByteBuffer
 class QrCodeAnalyser(
     private val activity: Activity,
     private val context: Context,
+    mainViewModel: MainViewModel,
     private val onQrCodeScanner: (String) -> Unit,
 ) : ImageAnalysis.Analyzer {
     private val supportedImageFormats = listOf(
@@ -46,16 +48,7 @@ class QrCodeAnalyser(
                     )
                 }.decode(binaryBmp)
                 onQrCodeScanner(result.text)
-                Log.e("qr", "result in camera is ${result.text}")
-
-                try {
-                    val id = result.text.toInt()
-                    val sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
-                    val editor = sharedPreferences.edit()
-                    editor.putInt("master_id", id.toInt())
-                    editor.apply()
-
-                } catch (e: Exception){}
+                Log.e(MY_LOG, "result in camera is ${result.text}")
 
                 try {
                     image.close()

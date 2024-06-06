@@ -1,6 +1,7 @@
 package com.example.skills.data.api
 
 import com.example.skills.data.entity.Address
+import com.example.skills.data.entity.Duration
 import com.example.skills.data.entity.TimeSlot
 import com.example.skills.data.roles.User
 import com.example.skills.data.roles.UserRequest
@@ -101,7 +102,7 @@ data class MasterForClient(
 data class ServiceResponse(
     val name: String? = null,
     val price: Double? = null,
-    val duration: Int? = null
+    val duration: Duration? = null
 )
 
 data class CategoryResponse(

@@ -406,7 +406,7 @@ class MainViewModel(context: Context) : ViewModel() {
 
     fun addMasterById(id: Int, onAddComplete: (Boolean) -> Unit) {
         viewModelScope.launch {
-//            _isLoading.emit(true)
+            _isLoading.emit(true)
             try {
                 val response = apiService.getMasterById(id = id, token = "Bearer $_userToken")
 
@@ -440,7 +440,7 @@ class MainViewModel(context: Context) : ViewModel() {
                 handleApiException(e)
                 onAddComplete(false)
             }
-            //_isLoading.emit(false)
+            _isLoading.emit(false)
         }
     }
 
