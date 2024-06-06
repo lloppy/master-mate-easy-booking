@@ -96,7 +96,6 @@ fun ClientMastersScreen(
     }
 }
 
-
 @Composable
 fun ClientMastersContent(
     innerPadding: PaddingValues,
