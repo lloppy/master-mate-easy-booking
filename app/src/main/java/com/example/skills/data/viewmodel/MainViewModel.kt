@@ -435,7 +435,7 @@ class MainViewModel(context: Context) : ViewModel() {
                             _mastersForClient.value += masterResponse
                         }
                     }
-                } else { }
+                } 
             } catch (e: Exception) {
                 handleApiException(e)
                 onAddComplete(false)

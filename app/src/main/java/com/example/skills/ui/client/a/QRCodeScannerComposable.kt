@@ -31,10 +31,13 @@ import com.example.skills.R
 import com.example.skills.data.viewmodel.MainViewModel
 
 @Composable
-fun QRCodeScannerComposable(viewModel: MainViewModel, navController: NavHostController, onQrCodeScanned: (String) -> Unit) {
+fun QRCodeScannerComposable(
+    viewModel: MainViewModel,
+    navController: NavHostController,
+    onQrCodeScanned: (String) -> Unit
+) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val activity = context as? Activity ?: return
 
     var hasCameraPermission by remember {
         mutableStateOf(
@@ -65,11 +68,11 @@ fun QRCodeScannerComposable(viewModel: MainViewModel, navController: NavHostCont
             preview.setSurfaceProvider(previewView.surfaceProvider)
 
             val imageAnalysis = ImageAnalysis.Builder()
-                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST).build()
+                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .build()
             imageAnalysis.setAnalyzer(
                 ContextCompat.getMainExecutor(ctx),
                 QrCodeAnalyser(
-                    activity = activity,
                     context = ctx,
                     mainViewModel = viewModel,
                     onQrCodeScanner = onQrCodeScanned
@@ -95,7 +98,9 @@ fun OverlayUI(navController: NavHostController, mainViewModel: MainViewModel, co
     val screenSize = LocalConfiguration.current.screenHeightDp.dp / 2
 
     Box(
-        Modifier.fillMaxSize().padding(bottom = 20.dp), contentAlignment = Alignment.BottomCenter
+        Modifier
+            .fillMaxSize()
+            .padding(bottom = 20.dp), contentAlignment = Alignment.BottomCenter
     ) {
         Image(
             painter = painterResource(id = R.drawable.scan_card),

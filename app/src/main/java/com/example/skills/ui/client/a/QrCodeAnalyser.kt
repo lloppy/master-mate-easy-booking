@@ -19,9 +19,8 @@ import com.google.zxing.common.HybridBinarizer
 import java.nio.ByteBuffer
 
 class QrCodeAnalyser(
-    private val activity: Activity,
     private val context: Context,
-    mainViewModel: MainViewModel,
+    private val mainViewModel: MainViewModel,
     private val onQrCodeScanner: (String) -> Unit,
 ) : ImageAnalysis.Analyzer {
     private val supportedImageFormats = listOf(
@@ -50,9 +49,27 @@ class QrCodeAnalyser(
                 onQrCodeScanner(result.text)
                 Log.e(MY_LOG, "result in camera is ${result.text}")
 
+                val masterId = result.text.substring(7).toInt()
+                try {
+                    mainViewModel.addMasterById(masterId) { successful ->
+                        if (successful) {
+                            Toast.makeText(
+                                context,
+                                "Мастер добавлен. master id is $masterId",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "Ошибка сервера при получени master id: id is $masterId",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                } catch (e: Exception) {
+                }
                 try {
                     image.close()
-                    activity.finish()
                 } catch (e: IllegalArgumentException) {
                     Toast.makeText(context, "Не получилось добавить мастера", Toast.LENGTH_SHORT).show()
                 }

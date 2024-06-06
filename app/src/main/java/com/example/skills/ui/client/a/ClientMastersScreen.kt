@@ -66,14 +66,7 @@ fun ClientMastersScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        navigateToQr.invoke()
-//                        val intent = Intent(context, QRCodeScannerScreen::class.java)
-//                        val options =
-//                            ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity)
-//                        context.startActivity(intent, options.toBundle())
-                    }
-                    ) {
+                    IconButton(onClick = navigateToQr) {
                         Icon(
                             imageVector = Icons.Outlined.Add,
                             contentDescription = "Localized description"
