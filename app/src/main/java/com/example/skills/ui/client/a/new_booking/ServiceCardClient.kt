@@ -47,7 +47,7 @@ fun ServiceCardClient(
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Text(
-                text = singleService.name,
+                text = singleService.name.capitalize(),
                 color = Color.White,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 14.sp,
@@ -88,7 +88,7 @@ fun ServiceCardClient(
             } else {
                 Spacer(modifier = Modifier.height(paddingBetweenText))
                 Text(
-                    text = "Адрес: " + user.address?.city.toString(),
+                    text = "Адрес: " + if (user.address?.city != null) user.address?.city else " — " ,
                     color = Color.LightGray,
                     fontWeight = FontWeight.Normal,
                     fontSize = 12.sp,
