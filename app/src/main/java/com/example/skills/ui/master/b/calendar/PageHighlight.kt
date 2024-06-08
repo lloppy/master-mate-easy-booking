@@ -28,7 +28,7 @@ import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import java.time.LocalDate
 
-private class HalfSizeShape(private val clipStart: Boolean) : Shape {
+class HalfSizeShape(private val clipStart: Boolean) : Shape {
     override fun createOutline(
         size: Size,
         layoutDirection: LayoutDirection,

@@ -24,6 +24,7 @@ class User(
     )
 
     class Master(
+        var id: Int? = null,
         var profileImage: File? = null,
         var images: MutableList<File>? = null,
 

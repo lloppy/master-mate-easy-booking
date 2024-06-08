@@ -15,21 +15,26 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.viewmodel.route.BookingViewModel
 import com.example.skills.ui.client.a.new_booking.ClientCalendarView
+import com.example.skills.ui.components.tools.LoadingScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectDateScreen(
     bookingViewModel: BookingViewModel,
     navController: NavHostController,
-    navigateToSelectTime: () -> Unit
+    navigateToSelectTime: () -> Unit,
+    mainViewModel: MainViewModel
 ) {
     Scaffold(
         topBar = {
@@ -59,7 +64,18 @@ fun SelectDateScreen(
             )
         }
     ) { innerPadding ->
-        CustomCalendarView(innerPadding, navController, bookingViewModel, navigateToSelectTime)
+        val isLoading by mainViewModel.isLoading.collectAsState()
+        if (isLoading) {
+            LoadingScreen()
+        } else {
+            CustomCalendarView(
+                innerPadding,
+                navController,
+                bookingViewModel,
+                navigateToSelectTime,
+                mainViewModel
+            )
+        }
     }
 }
 
@@ -68,7 +84,8 @@ fun CustomCalendarView(
     innerPadding: PaddingValues,
     navController: NavHostController,
     bookingViewModel: BookingViewModel,
-    navigateToSelectTime: () -> Unit
+    navigateToSelectTime: () -> Unit,
+    mainViewModel: MainViewModel
 ) {
     Column(
         modifier = Modifier
@@ -77,7 +94,8 @@ fun CustomCalendarView(
     ) {
         ClientCalendarView(
             bookingViewModel = bookingViewModel,
-            navigateToSelectTime = navigateToSelectTime
+            navigateToSelectTime = navigateToSelectTime,
+            mainViewModel = mainViewModel
         )
     }
 }

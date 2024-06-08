@@ -131,8 +131,9 @@ fun OverlayUI(navController: NavHostController, mainViewModel: MainViewModel, co
                 ),
                 shape = RoundedCornerShape(16.dp),
                 keyboardActions = KeyboardActions(onDone = {
-                    val masterId = mastersCode.substring(7).toInt()
                     try {
+                        val masterId = mastersCode.substring(7).toInt()
+
                         mainViewModel.addMasterById(masterId) { successful ->
                             if (successful) { } else {
                                 Toast.makeText(

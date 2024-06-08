@@ -126,10 +126,21 @@ fun MasterHomeScreen(
         verticalArrangement = Arrangement.Top
     ) {
         bookingViewModel.data1.value = user
+
         val receivedCategories = bookingViewModel.data1.value!!.categories
         if (receivedCategories != null) {
-            mainViewModel.getServicesByCategoryId(receivedCategories) { success ->
-                Log.e(MY_LOG, "getServicesByCategoryId is successful")
+            try {
+                mainViewModel.getServicesByCategoryId(receivedCategories) { success ->
+                    Log.e(MY_LOG, "getServicesByCategoryId is successful")
+                }
+                mainViewModel.getSchedulesById(
+                    //TODO
+                   // user.id
+                    2
+                ) { success ->
+                    Log.e(MY_LOG, "getSchedulesById is successful")
+                }
+            } catch (e: Exception) {
             }
         }
         Log.e(MY_LOG, "bookingViewModel user categ is ${user.categories?.firstOrNull()}")

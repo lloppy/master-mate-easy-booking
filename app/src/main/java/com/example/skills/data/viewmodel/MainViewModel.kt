@@ -26,6 +26,7 @@ import com.example.skills.data.entity.Category
 import com.example.skills.data.entity.CategoryRequest
 import com.example.skills.data.entity.Duration
 import com.example.skills.data.entity.EditServiceRequest
+import com.example.skills.data.entity.Schedule
 import com.example.skills.data.entity.Service
 import com.example.skills.data.entity.ServiceRequest
 import com.example.skills.data.roles.Role
@@ -63,6 +64,8 @@ class MainViewModel(context: Context) : ViewModel() {
     private val _servicesLiveDataClient = MutableLiveData<List<Service>>()
     val servicesLiveDataClient: LiveData<List<Service>> = _servicesLiveDataClient
 
+    private val _schedulesLiveData = MutableLiveData<List<Schedule>>()
+    val schedulesLiveData: LiveData<List<Schedule>> get() = _schedulesLiveData
 
     val userIsAuthenticated = mutableStateOf(false)
     private val preferences: SharedPreferences =
@@ -485,6 +488,30 @@ class MainViewModel(context: Context) : ViewModel() {
                     response.body()?.let { data ->
                         Log.e(MY_LOG, "img is $data")
                     }
+                }
+            } catch (e: Exception) {
+                handleApiException(e)
+                onAddComplete(false)
+            }
+        }
+    }
+
+    fun getSchedulesById(masterId: Int, onAddComplete: (Boolean) -> Unit) {
+        Log.d(MY_LOG, "masterId is $masterId")
+
+        viewModelScope.launch {
+            try {
+                val response = apiService.getSchedulesById(id = masterId, token = "Bearer $_userToken")
+                if (response.isSuccessful) {
+                    response.body()?.let { data ->
+                        _schedulesLiveData.postValue(data)
+                        Log.d(MY_LOG, "getSchedulesById is $data")
+                        onAddComplete(true)
+                    } ?: run {
+                        onAddComplete(false)
+                    }
+                } else {
+                    onAddComplete(false)
                 }
             } catch (e: Exception) {
                 handleApiException(e)

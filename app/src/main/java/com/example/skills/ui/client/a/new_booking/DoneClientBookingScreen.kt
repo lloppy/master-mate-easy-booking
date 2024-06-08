@@ -41,7 +41,7 @@ fun DoneClientBookingScreen(navigateToBookings: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.6f)
+                .fillMaxHeight(0.56f)
                 .padding(start = 28.dp, end = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top

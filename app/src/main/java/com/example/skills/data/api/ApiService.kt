@@ -167,6 +167,12 @@ interface ApiService {
         @Path("id") id: Int
     ): Response<ResponseBody>
 
+    @GET("/api/masters/{id}/schedules")
+    suspend fun getSchedulesById(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): Response<List<Schedule>>
+
     @PUT("api/clients/me/masters/{id}")
     suspend fun addAddedMaster(
         @Header("Authorization") token: String,

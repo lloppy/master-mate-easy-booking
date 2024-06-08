@@ -1,7 +1,5 @@
 package com.example.skills.navigation.nav_bar.client
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -127,7 +125,8 @@ fun SetupClientNavGraph(
                 navController = navHostController,
                 navigateToSelectTime = {
                     navHostController.navigate(ScreenRole.Client.SelectTime.route)
-                }
+                },
+                mainViewModel = mainViewModel
             )
         }
 
@@ -149,7 +148,8 @@ fun SetupClientNavGraph(
                 navController = navHostController,
                 navigateToConfirmBooking = {
                     navHostController.navigate(ScreenRole.Client.ConfirmClientBooking.route)
-                }
+                },
+                mainViewModel = mainViewModel
             )
         }
 

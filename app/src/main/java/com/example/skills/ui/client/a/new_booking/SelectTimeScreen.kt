@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -34,8 +35,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
+import com.example.skills.data.entity.Duration
+import com.example.skills.data.entity.TimeSlot
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.viewmodel.route.BookingViewModel
 import com.example.skills.ui.components.CustomButton
+import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -45,7 +50,8 @@ import java.util.Locale
 fun SelectTimeScreen(
     bookingViewModel: BookingViewModel,
     navController: NavHostController,
-    navigateToConfirmBooking: () -> Unit
+    navigateToConfirmBooking: () -> Unit,
+    mainViewModel: MainViewModel
 ) {
     Scaffold(
         topBar = {
@@ -78,7 +84,8 @@ fun SelectTimeScreen(
         SelectTimeContent(
             innerPadding,
             bookingViewModel,
-            navigateToConfirmBooking
+            navigateToConfirmBooking,
+            mainViewModel
         )
     }
 }
@@ -88,11 +95,30 @@ fun SelectTimeScreen(
 fun SelectTimeContent(
     innerPadding: PaddingValues,
     bookingViewModel: BookingViewModel,
-    navigateToConfirmBooking: () -> Unit
+    navigateToConfirmBooking: () -> Unit,
+    mainViewModel: MainViewModel
 ) {
-    val timeSlots = List(24) {
-        String.format("%02d:%02d", it / 2, (it % 2) * 30)
-    }
+    val schedules = mainViewModel.schedulesLiveData.observeAsState(emptyList())
+    var serviceDuration = bookingViewModel.data2.value!!.duration
+    val startAndEndOfDay =
+        schedules.value.filter { LocalDate.parse(it.date) == bookingViewModel.data3.value }
+            .flatMap { it.timeSlots }.first()
+
+    val serviceDurationInMinutes = 60 //serviceDuration.minutes
+
+    val timeSlots = if (startAndEndOfDay != null) {
+        val start = LocalTime.parse(startAndEndOfDay.from)
+        val end = LocalTime.parse(startAndEndOfDay.to)
+        val totalMinutes = (end.hour * 60 + end.minute) - (start.hour * 60 + start.minute)
+
+        List(totalMinutes / serviceDurationInMinutes) { index ->
+            val slotStart = start.plusMinutes(index * serviceDurationInMinutes.toLong())
+            val slotEnd = slotStart.plusMinutes(serviceDurationInMinutes.toLong())
+            "${slotStart.format(DateTimeFormatter.ofPattern("HH:mm"))} - ${slotEnd.format(DateTimeFormatter.ofPattern("HH:mm"))}"
+        }
+    } else emptyList()
+
+
     var selectedTime by remember { mutableStateOf("") }
 
     Column(
@@ -125,10 +151,10 @@ fun SelectTimeContent(
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 fontSize = 18.sp,
-                modifier = Modifier.padding(start = 24.dp)
+                modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
             )
             LazyVerticalGrid(
-                columns = GridCells.Fixed(4),
+                columns = GridCells.Fixed(3),
             ) {
                 items(timeSlots.size) { index ->
                     val isSelected = timeSlots[index] == selectedTime
@@ -140,11 +166,12 @@ fun SelectTimeContent(
                             ) Color.Gray else Color.LightGray,
                             contentColor = if (isSelected) Color.White else Color.Black
                         ),
-                        modifier = Modifier.padding(2.dp),
+                        modifier = Modifier.padding(start = 2.dp, end = 2.dp, top = 2.dp, bottom = 5.dp),
                         onClick = { selectedTime = timeSlots[index] }
                     ) {
                         Text(
                             text = timeSlots[index],
+                            fontSize = 11.sp
                         )
                     }
                 }
@@ -160,8 +187,8 @@ fun SelectTimeContent(
         }
         CustomButton(
             navigateTo = {
-                val parsedTime = LocalTime.parse(selectedTime, DateTimeFormatter.ofPattern("HH:mm"))
-                bookingViewModel.data4 = MutableLiveData(parsedTime)
+                val parsedSlot = parseTimeSlot(selectedTime)
+                bookingViewModel.data4 = MutableLiveData(parsedSlot)
 
                 navigateToConfirmBooking.invoke()
             },
@@ -170,5 +197,13 @@ fun SelectTimeContent(
         )
     }
 }
+
+fun parseTimeSlot(selectedTime: String): TimeSlot {
+    val times = selectedTime.split(" - ")
+    val from = times[0]
+    val to = times[1]
+    return TimeSlot(from, to)
+}
+
 
 val alreadyBooking = listOf("00:00", "07:30", "10:00")
