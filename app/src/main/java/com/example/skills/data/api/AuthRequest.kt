@@ -83,21 +83,20 @@ data class MasterForClientResponse(
 
 data class MasterForClient(
     val id: Int,
-    val fullName: String? = null,
-    val description: String? = null,
-    val address: AddressResponse? = null,
-    val messenger: String? = null,
-    val profilePictureId: Int? = null,
-    val additionalImagesIds: List<Int>? = null,
-    val phoneNumber: String? = null,
-    val services: List<ServiceResponse>? = null,
-    val categories: List<CategoryResponse>? = null,
-    val schedule: List<ScheduleResponse>? = null,
+    var fullName: String? = null,
+    var description: String? = null,
+    var address: AddressResponse? = null,
+    var messenger: String? = null,
+    var profilePictureId: Int? = null,
+    var additionalImagesIds: List<Int>? = null,
+    var phoneNumber: String? = null,
+    var services: List<ServiceResponse>? = null,
+    var categories: List<CategoryResponse>? = null,
+    var schedule: List<ScheduleResponse>? = null,
 
     var profileImage: File? = null,
     var images: MutableList<File>? = null
 )
-
 
 data class ServiceResponse(
     val name: String? = null,
@@ -112,7 +111,7 @@ data class CategoryResponse(
 
 data class AddressResponse(
     val street: String? = null,
-    val city: String? = null,
+    var city: String? = null,
     val state: String? = null,
     val zipCode: String? = null,
     val country: String? = null

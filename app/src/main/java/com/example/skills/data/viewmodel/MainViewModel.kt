@@ -9,15 +9,16 @@ import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.skills.data.api.ActivationRequest
 import com.example.skills.data.api.AuthRequest
+import com.example.skills.data.api.CategoryResponse
 import com.example.skills.data.api.EditMasterRequest
 import com.example.skills.data.api.LogInRequest
 import com.example.skills.data.api.MasterForClient
-import com.example.skills.data.api.MasterForClientResponse
 import com.example.skills.data.api.Network
 import com.example.skills.data.api.Network.apiService
 import com.example.skills.data.api.ScheduleCreateRequest
@@ -29,6 +30,8 @@ import com.example.skills.data.entity.Service
 import com.example.skills.data.entity.ServiceRequest
 import com.example.skills.data.roles.Role
 import com.example.skills.data.roles.User
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -56,6 +59,10 @@ class MainViewModel(context: Context) : ViewModel() {
 
     val servicesLiveDataMaster = MutableLiveData<List<Service>?>()
     val categoriesLiveDataMaster = MutableLiveData<List<Category>?>()
+
+    private val _servicesLiveDataClient = MutableLiveData<List<Service>>()
+    val servicesLiveDataClient: LiveData<List<Service>> = _servicesLiveDataClient
+
 
     val userIsAuthenticated = mutableStateOf(false)
     private val preferences: SharedPreferences =
@@ -202,26 +209,29 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
-    fun getServicesByCategoryId(categoryId: Int, onActivationComplete: (Boolean) -> Unit) {
+    fun getServicesByCategoryId(
+        categoryIds: List<CategoryResponse>,
+        onComplete: (Boolean) -> Unit
+    ) {
         viewModelScope.launch {
             _isLoading.emit(true)
-
             try {
-                val response = apiService.getCategoryServices(categoryId)
+                val responses = categoryIds.map { category ->
+                    async {
+                        category.id?.let { apiService.getCategoryServices(it) }
+                    }
+                }.awaitAll()
 
-                if (response.isSuccessful) {
-                    Log.d(MY_LOG, "getServicesByCategoryId isSuccessful")
-                    onActivationComplete(true)
+                val successfulResponses = responses.filter { it!!.isSuccessful }.mapNotNull { it?.body() }.flatten()
+                if (successfulResponses.isNotEmpty()) {
+                    _servicesLiveDataClient.postValue(successfulResponses)
+                    onComplete(true)
                 } else {
-                    Log.e(
-                        MY_LOG,
-                        "getServicesByCategoryId failed: ${response.errorBody()?.string()}"
-                    )
-                    onActivationComplete(false)
+                    onComplete(false)
                 }
             } catch (e: Exception) {
                 handleApiException(e)
-                onActivationComplete(false)
+                onComplete(false)
             }
             _isLoading.emit(false)
         }
@@ -431,13 +441,36 @@ class MainViewModel(context: Context) : ViewModel() {
                             images = null
                         )
 
-                        if (_mastersForClient.value.all { it.id != id }){
+                        if (_mastersForClient.value.all { it.id != id }) {
                             _mastersForClient.value += masterResponse
                         }
                     }
-                } 
+                }
             } catch (e: Exception) {
                 handleApiException(e)
+                onAddComplete(false)
+            }
+            _isLoading.emit(false)
+        }
+    }
+
+    fun pushMasterById(id: Int, onAddComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            try {
+                val response = apiService.addAddedMaster(
+                    token = "Bearer $_userToken",
+                    id = id,
+                )
+                if (response.isSuccessful) {
+                    Log.e(MY_LOG, "responseAddedMaster is Successful")
+                    onAddComplete(true)
+                } else {
+                    Log.e(MY_LOG, "Error is ${response.errorBody()?.string()}")
+                    onAddComplete(false)
+                }
+            } catch (e: Exception) {
+                Log.e(MY_LOG, "Exception occurred while adding master", e)
                 onAddComplete(false)
             }
             _isLoading.emit(false)
@@ -448,13 +481,11 @@ class MainViewModel(context: Context) : ViewModel() {
         viewModelScope.launch {
             try {
                 val response = apiService.getImageById(id = id, token = "Bearer $_userToken")
-
                 if (response.isSuccessful) {
                     response.body()?.let { data ->
-                        Log.e(MY_LOG ,"img is ${data}")
-
+                        Log.e(MY_LOG, "img is $data")
                     }
-                } else { }
+                }
             } catch (e: Exception) {
                 handleApiException(e)
                 onAddComplete(false)
@@ -541,7 +572,9 @@ class MainViewModel(context: Context) : ViewModel() {
 
             val masterCode = if (masterId != null) {
                 generateCode(masterId)
-            } else { null }
+            } else {
+                null
+            }
 
             onComplete(masterCode)
             _isLoading.emit(false)
@@ -759,8 +792,7 @@ class MainViewModel(context: Context) : ViewModel() {
                     val picResponse = apiService.getMastersWorkById(id)
                     if (picResponse.isSuccessful) {
                         picResponse.body()?.let { responseBody ->
-                            val fileName =
-                                "image_$id.jpeg" // Или другое расширение в зависимости от формата изображения
+                            val fileName = "image_$id.jpeg"
                             val imageFile = saveResponseBodyToDisk(responseBody, context, fileName)
                             imageFile?.let { file ->
                                 imageFiles.add(file)

@@ -103,7 +103,8 @@ fun SetupClientNavGraph(
                 navHostController,
                 navigateToServices = {
                     navHostController.navigate(ScreenRole.Client.ViewMasterServices.route)
-                }
+                },
+                mainViewModel = mainViewModel
             )
         }
 

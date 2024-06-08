@@ -49,23 +49,19 @@ fun SimpleMasterCard(
         val painter =
             if (master.profilePictureId != null) {
                 try {
-                    mainViewModel.getImageById(master.profilePictureId) { successful ->
+                    mainViewModel.getImageById(master.profilePictureId!!) { successful ->
                         if (successful) {
                             Log.e(MY_LOG, "img is successful")
 
                         } else {
                             Log.e(MY_LOG, "img is error")
-
                         }
                     }
                 } catch (e: Exception) {
                     Log.e(MY_LOG, "img is error")
-
                 }
-
-
                 painterResource(id = R.drawable.master)
-                // painterResource(id = )
+
             } else painterResource(id = R.drawable.master)
         Row(
             modifier = Modifier.fillMaxWidth(),

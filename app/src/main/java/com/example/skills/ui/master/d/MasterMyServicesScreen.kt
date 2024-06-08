@@ -135,7 +135,10 @@ fun MasterMyServices(
                 )
         ) {
             if (categories != null) {
+                Log.e("MasterMyServicesScreen", "categories != null")
                 if (categories.size <= 1) {
+                    Log.e("MasterMyServicesScreen", "categories size 1 or 0")
+
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -153,6 +156,8 @@ fun MasterMyServices(
                         )
                     }
                 } else {
+                    Log.e("MasterMyServicesScreen", "categories more than 1")
+
                     LazyRow(
                         Modifier
                             .fillMaxWidth()

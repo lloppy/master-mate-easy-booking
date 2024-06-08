@@ -64,7 +64,6 @@ interface ApiService {
         @Path("id") id: Int
     ): Response<ResponseBody>
 
-
     @POST("api/masters/me/edit")
     suspend fun editMasterProfile(
         @Header("Authorization") token: String,
@@ -168,5 +167,9 @@ interface ApiService {
         @Path("id") id: Int
     ): Response<ResponseBody>
 
-
+    @PUT("api/clients/me/masters/{id}")
+    suspend fun addAddedMaster(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): Response<ResponseBody>
 }

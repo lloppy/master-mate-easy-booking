@@ -46,8 +46,6 @@ fun ClientMastersScreen(
     navigateToSelectedMasterProfile: () -> Unit,
     navigateToQr: () -> Unit
 ) {
-    val context = LocalContext.current
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(

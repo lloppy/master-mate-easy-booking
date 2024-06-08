@@ -134,19 +134,20 @@ fun OverlayUI(navController: NavHostController, mainViewModel: MainViewModel, co
                     val masterId = mastersCode.substring(7).toInt()
                     try {
                         mainViewModel.addMasterById(masterId) { successful ->
-                            if (successful) {
-                                Toast.makeText(
-                                    context,
-                                    "Мастер добавлен. master id is $masterId",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else {
+                            if (successful) { } else {
                                 Toast.makeText(
                                     context,
                                     "Ошибка сервера при получени master id: id is $masterId",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
+                        }
+                        mainViewModel.pushMasterById(masterId){ successful ->
+                            Toast.makeText(
+                                context,
+                                "Мастер добавлен. master id is $masterId",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     } catch (e: Exception) {
                     }

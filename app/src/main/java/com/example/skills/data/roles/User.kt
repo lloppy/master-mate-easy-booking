@@ -19,6 +19,7 @@ class User(
 
 ) {
     class Client(
+        val mastersId : List<Int> = emptyList(),
         var birthday: String?
     )
 

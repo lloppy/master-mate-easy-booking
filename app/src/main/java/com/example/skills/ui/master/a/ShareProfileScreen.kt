@@ -91,7 +91,7 @@ fun ShareProfileScreen(
                     }
                 }
             )
-        },
+        }
     ) { innerPadding ->
         val isLoading by viewModel.isLoading.collectAsState()
         var masterCode by remember { mutableStateOf<String?>(null) }

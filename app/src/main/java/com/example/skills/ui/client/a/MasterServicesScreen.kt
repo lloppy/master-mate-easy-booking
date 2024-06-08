@@ -25,6 +25,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -38,9 +40,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.skills.data.api.CategoryResponse
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.viewmodel.route.BookingViewModel
 import com.example.skills.ui.client.a.new_booking.ServiceCardClient
+import com.example.skills.ui.components.tools.LoadingScreen
 import com.example.skills.ui.theme.paddingBetweenElements
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,12 +83,17 @@ fun MasterServicesScreen(
             )
         }
     ) { innerPadding ->
-        MasterMyServices(
-            innerPadding,
-            bookingViewModel,
-            navigateToSelectDate,
-            viewModel
-        )
+        val isLoading by viewModel.isLoading.collectAsState()
+        if (isLoading) {
+            LoadingScreen()
+        } else {
+            MasterMyServices(
+                innerPadding,
+                bookingViewModel,
+                navigateToSelectDate,
+                viewModel
+            )
+        }
     }
 }
 
@@ -98,11 +107,10 @@ fun MasterMyServices(
 ) {
     val master = bookingViewModel.data1.value!!
 
-    val receivedCategories by viewModel.categoriesLiveDataMaster.observeAsState(emptyList())
+    val receivedCategories = bookingViewModel.data1.value!!.categories
     var selectedCategory by remember { mutableStateOf(if (receivedCategories?.isNotEmpty() == true) receivedCategories!!.first().name else "") }
 
-    val services by viewModel.servicesLiveDataMaster.observeAsState()
-    val categories = receivedCategories
+    val services by viewModel.servicesLiveDataClient.observeAsState()
 
     Column(
         modifier = Modifier
@@ -114,7 +122,7 @@ fun MasterMyServices(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        if (categories!!.size <= 1) {
+        if (receivedCategories!!.isEmpty()) {
             Text(
                 text = "В списке мастера отсутствуют категории услуг",
                 fontSize = 14.sp,
@@ -124,13 +132,13 @@ fun MasterMyServices(
             )
         } else {
             LazyRow(Modifier.fillMaxWidth()) {
-                items(categories) { category ->
+                items(receivedCategories) { category ->
                     val interactionSource = remember { MutableInteractionSource() }
 
                     CategoryButton(
-                        text = category.name,
+                        text = category.name.toString(),
                         onClick = {
-                            category.action.invoke()
+                            {}
                             selectedCategory = category.name
                         },
                         interactionSource = interactionSource,

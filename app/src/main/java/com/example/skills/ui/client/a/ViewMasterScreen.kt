@@ -1,12 +1,13 @@
 package com.example.skills.ui.client.a
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.rounded.DeleteOutline
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,6 +30,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.api.MasterForClient
+import com.example.skills.data.viewmodel.MY_LOG
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.viewmodel.route.BookingViewModel
 import com.example.skills.ui.master.d.CustomAlertDialog
 
@@ -37,7 +40,8 @@ import com.example.skills.ui.master.d.CustomAlertDialog
 fun ViewMasterScreen(
     bookingViewModel: BookingViewModel,
     navController: NavHostController,
-    navigateToServices: () -> Unit
+    navigateToServices: () -> Unit,
+    mainViewModel: MainViewModel
 ) {
     var showDialog by remember { mutableStateOf(false) }
     val master = bookingViewModel.data1.value!!
@@ -73,7 +77,7 @@ fun ViewMasterScreen(
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            imageVector = Icons.Outlined.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = "Localized description"
                         )
                     }
@@ -84,7 +88,9 @@ fun ViewMasterScreen(
         MasterHomeScreen(
             innerPadding,
             master,
-            navigateToServices
+            navigateToServices,
+            bookingViewModel,
+            mainViewModel
         )
 
         if (showDialog) {
@@ -107,7 +113,9 @@ fun ViewMasterScreen(
 fun MasterHomeScreen(
     innerPadding: PaddingValues,
     user: MasterForClient,
-    navigateToServices: () -> Unit
+    navigateToServices: () -> Unit,
+    bookingViewModel: BookingViewModel,
+    mainViewModel: MainViewModel
 ) {
 
     Column(
@@ -117,6 +125,15 @@ fun MasterHomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
+        bookingViewModel.data1.value = user
+        val receivedCategories = bookingViewModel.data1.value!!.categories
+        if (receivedCategories != null) {
+            mainViewModel.getServicesByCategoryId(receivedCategories) { success ->
+                Log.e(MY_LOG, "getServicesByCategoryId is successful")
+            }
+        }
+        Log.e(MY_LOG, "bookingViewModel user categ is ${user.categories?.firstOrNull()}")
+
         ViewMasterHead(user, navigateToServices)
         //TODO if (user.master?.images != null) MasterGallery(user.master!!.images!!)
     }

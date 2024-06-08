@@ -53,11 +53,13 @@ class QrCodeAnalyser(
                 try {
                     mainViewModel.addMasterById(masterId) { successful ->
                         if (successful) {
-                            Toast.makeText(
-                                context,
-                                "Мастер добавлен. master id is $masterId",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            mainViewModel.pushMasterById(masterId){ successful ->
+                                Toast.makeText(
+                                    context,
+                                    "Мастер добавлен. master id is $masterId",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         } else {
                             Toast.makeText(
                                 context,

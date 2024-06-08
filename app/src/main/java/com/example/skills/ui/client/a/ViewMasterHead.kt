@@ -56,7 +56,8 @@ fun ViewMasterHead(master: MasterForClient, navigateToServices: () -> Unit) {
         painterResource(id = R.drawable.master)
     }
 
-    val uri = if (master?.messenger != null) Uri.parse(master?.messenger) else Uri.parse("https://t.me/lloppy")
+    if (master.messenger == null) master.messenger = "https://t.me/lloppy"
+    val uri = Uri.parse(master.messenger)
     val intent = Intent(Intent.ACTION_VIEW, uri)
 
     Column(
@@ -83,19 +84,19 @@ fun ViewMasterHead(master: MasterForClient, navigateToServices: () -> Unit) {
                 alignment = Alignment.TopCenter
             )
         }
-        if (master?.description != null) {
-            Text(
-                text = master?.description,
-                fontSize = 14.sp,
-                maxLines = if (expanded) Int.MAX_VALUE else 3,
-                fontFamily = fontFamilyInter,
-                fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Center,
-                lineHeight = 18.sp,
-                color = Color.Gray,
-                modifier = Modifier.padding(start = 12.dp, end = 12.dp)
-            )
-        }
+        if (master?.description == null) master?.description = ""
+        Text(
+            text = master?.description!!,
+            fontSize = 14.sp,
+            maxLines = if (expanded) Int.MAX_VALUE else 3,
+            fontFamily = fontFamilyInter,
+            fontWeight = FontWeight.Normal,
+            textAlign = TextAlign.Center,
+            lineHeight = 18.sp,
+            color = Color.Gray,
+            modifier = Modifier.padding(start = 12.dp, end = 12.dp)
+        )
+
         if (!expanded) {
             Text(
                 text = "... ещё",
@@ -107,7 +108,7 @@ fun ViewMasterHead(master: MasterForClient, navigateToServices: () -> Unit) {
         if (expanded) {
             Spacer(modifier = Modifier.height(paddingBetweenText))
             Text(
-                text = master?.address?.city.toString(),
+                text = if (master?.address?.city != null) master?.address?.city!! else "",
                 fontSize = 14.sp,
                 fontFamily = fontFamilyInter,
                 fontWeight = FontWeight.Normal,
@@ -127,6 +128,7 @@ fun ViewMasterHead(master: MasterForClient, navigateToServices: () -> Unit) {
                 contentDescription = "link",
                 tint = Color(0, 122, 255),
             )
+            if (master?.messenger == "https://t.me/lloppy") master?.messenger = "Мастер ещё не добавил мессенджер"
             Text(
                 text = master?.messenger.toString(),
                 fontSize = 14.sp,
