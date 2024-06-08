@@ -99,12 +99,12 @@ fun SelectTimeContent(
     mainViewModel: MainViewModel
 ) {
     val schedules = mainViewModel.schedulesLiveData.observeAsState(emptyList())
-    var serviceDuration = bookingViewModel.data2.value!!.duration
-    val startAndEndOfDay =
-        schedules.value.filter { LocalDate.parse(it.date) == bookingViewModel.data3.value }
-            .flatMap { it.timeSlots }.first()
+    var serviceDurationInMinutes = 60 //bookingViewModel.data2.value!!.duration.minutes
+    val startAndEndOfDay = schedules.value
+        .filter { LocalDate.parse(it.date) == bookingViewModel.data3.value }
+        .flatMap { it.timeSlots }
+        .first()
 
-    val serviceDurationInMinutes = 60 //serviceDuration.minutes
 
     val timeSlots = if (startAndEndOfDay != null) {
         val start = LocalTime.parse(startAndEndOfDay.from)
@@ -114,7 +114,7 @@ fun SelectTimeContent(
         List(totalMinutes / serviceDurationInMinutes) { index ->
             val slotStart = start.plusMinutes(index * serviceDurationInMinutes.toLong())
             val slotEnd = slotStart.plusMinutes(serviceDurationInMinutes.toLong())
-            "${slotStart.format(DateTimeFormatter.ofPattern("HH:mm"))} - ${slotEnd.format(DateTimeFormatter.ofPattern("HH:mm"))}"
+            slotStart.format(DateTimeFormatter.ofPattern("HH:mm"))
         }
     } else emptyList()
 
@@ -154,7 +154,7 @@ fun SelectTimeContent(
                 modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
             )
             LazyVerticalGrid(
-                columns = GridCells.Fixed(3),
+                columns = GridCells.Fixed(4),
             ) {
                 items(timeSlots.size) { index ->
                     val isSelected = timeSlots[index] == selectedTime
@@ -170,8 +170,7 @@ fun SelectTimeContent(
                         onClick = { selectedTime = timeSlots[index] }
                     ) {
                         Text(
-                            text = timeSlots[index],
-                            fontSize = 11.sp
+                            text = timeSlots[index]
                         )
                     }
                 }
@@ -187,7 +186,7 @@ fun SelectTimeContent(
         }
         CustomButton(
             navigateTo = {
-                val parsedSlot = parseTimeSlot(selectedTime)
+                val parsedSlot = parseTimeSlot(selectedTime, serviceDurationInMinutes)
                 bookingViewModel.data4 = MutableLiveData(parsedSlot)
 
                 navigateToConfirmBooking.invoke()
@@ -198,11 +197,9 @@ fun SelectTimeContent(
     }
 }
 
-fun parseTimeSlot(selectedTime: String): TimeSlot {
-    val times = selectedTime.split(" - ")
-    val from = times[0]
-    val to = times[1]
-    return TimeSlot(from, to)
+fun parseTimeSlot(selectedTime: String, duration: Int): TimeSlot {
+    var endTime = LocalTime.parse(selectedTime).plusMinutes(duration.toLong())
+    return TimeSlot(selectedTime, endTime.toString())
 }
 
 

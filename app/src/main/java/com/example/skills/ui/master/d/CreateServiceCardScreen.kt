@@ -197,7 +197,7 @@ fun ContentCreateServiceCard(
                                     name,
                                     description,
                                     price.toInt(),
-                                    Duration(0, duration.toInt()),
+                                    Duration(duration.toInt()/60, duration.toInt()%60),
                                     category = selectedCategory
                                 ),
                                 selectedCategory.id
