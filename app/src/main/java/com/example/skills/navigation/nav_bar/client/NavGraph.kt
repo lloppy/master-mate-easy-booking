@@ -171,7 +171,8 @@ fun SetupClientNavGraph(
                 bookingViewModel = bookingViewModel,
                 navigateToDoneBooking = {
                     navHostController.navigate(ScreenRole.Client.DoneClientBooking.route)
-                }
+                },
+                mainViewModel = mainViewModel
             )
         }
 

@@ -20,6 +20,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 
 interface ApiService {
@@ -139,7 +140,10 @@ interface ApiService {
     suspend fun getScheduleByToken(@Header("Authorization") token: String): Response<List<Schedule>>
 
     @PUT("/api/masters/me/schedules")
-    suspend fun changeSchedule(@Header("Authorization") token: String, @Body scheduleChangeRequest: ScheduleChangeRequest): Response<String>
+    suspend fun changeSchedule(
+        @Header("Authorization") token: String,
+        @Body scheduleChangeRequest: ScheduleChangeRequest
+    ): Response<String>
 
     @POST("/api/masters/me/schedules")
     suspend fun createSchedule(
@@ -148,7 +152,10 @@ interface ApiService {
     ): Response<ResponseBody>
 
     @DELETE("/api/masters/me/schedules")
-    suspend fun deleteSchedule(@Header("Authorization") token: String, @Body dates: List<String>): Response<String>
+    suspend fun deleteSchedule(
+        @Header("Authorization") token: String,
+        @Body dates: List<String>
+    ): Response<String>
 
     @GET("/api/masters/{id}/schedules")
     suspend fun getScheduleByMasterId(@Path("id") id: Long): Response<List<Schedule>>
@@ -177,5 +184,20 @@ interface ApiService {
     suspend fun addAddedMaster(
         @Header("Authorization") token: String,
         @Path("id") id: Int
+    ): Response<ResponseBody>
+
+    @GET("api/masters/{masterId}/services/{serviceId}/timeslots")
+    suspend fun getFreeTimeSlots(
+        @Header("Authorization") token: String,
+        @Path("serviceId") serviceId: Int,
+        @Path("masterId") masterId: Int,
+        @Query("date") date: String
+    ): Response<List<String>>
+
+    @POST("api/masters/{id}/records")
+    suspend fun createRecord(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+        @Body bookingData: BookingRequest
     ): Response<ResponseBody>
 }

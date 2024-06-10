@@ -134,9 +134,7 @@ fun MasterHomeScreen(
                     Log.e(MY_LOG, "getServicesByCategoryId is successful")
                 }
                 mainViewModel.getSchedulesById(
-                    //TODO
-                   // user.id
-                    2
+                    user.masterId!!
                 ) { success ->
                     Log.e(MY_LOG, "getSchedulesById is successful")
                 }

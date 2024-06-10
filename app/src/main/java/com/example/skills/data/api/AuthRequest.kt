@@ -71,6 +71,7 @@ data class MasterForClientResponse(
     val id: Int,
     val fullName: String? = null,
     val description: String? = null,
+    val masterId: Int? = null,
     val address: AddressResponse? = null,
     val messenger: String? = null,
     val profilePictureId: Int? = null,
@@ -86,6 +87,7 @@ data class MasterForClient(
     var fullName: String? = null,
     var description: String? = null,
     var address: AddressResponse? = null,
+    var masterId: Int? = null,
     var messenger: String? = null,
     var profilePictureId: Int? = null,
     var additionalImagesIds: List<Int>? = null,
@@ -121,4 +123,18 @@ data class ScheduleResponse(
     val dayOfWeek: String? = null,
     val startTime: String? = null,
     val endTime: String? = null
+)
+
+data class StartTimeSlot(
+    val hour: Int,
+    val minute: Int,
+    val second: Int,
+    val nano: Int
+)
+
+data class BookingRequest(
+    val date: String,
+    val timeFrom: String,
+    val serviceId: Int,
+    val comment: String
 )

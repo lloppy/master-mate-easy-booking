@@ -20,6 +20,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -35,12 +36,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
-import com.example.skills.data.entity.Duration
 import com.example.skills.data.entity.TimeSlot
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.viewmodel.route.BookingViewModel
 import com.example.skills.ui.components.CustomButton
-import java.time.LocalDate
+import com.example.skills.ui.components.tools.LoadingScreen
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -81,12 +81,17 @@ fun SelectTimeScreen(
             )
         }
     ) { innerPadding ->
-        SelectTimeContent(
-            innerPadding,
-            bookingViewModel,
-            navigateToConfirmBooking,
-            mainViewModel
-        )
+        val isLoading by mainViewModel.isLoading.collectAsState()
+        if (isLoading) {
+            LoadingScreen()
+        } else {
+            SelectTimeContent(
+                innerPadding,
+                bookingViewModel,
+                navigateToConfirmBooking,
+                mainViewModel
+            )
+        }
     }
 }
 
@@ -98,27 +103,8 @@ fun SelectTimeContent(
     navigateToConfirmBooking: () -> Unit,
     mainViewModel: MainViewModel
 ) {
-    val schedules = mainViewModel.schedulesLiveData.observeAsState(emptyList())
-    var serviceDurationInMinutes = 60 //bookingViewModel.data2.value!!.duration.minutes
-    val startAndEndOfDay = schedules.value
-        .filter { LocalDate.parse(it.date) == bookingViewModel.data3.value }
-        .flatMap { it.timeSlots }
-        .first()
-
-
-    val timeSlots = if (startAndEndOfDay != null) {
-        val start = LocalTime.parse(startAndEndOfDay.from)
-        val end = LocalTime.parse(startAndEndOfDay.to)
-        val totalMinutes = (end.hour * 60 + end.minute) - (start.hour * 60 + start.minute)
-
-        List(totalMinutes / serviceDurationInMinutes) { index ->
-            val slotStart = start.plusMinutes(index * serviceDurationInMinutes.toLong())
-            val slotEnd = slotStart.plusMinutes(serviceDurationInMinutes.toLong())
-            slotStart.format(DateTimeFormatter.ofPattern("HH:mm"))
-        }
-    } else emptyList()
-
-
+    val timeSlotsState = mainViewModel.freeSlotsLiveData.observeAsState(emptyList())
+    val serviceDurationInMinutes = bookingViewModel.data2.value!!.duration.minutes
     var selectedTime by remember { mutableStateOf("") }
 
     Column(
@@ -154,34 +140,29 @@ fun SelectTimeContent(
                 modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
             )
             LazyVerticalGrid(
-                columns = GridCells.Fixed(4),
+                columns = GridCells.Fixed(if (timeSlotsState.value.size < 4) timeSlotsState.value.size else 4),
             ) {
-                items(timeSlots.size) { index ->
-                    val isSelected = timeSlots[index] == selectedTime
+                items(timeSlotsState.value.size) { index ->
+                    val timeSlot = timeSlotsState.value[index]
+                    val isSelected = timeSlot == selectedTime
                     Button(
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isSelected) Color.Black else if (alreadyBooking.contains(
-                                    timeSlots[index]
-                                )
-                            ) Color.Gray else Color.LightGray,
+                            containerColor = if (isSelected) Color.Black else Color.LightGray,
                             contentColor = if (isSelected) Color.White else Color.Black
                         ),
-                        modifier = Modifier.padding(start = 2.dp, end = 2.dp, top = 2.dp, bottom = 5.dp),
-                        onClick = { selectedTime = timeSlots[index] }
+                        modifier = Modifier.padding(
+                            start = 2.dp,
+                            end = 2.dp,
+                            top = 2.dp,
+                            bottom = 5.dp
+                        ),
+                        onClick = {
+                            selectedTime = timeSlotsState.value[index]
+                        }
                     ) {
-                        Text(
-                            text = timeSlots[index]
-                        )
+                        Text(text = timeSlotsState.value[index].substring(0, timeSlotsState.value[index].length - 3))
                     }
                 }
-            }
-            if (alreadyBooking.contains(selectedTime)) {
-                Text(
-                    text = "Вы выбрали время, которое уже занято другим клиентом, если он отменит запись, вы получете уведомление и сможете подтвердить свою бронь или отказаться",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = Color.LightGray
-                )
             }
         }
         CustomButton(
@@ -192,15 +173,12 @@ fun SelectTimeContent(
                 navigateToConfirmBooking.invoke()
             },
             buttonText = "Далее",
-            enabled = if (selectedTime.isNotEmpty() && !alreadyBooking.contains(selectedTime)) true else false
+            enabled = selectedTime.isNotEmpty()
         )
     }
 }
 
 fun parseTimeSlot(selectedTime: String, duration: Int): TimeSlot {
-    var endTime = LocalTime.parse(selectedTime).plusMinutes(duration.toLong())
+    val endTime = LocalTime.parse(selectedTime).plusMinutes(duration.toLong())
     return TimeSlot(selectedTime, endTime.toString())
 }
-
-
-val alreadyBooking = listOf("00:00", "07:30", "10:00")

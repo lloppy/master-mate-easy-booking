@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.skills.data.api.ActivationRequest
 import com.example.skills.data.api.AuthRequest
+import com.example.skills.data.api.BookingRequest
 import com.example.skills.data.api.CategoryResponse
 import com.example.skills.data.api.EditMasterRequest
 import com.example.skills.data.api.LogInRequest
@@ -66,6 +67,9 @@ class MainViewModel(context: Context) : ViewModel() {
 
     private val _schedulesLiveData = MutableLiveData<List<Schedule>>()
     val schedulesLiveData: LiveData<List<Schedule>> get() = _schedulesLiveData
+
+    private val _freeSlotsLiveData = MutableLiveData<List<String>>()
+    val freeSlotsLiveData: LiveData<List<String>> get() = _freeSlotsLiveData
 
     val userIsAuthenticated = mutableStateOf(false)
     private val preferences: SharedPreferences =
@@ -431,6 +435,7 @@ class MainViewModel(context: Context) : ViewModel() {
                             fullName = data.fullName,
                             description = data.description,
                             address = data.address,
+                            masterId = data.masterId,
                             messenger = data.messenger,
                             profilePictureId = data.profilePictureId,
                             additionalImagesIds = data.additionalImagesIds,
@@ -497,8 +502,6 @@ class MainViewModel(context: Context) : ViewModel() {
     }
 
     fun getSchedulesById(masterId: Int, onAddComplete: (Boolean) -> Unit) {
-        Log.d(MY_LOG, "masterId is $masterId")
-
         viewModelScope.launch {
             try {
                 val response = apiService.getSchedulesById(id = masterId, token = "Bearer $_userToken")
@@ -506,6 +509,31 @@ class MainViewModel(context: Context) : ViewModel() {
                     response.body()?.let { data ->
                         _schedulesLiveData.postValue(data)
                         Log.d(MY_LOG, "getSchedulesById is $data")
+                        onAddComplete(true)
+                    } ?: run {
+                        onAddComplete(false)
+                    }
+                } else {
+                    onAddComplete(false)
+                }
+            } catch (e: Exception) {
+                handleApiException(e)
+                onAddComplete(false)
+            }
+        }
+    }
+
+    fun getFreeTimeSlots(masterId: Int, serviceId: Int, date: String, onAddComplete: (Boolean) -> Unit) {
+        Log.i(MY_LOG, "getFreeTimeSlots masterId $masterId")
+        Log.i(MY_LOG, "getFreeTimeSlots serviceId $serviceId")
+        Log.i(MY_LOG, "getFreeTimeSlots date $date" )
+
+        viewModelScope.launch {
+            try {
+                val response = apiService.getFreeTimeSlots(token = "Bearer $_userToken", masterId = masterId, serviceId = serviceId, date = date)
+                if (response.isSuccessful) {
+                    response.body()?.let { data ->
+                        _freeSlotsLiveData.postValue(data)
                         onAddComplete(true)
                     } ?: run {
                         onAddComplete(false)
@@ -677,6 +705,38 @@ class MainViewModel(context: Context) : ViewModel() {
                 }
             } catch (_: Exception) {
             }
+        }
+    }
+
+    fun createRecord(
+        id: Int,
+        bookingRequest: BookingRequest,
+        onComplete: (Boolean) -> Unit
+    ) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            try {
+                val response = apiService.createRecord("Bearer $_userToken", id, bookingRequest)
+                if (response.isSuccessful) {
+                    val body = response.body()?.string()
+
+                    if (body != null) {
+                        loadMasterCategories()
+
+                        Log.i(MY_LOG, "createRecord successful")
+                        onComplete(true)
+                    } else {
+                        Log.e(MY_LOG, "createRecord is null")
+                        onComplete(false)
+                    }
+                } else {
+                    Log.e(MY_LOG, "Error is ${response.errorBody()}")
+                }
+            } catch (e: Exception) {
+                handleApiException(e)
+                onComplete(false)
+            }
+            _isLoading.emit(false)
         }
     }
 

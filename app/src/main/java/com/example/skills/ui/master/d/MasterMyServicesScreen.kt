@@ -178,7 +178,10 @@ fun MasterMyServices(
 
                                             try {
                                                 val selectedCategoryName = selectedCategory
-                                                Log.e(MY_LOG, "selectedCategoryName is $selectedCategoryName")
+                                                Log.e(
+                                                    MY_LOG,
+                                                    "selectedCategoryName is $selectedCategoryName"
+                                                )
 
                                                 navController.navigate(
                                                     ScreenRole.Master.ChangeCategory.route.replace(
@@ -186,7 +189,8 @@ fun MasterMyServices(
                                                         selectedCategoryName
                                                     )
                                                 )
-                                            } catch (e: IllegalArgumentException) {  }
+                                            } catch (e: IllegalArgumentException) {
+                                            }
                                         }
 
                                         is PressInteraction.Release -> {
@@ -229,6 +233,15 @@ fun MasterMyServices(
                         )
                     }
                 }
+            } else {
+                receivedCategories?.plus(
+                    Category(
+                        Int.MAX_VALUE,
+                        "Добавить категорию",
+                        description = "",
+                        action = navigateToCreateCategory
+                    )
+                )
             }
         }
 
@@ -236,9 +249,10 @@ fun MasterMyServices(
         try {
             categories!!.size > 1
             isCategoriesNull = false
-        } catch (e: Exception) {}
+        } catch (e: Exception) {
+        }
 
-        if (!isCategoriesNull ) {
+        if (!isCategoriesNull) {
             if (categories!!.size > 1) {
                 Spacer(modifier = Modifier.height(12.dp))
                 CustomButton(

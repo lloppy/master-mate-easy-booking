@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
-import com.example.skills.ui.client.a.new_booking.alreadyBooking
 import com.example.skills.data.viewmodel.route.EditBookingViewModel
 import com.example.skills.ui.components.CustomButton
 import java.time.LocalTime
@@ -135,10 +134,7 @@ fun SelectTimeContent(
                     val isSelected = timeSlots[index] == selectedTime
                     Button(
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isSelected) Color.Black else if (alreadyBooking.contains(
-                                    timeSlots[index]
-                                )
-                            ) Color.Gray else Color.LightGray,
+                            containerColor = if (isSelected) Color.Black else Color.LightGray,
                             contentColor = if (isSelected) Color.White else Color.Black
                         ),
                         modifier = Modifier.padding(2.dp),
@@ -150,14 +146,6 @@ fun SelectTimeContent(
                     }
                 }
             }
-            if (alreadyBooking.contains(selectedTime)) {
-                Text(
-                    text = "Вы выбрали время, которое уже занято другим клиентом, если он отменит запись, вы получете уведомление и сможете подтвердить свою бронь или отказаться",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = Color.LightGray
-                )
-            }
         }
         CustomButton(
             navigateTo = {
@@ -167,7 +155,7 @@ fun SelectTimeContent(
                 navigateToConfirmBooking.invoke()
             },
             buttonText = "Далее",
-            enabled = if (selectedTime.isNotEmpty() && !alreadyBooking.contains(selectedTime)) true else false
+            enabled = selectedTime.isNotEmpty()
         )
     }
 }

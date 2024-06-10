@@ -1,5 +1,6 @@
 package com.example.skills.client.components.a.new_booking
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -18,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,10 +33,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
+import com.example.skills.data.api.BookingRequest
+import com.example.skills.data.entity.CategoryRequest
+import com.example.skills.data.viewmodel.MY_LOG
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.viewmodel.route.BookingViewModel
 import com.example.skills.ui.client.a.new_booking.ServiceCardClient
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.components.CustomOutlinedTextField
+import com.example.skills.ui.components.tools.LoadingScreen
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -43,6 +50,7 @@ import java.util.Locale
 fun ConfirmClientBookingScreen(
     navController: NavHostController,
     bookingViewModel: BookingViewModel,
+    mainViewModel: MainViewModel,
     navigateToDoneBooking: () -> Unit
 ) {
     Scaffold(
@@ -65,7 +73,7 @@ fun ConfirmClientBookingScreen(
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            imageVector = Icons.Outlined.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = "Localized description"
                         )
                     }
@@ -73,11 +81,17 @@ fun ConfirmClientBookingScreen(
             )
         }
     ) { innerPadding ->
-        ConfirmClientBookingContent(
-            innerPadding,
-            bookingViewModel,
-            navigateToDoneBooking
-        )
+        val isLoading by mainViewModel.isLoading.collectAsState()
+        if (isLoading) {
+            LoadingScreen()
+        } else {
+            ConfirmClientBookingContent(
+                innerPadding = innerPadding,
+                bookingViewModel = bookingViewModel,
+                navigateToDoneBooking = navigateToDoneBooking,
+                mainViewModel = mainViewModel
+            )
+        }
     }
 }
 
@@ -86,7 +100,8 @@ fun ConfirmClientBookingScreen(
 fun ConfirmClientBookingContent(
     innerPadding: PaddingValues,
     bookingViewModel: BookingViewModel,
-    navigateToDoneBooking: () -> Unit
+    navigateToDoneBooking: () -> Unit,
+    mainViewModel: MainViewModel
 ) {
     val master = bookingViewModel.data1.value!!
     val singleService = bookingViewModel.data2.value!!
@@ -98,13 +113,18 @@ fun ConfirmClientBookingContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = innerPadding.calculateTopPadding().plus(16.dp), bottom = 100.dp),
+            .padding(
+                top = innerPadding
+                    .calculateTopPadding()
+                    .plus(16.dp), bottom = 100.dp
+            ),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column (modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
+        Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
             Text(
                 text = date.format(DateTimeFormatter.ofPattern("d MMMM", Locale("ru")))
-                        + ", c " + time.from.format(DateTimeFormatter.ofPattern("HH:mm")) + " до " + time.to.format(DateTimeFormatter.ofPattern("HH:mm")),
+                        + " в " + time.from.format(DateTimeFormatter.ofPattern("HH:mm"))
+                    .substring(0, time.from.length - 3),
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 fontSize = 18.sp,
@@ -116,7 +136,7 @@ fun ConfirmClientBookingContent(
             )
             Spacer(modifier = Modifier.height(12.dp))
 
-            Column (modifier = Modifier.padding(start = 6.dp, end = 6.dp)) {
+            Column(modifier = Modifier.padding(start = 6.dp, end = 6.dp)) {
                 CustomOutlinedTextField(
                     value = comment,
                     onValueChange = { comment = it },
@@ -126,8 +146,27 @@ fun ConfirmClientBookingContent(
         }
         CustomButton(
             navigateTo = {
+                Log.d(MY_LOG, "createRecord date" + bookingViewModel.data3.value.toString() )
+                Log.d(MY_LOG, "createRecord timeFrom" + time.from)
+                Log.d(MY_LOG, "createRecord serviceId" + bookingViewModel.data2.value!!.id )
+                Log.d(MY_LOG, "createRecord comment" + bookingViewModel.data5.value)
+                Log.d(MY_LOG, "createRecord masterId" + bookingViewModel.data1.value!!.masterId )
+
                 bookingViewModel.data5 = MutableLiveData(comment)
-                navigateToDoneBooking.invoke()
+
+                mainViewModel.createRecord(
+                    bookingViewModel.data1.value!!.masterId!!,
+                    BookingRequest(
+                        date = bookingViewModel.data3.value.toString(),
+                        timeFrom = time.from,
+                        serviceId = bookingViewModel.data2.value!!.id,
+                        comment = comment
+                    )
+                ) { successful ->
+                    if (successful) {
+                        navigateToDoneBooking.invoke()
+                    }
+                }
             },
             buttonText = "Подтвердить"
         )

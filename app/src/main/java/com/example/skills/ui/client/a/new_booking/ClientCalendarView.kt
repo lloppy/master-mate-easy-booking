@@ -56,6 +56,7 @@ import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun ClientCalendarView(
@@ -64,13 +65,8 @@ fun ClientCalendarView(
     mainViewModel: MainViewModel
 ) {
     val schedules by mainViewModel.schedulesLiveData.observeAsState(emptyList())
-    Log.e(MY_LOG, "schedules is ${schedules.first().date}")
-
     var currentMonth by remember { mutableStateOf(YearMonth.now()) }
-    val startMonth = remember { currentMonth }
-    val endMonth = remember { currentMonth.plusMonths(12) }
     val today = remember { LocalDate.now() }
-
     var selection by remember { mutableStateOf(DateSelection()) }
 
     val isStartDateScheduled = selection.startDate?.let { startDate ->
@@ -153,8 +149,19 @@ fun ClientCalendarView(
                 if (selection.daysBetween != null || selection.startDate != null) {
                     CustomButton(
                         navigateTo = {
-                            bookingViewModel.data3 = MutableLiveData(selection.startDate)
-                            navigateToSelectTime.invoke()
+                            Log.i(MY_LOG, "date is " + selection.startDate!!.toString())
+                            val formatter = DateTimeFormatter.ISO_LOCAL_DATE
+                            try {
+                                mainViewModel.getFreeTimeSlots(
+                                    masterId = bookingViewModel.data1.value!!.masterId!!,
+                                    serviceId = bookingViewModel.data2.value!!.id,
+                                    date = selection.startDate!!.format(formatter)
+                                ) {
+                                    Log.e(MY_LOG, "getSchedulesById is successful")
+                                    bookingViewModel.data3 = MutableLiveData(selection.startDate)
+                                    navigateToSelectTime.invoke()
+                                }
+                            } catch (_: Exception) { }
                         },
                         buttonText = "Далее",
                         enabled = isStartDateScheduled && selection.endDate == null
@@ -196,7 +203,7 @@ fun Day(
                 selectionColor = selectionColor,
                 continuousSelectionColor = continuousSelectionColor,
                 isScheduled = isScheduled
-        ) { textColor = it },
+            ) { textColor = it },
 
         contentAlignment = Alignment.Center,
     ) {
@@ -208,7 +215,6 @@ fun Day(
         )
     }
 }
-
 
 
 fun Modifier.backgroundHighlight(
