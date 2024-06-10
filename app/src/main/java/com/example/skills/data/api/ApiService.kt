@@ -4,6 +4,7 @@ package com.example.skills.data.api
 import com.example.skills.data.entity.Category
 import com.example.skills.data.entity.CategoryRequest
 import com.example.skills.data.entity.EditServiceRequest
+import com.example.skills.data.entity.RecordItem
 import com.example.skills.data.entity.Schedule
 import com.example.skills.data.entity.Service
 import com.example.skills.data.entity.ServiceRequest
@@ -204,6 +205,17 @@ interface ApiService {
     @GET("api/masters/me/records")
     suspend fun getRecords(
         @Header("Authorization") token: String,
+    ): Response<List<RecordItem>>
+
+    @DELETE("api/masters/me/records")
+    suspend fun deleteAllRecords(
+        @Header("Authorization") token: String,
+        @Body date: String
     ): Response<ResponseBody>
 
+    @DELETE("api/masters/records/{id}")
+    suspend fun deleteRecord(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): Response<ResponseBody>
 }

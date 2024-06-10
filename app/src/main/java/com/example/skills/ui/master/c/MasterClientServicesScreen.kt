@@ -1,5 +1,6 @@
 package com.example.skills.ui.master.c
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,7 +17,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -27,8 +30,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skills.data.entity.RecordItem
+import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
-import com.example.skills.data.viewmodel.MyRepository
+import com.example.skills.ui.components.tools.LoadingScreen
 import com.example.skills.ui.master.b.calendar.clickable
 import com.example.skills.ui.master.d.CustomAlertDialog
 import java.time.LocalDate
@@ -61,7 +65,12 @@ fun MasterClientServicesScreen(
             )
         }
     ) { innerPadding ->
-        MasterClientServices(innerPadding, viewModel)
+        val isLoading by viewModel.isLoading.collectAsState()
+        if (isLoading) {
+            LoadingScreen()
+        } else {
+            MasterClientServices(innerPadding, viewModel)
+        }
     }
 }
 
@@ -70,8 +79,8 @@ fun MasterClientServices(
     innerPadding: PaddingValues,
     viewModel: MainViewModel
 ) {
-    val recordItems by remember { mutableStateOf(MyRepository.getRecordsItemList()) }
-    var selectedDate: LocalDate? = null
+    val recordItems = viewModel.recordsLiveData.observeAsState()
+    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
 
     val twoSegments = remember { listOf("Актуальные", "История") }
     var selectedTwoSegment by remember { mutableStateOf(twoSegments.first()) }
@@ -84,10 +93,13 @@ fun MasterClientServices(
                 showDialog = false
             },
             onExit = {
-                showDialog = false
+                Log.e(MY_LOG, "selectedDate is $selectedDate")
 
-                recordItems.clear()
-                // recordItems.toMutableList().removeIf { it.timeFrom.toLocalDate() != selectedDate }
+                selectedDate?.let {
+                    viewModel.deleteAllRecords(it.toString()) {
+                        showDialog = false
+                    }
+                }
             },
             "Отменить все записи",
             "Все записи на эту дату будут отменены, мы уведомим об этом клиентов"
@@ -115,13 +127,13 @@ fun MasterClientServices(
                 .padding(bottom = 100.dp)
         ) {
             val groupedItems = if (selectedTwoSegment == "Актуальные") {
-                recordItems.filter { it.status == "ACTUAL" || it.status == "IN_PROGRESS" }
+                recordItems.value!!.filter { it.status == "CREATED" || it.status == "IN_PROGRESS" }
                     .groupByDate()
             } else {
-                recordItems.filter { it.status == "CANCELLED" || it.status == "COMPLETED" }
-                    .groupByDate()
+                recordItems.value?.filter { it.status == "CANCELLED" || it.status == "COMPLETED" }
+                    ?.groupByDate()
             }
-            groupedItems.forEach { (date, items) ->
+            groupedItems?.forEach { (date, items) ->
                 item {
                     Row(
                         modifier = Modifier.fillMaxWidth(),

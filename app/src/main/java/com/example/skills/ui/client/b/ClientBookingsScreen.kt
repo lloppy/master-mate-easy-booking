@@ -15,6 +15,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,10 +27,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.skills.data.entity.RecordStatus
 import com.example.skills.data.viewmodel.MainViewModel
-import com.example.skills.data.viewmodel.route.EditBookingViewModel
 import com.example.skills.data.viewmodel.MyRepository.getRecordsItemList
+import com.example.skills.data.viewmodel.route.EditBookingViewModel
+import com.example.skills.ui.components.tools.LoadingScreen
 import com.example.skills.ui.master.c.RecordItemCard
 import com.example.skills.ui.master.c.SegmentText
 import com.example.skills.ui.master.c.SegmentedControl
@@ -64,7 +65,12 @@ fun ClientBookingsScreen(
             )
         }
     ) { innerPadding ->
-        MasterClientServices(innerPadding, navController, editBookingViewModel, viewModel)
+        val isLoading by viewModel.isLoading.collectAsState()
+        if (isLoading) {
+            LoadingScreen()
+        } else {
+            MasterClientServices(innerPadding, navController, editBookingViewModel, viewModel)
+        }
     }
 }
 
@@ -103,7 +109,7 @@ fun MasterClientServices(
                 .padding(bottom = 100.dp)
         ) {
             val groupedItems = if (selectedTwoSegment == "Актуальные") {
-                recordItems.filter { it.status == "ACTUAL" || it.status == "IN_PROGRESS" }
+                recordItems.filter { it.status == "CREATED" || it.status == "IN_PROGRESS" }
                     .groupByDate()
             } else {
                 recordItems.filter { it.status == "CANCELLED" || it.status == "COMPLETED" }
@@ -120,10 +126,16 @@ fun MasterClientServices(
                         maxLines = 1
                     )
                 }
-                
+
                 items.forEach { recordItem ->
                     item {
-                        RecordItemCard(recordItem, true, navController, editBookingViewModel, viewModel)
+                        RecordItemCard(
+                            recordItem,
+                            true,
+                            navController,
+                            editBookingViewModel,
+                            viewModel
+                        )
                     }
                 }
             }

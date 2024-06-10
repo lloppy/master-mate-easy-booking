@@ -73,7 +73,9 @@ fun RecordItemCard(
                 showDialog = false
             },
             onExit = {
-                showDialog = false
+                mainViewModel.deleteRecord(recordItem.id) {
+                    showDialog = false
+                }
             },
             "Отменить запись",
             "Запись будет отменена, мы уведомим об этом " + if (isClient) "мастера" else "клиента"
@@ -153,7 +155,7 @@ fun RecordItemCard(
                         .height(40.dp)
                         .align(Alignment.TopEnd)
                 ) {
-                    if (recordItem.status == "ACTUAL" || recordItem.status == "IN_PROGRESS") {
+                    if (recordItem.status == "CREATED" || recordItem.status == "IN_PROGRESS") {
                         IconButton(onClick = { showCalendarDialog = true }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_calendar),
@@ -180,7 +182,7 @@ fun RecordItemCard(
                         }
                     }) {
                         val iconResId = when {
-                            isClient && (recordItem.status == "ACTUAL" || recordItem.status == "IN_PROGRESS") -> R.drawable.edit
+                            isClient && (recordItem.status == "CREATED" || recordItem.status == "IN_PROGRESS") -> R.drawable.edit
                             !isClient -> R.drawable.phone_circle
                             else -> null
                         }
@@ -195,7 +197,7 @@ fun RecordItemCard(
                             )
                         }
                     }
-                    if (recordItem.status == "ACTUAL" || recordItem.status == "IN_PROGRESS") {
+                    if (recordItem.status == "CREATED" || recordItem.status == "IN_PROGRESS") {
                         IconButton(onClick = { showDialog = true }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.close_circle),

@@ -27,6 +27,7 @@ import com.example.skills.data.entity.Category
 import com.example.skills.data.entity.CategoryRequest
 import com.example.skills.data.entity.Duration
 import com.example.skills.data.entity.EditServiceRequest
+import com.example.skills.data.entity.RecordItem
 import com.example.skills.data.entity.Schedule
 import com.example.skills.data.entity.Service
 import com.example.skills.data.entity.ServiceRequest
@@ -70,6 +71,9 @@ class MainViewModel(context: Context) : ViewModel() {
 
     private val _freeSlotsLiveData = MutableLiveData<List<String>>()
     val freeSlotsLiveData: LiveData<List<String>> get() = _freeSlotsLiveData
+
+    private val _recordsLiveData = MutableLiveData<List<RecordItem>>()
+    val recordsLiveData: LiveData<List<RecordItem>> get() = _recordsLiveData
 
     val userIsAuthenticated = mutableStateOf(false)
     private val preferences: SharedPreferences =
@@ -229,7 +233,8 @@ class MainViewModel(context: Context) : ViewModel() {
                     }
                 }.awaitAll()
 
-                val successfulResponses = responses.filter { it!!.isSuccessful }.mapNotNull { it?.body() }.flatten()
+                val successfulResponses =
+                    responses.filter { it!!.isSuccessful }.mapNotNull { it?.body() }.flatten()
                 if (successfulResponses.isNotEmpty()) {
                     _servicesLiveDataClient.postValue(successfulResponses)
                     onComplete(true)
@@ -504,7 +509,8 @@ class MainViewModel(context: Context) : ViewModel() {
     fun getSchedulesById(masterId: Int, onAddComplete: (Boolean) -> Unit) {
         viewModelScope.launch {
             try {
-                val response = apiService.getSchedulesById(id = masterId, token = "Bearer $_userToken")
+                val response =
+                    apiService.getSchedulesById(id = masterId, token = "Bearer $_userToken")
                 if (response.isSuccessful) {
                     response.body()?.let { data ->
                         _schedulesLiveData.postValue(data)
@@ -523,14 +529,24 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
-    fun getFreeTimeSlots(masterId: Int, serviceId: Int, date: String, onAddComplete: (Boolean) -> Unit) {
+    fun getFreeTimeSlots(
+        masterId: Int,
+        serviceId: Int,
+        date: String,
+        onAddComplete: (Boolean) -> Unit
+    ) {
         Log.i(MY_LOG, "getFreeTimeSlots masterId $masterId")
         Log.i(MY_LOG, "getFreeTimeSlots serviceId $serviceId")
-        Log.i(MY_LOG, "getFreeTimeSlots date $date" )
+        Log.i(MY_LOG, "getFreeTimeSlots date $date")
 
         viewModelScope.launch {
             try {
-                val response = apiService.getFreeTimeSlots(token = "Bearer $_userToken", masterId = masterId, serviceId = serviceId, date = date)
+                val response = apiService.getFreeTimeSlots(
+                    token = "Bearer $_userToken",
+                    masterId = masterId,
+                    serviceId = serviceId,
+                    date = date
+                )
                 if (response.isSuccessful) {
                     response.body()?.let { data ->
                         _freeSlotsLiveData.postValue(data)
@@ -586,6 +602,64 @@ class MainViewModel(context: Context) : ViewModel() {
             } catch (e: Exception) {
                 handleApiException(e)
                 onServiceRemoveComplete(false)
+            }
+            _isLoading.emit(false)
+        }
+    }
+
+    fun deleteAllRecords(date: String, onComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            try {
+                val response = apiService.deleteAllRecords("Bearer $_userToken", date)
+                if (response.isSuccessful) {
+                    val body = response.body()
+
+                    if (body != null) {
+                        loadMasterRecords()
+
+                        Log.i(MY_LOG, "Records remove successful")
+                        onComplete(true)
+                    } else {
+                        Log.e(MY_LOG, "Remove Records response is null")
+                        onComplete(false)
+                    }
+                } else {
+                    Log.e(MY_LOG, "Error occurred while removing Records: ${response.errorBody()}")
+                    onComplete(false)
+                }
+            } catch (e: Exception) {
+                handleApiException(e)
+                onComplete(false)
+            }
+            _isLoading.emit(false)
+        }
+    }
+
+    fun deleteRecord(id: Int, onComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            try {
+                val response = apiService.deleteRecord("Bearer $_userToken", id)
+                if (response.isSuccessful) {
+                    val body = response.body()
+
+                    if (body != null) {
+                        loadMasterRecords()
+
+                        Log.i(MY_LOG, "Records remove successful")
+                        onComplete(true)
+                    } else {
+                        Log.e(MY_LOG, "Remove Records response is null")
+                        onComplete(false)
+                    }
+                } else {
+                    Log.e(MY_LOG, "Error occurred while removing Records: ${response.errorBody()}")
+                    onComplete(false)
+                }
+            } catch (e: Exception) {
+                handleApiException(e)
+                onComplete(false)
             }
             _isLoading.emit(false)
         }
@@ -768,6 +842,7 @@ class MainViewModel(context: Context) : ViewModel() {
                     loadMasterCategories()
                     loadMasterImage(context)
                     loadMasterWorks(context)
+                    loadMasterRecords()
                 } catch (e: Exception) {
                     Log.e(
                         MY_LOG,
@@ -815,6 +890,23 @@ class MainViewModel(context: Context) : ViewModel() {
             }
         } else {
             Log.d(MY_LOG, "Failed to load services")
+        }
+    }
+
+    private suspend fun loadMasterRecords() {
+        val response = apiService.getRecords(token = "Bearer $_userToken")
+        if (response.isSuccessful) {
+            Log.e(MY_LOG, "getRecords is Successful")
+            Log.e(MY_LOG, response.body()?.first()?.status.toString())
+
+            val records = response.body()
+            if (records != null) {
+                _recordsLiveData.postValue(records!!)
+            } else {
+                _recordsLiveData.postValue(emptyList())
+            }
+        } else {
+            Log.e(MY_LOG, "Error is ${response.errorBody()?.string()}")
         }
     }
 
