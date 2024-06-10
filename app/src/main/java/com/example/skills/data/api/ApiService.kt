@@ -200,4 +200,10 @@ interface ApiService {
         @Path("id") id: Int,
         @Body bookingData: BookingRequest
     ): Response<ResponseBody>
+
+    @GET("api/masters/me/records")
+    suspend fun getRecords(
+        @Header("Authorization") token: String,
+    ): Response<ResponseBody>
+
 }

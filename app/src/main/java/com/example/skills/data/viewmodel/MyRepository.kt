@@ -73,73 +73,7 @@ object MyRepository {
 //        )
 //    )
 
-    private val recordsItemList = mutableListOf<RecordItem>(
-        RecordItem(
-            serviceName = "Маникюр класический",
-            price = 800,
-            timeFrom = LocalDateTime.now().minusDays(10L),
-            duration = 60,
-            comment = "Опоздаю на 10 минут",
-            clientName = "Анкудинова Полина",
-            clientAge = 20,
-            recordStatus = RecordStatus.ACTUAL
-        ),
-        RecordItem(
-            "Маникюр класический",
-            800,
-            LocalDateTime.now(),
-            60,
-            "Анкудинова Полина",
-            20,
-            RecordStatus.ACTUAL
-        ),
-        RecordItem(
-            "Маникюр класический",
-            800,
-            LocalDateTime.now().plusDays(4L),
-            60,
-            "Анкудинова Полина",
-            20,
-            RecordStatus.ACTUAL
-        ),
-        RecordItem(
-            "Маникюр класический",
-            800,
-            LocalDateTime.now(),
-            60,
-            "Анкудинова Полина",
-            20,
-            RecordStatus.ACTUAL
-        ),
-        RecordItem(
-            "Маникюр класический",
-            800,
-            LocalDateTime.now(),
-            60,
-            "Анкудинова Полина",
-            20,
-            RecordStatus.ACTUAL
-        ),
-        RecordItem(
-            "Маникюр европейский",
-            1000,
-            LocalDateTime.now(),
-            75,
-            "Гиязов Арсель",
-            20,
-            RecordStatus.ARCHIVE,
-            isDone = true
-        ),
-        RecordItem(
-            "Маникюр европейский",
-            1000,
-            LocalDateTime.now(),
-            75,
-            "Гиязов Арсель",
-            20,
-            RecordStatus.ARCHIVE
-        )
-    )
+    private val recordsItemList = mutableListOf<RecordItem>()
 
 
     fun getMaster(id: String): User = listMasters.first { it.token == id }

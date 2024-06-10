@@ -37,7 +37,6 @@ fun SetupClientNavGraph(
     // BookingViewModel
     val bookingViewModel: BookingViewModel = viewModel()
     val editBookingViewModel: EditBookingViewModel = viewModel()
-    val context = LocalContext.current
 
     NavHost(
         navController = navHostController,
@@ -160,7 +159,8 @@ fun SetupClientNavGraph(
                 navController = navHostController,
                 navigateToConfirmBooking = {
                     navHostController.navigate(ScreenRole.Client.EditConfirmClientBooking.route)
-                }
+                },
+                mainViewModel = mainViewModel
             )
         }
 

@@ -1,20 +1,24 @@
 package com.example.skills.data.entity
 
-import java.time.LocalDateTime
+import com.example.skills.data.roles.User
 
 data class RecordItem(
-    val serviceName: String,
-    val price: Int,
-    val timeFrom: LocalDateTime,
-    val duration: Int,
-    val clientName: String,
-    val clientAge: Int,
-    val recordStatus: RecordStatus,
-    val isDone: Boolean? = if (recordStatus == RecordStatus.ACTUAL) null else false,
-    val comment: String? = null,
-    val clientId: String? = null,
-    val masterId: String = "123",
-    val serviceId: Int = 123
+    val id: Int,
+    val masterId: Int = 1,
+    val date: String,
+    val status: String,
+    val comment: String = "some comment",
+    val timeFrom: String,
+    val timeTo: String,
+    val service: Service,
+    val client: ClientResponse
 )
 
-enum class RecordStatus { ACTUAL, ARCHIVE }
+enum class RecordStatus {
+    CREATED, CANCELLED, COMPLETED, IN_PROGRESS
+}
+data class ClientResponse(
+    val fullName: String,
+    val age: Int,
+    val phone: String
+)

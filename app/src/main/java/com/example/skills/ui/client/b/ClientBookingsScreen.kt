@@ -82,7 +82,7 @@ fun MasterClientServices(
             end = 16.dp
         )
     ) {
-        val records by remember { mutableStateOf(getRecordsItemList()) }
+        val recordItems by remember { mutableStateOf(getRecordsItemList()) }
 
         val twoSegments = remember { listOf("Актуальные", "История") }
         var selectedTwoSegment by remember { mutableStateOf(twoSegments.first()) }
@@ -103,9 +103,11 @@ fun MasterClientServices(
                 .padding(bottom = 100.dp)
         ) {
             val groupedItems = if (selectedTwoSegment == "Актуальные") {
-                records.filter { it.recordStatus == RecordStatus.ACTUAL }.groupByDate()
+                recordItems.filter { it.status == "ACTUAL" || it.status == "IN_PROGRESS" }
+                    .groupByDate()
             } else {
-                records.filter { it.recordStatus == RecordStatus.ARCHIVE }.groupByDate()
+                recordItems.filter { it.status == "CANCELLED" || it.status == "COMPLETED" }
+                    .groupByDate()
             }
             groupedItems.forEach { (date, items) ->
                 item {

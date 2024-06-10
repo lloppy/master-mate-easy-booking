@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -20,7 +20,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -34,9 +36,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.viewmodel.route.EditBookingViewModel
+import com.example.skills.ui.client.a.new_booking.parseTimeSlot
 import com.example.skills.ui.components.CustomButton
-import java.time.LocalTime
+import com.example.skills.ui.components.tools.LoadingScreen
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -45,7 +49,8 @@ import java.util.Locale
 fun EditTimeScreen(
     editBookingViewModel: EditBookingViewModel,
     navController: NavHostController,
-    navigateToConfirmBooking: () -> Unit
+    navigateToConfirmBooking: () -> Unit,
+    mainViewModel: MainViewModel
 ) {
     Scaffold(
         topBar = {
@@ -67,7 +72,7 @@ fun EditTimeScreen(
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            imageVector = Icons.Outlined.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = "Localized description"
                         )
                     }
@@ -75,11 +80,17 @@ fun EditTimeScreen(
             )
         }
     ) { innerPadding ->
-        SelectTimeContent(
-            innerPadding,
-            editBookingViewModel,
-            navigateToConfirmBooking
-        )
+        val isLoading by mainViewModel.isLoading.collectAsState()
+        if (isLoading) {
+            LoadingScreen()
+        } else {
+            SelectTimeContent(
+                innerPadding,
+                editBookingViewModel,
+                navigateToConfirmBooking,
+                mainViewModel
+            )
+        }
     }
 }
 
@@ -88,11 +99,11 @@ fun EditTimeScreen(
 fun SelectTimeContent(
     innerPadding: PaddingValues,
     editBookingViewModel: EditBookingViewModel,
-    navigateToConfirmBooking: () -> Unit
+    navigateToConfirmBooking: () -> Unit,
+    mainViewModel: MainViewModel
 ) {
-    val timeSlots = List(24) {
-        String.format("%02d:%02d", it / 2, (it % 2) * 30)
-    }
+    val timeSlotsState = mainViewModel.freeSlotsLiveData.observeAsState(emptyList())
+    val serviceDurationInMinutes = editBookingViewModel.data2.value!!.duration.minutes
     var selectedTime by remember { mutableStateOf("") }
 
     Column(
@@ -128,20 +139,26 @@ fun SelectTimeContent(
                 modifier = Modifier.padding(start = 24.dp)
             )
             LazyVerticalGrid(
-                columns = GridCells.Fixed(4),
+                columns = GridCells.Fixed(if (timeSlotsState.value.size < 4) timeSlotsState.value.size else 4),
             ) {
-                items(timeSlots.size) { index ->
-                    val isSelected = timeSlots[index] == selectedTime
+                items(timeSlotsState.value.size) { index ->
+                    val timeSlot = timeSlotsState.value[index]
+                    val isSelected = timeSlot == selectedTime
                     Button(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (isSelected) Color.Black else Color.LightGray,
                             contentColor = if (isSelected) Color.White else Color.Black
                         ),
                         modifier = Modifier.padding(2.dp),
-                        onClick = { selectedTime = timeSlots[index] }
+                        onClick = {
+                            selectedTime = timeSlotsState.value[index]
+                        }
                     ) {
                         Text(
-                            text = timeSlots[index],
+                            text = timeSlotsState.value[index].substring(
+                                0,
+                                timeSlotsState.value[index].length - 3
+                            )
                         )
                     }
                 }
@@ -149,8 +166,8 @@ fun SelectTimeContent(
         }
         CustomButton(
             navigateTo = {
-                val parsedTime = LocalTime.parse(selectedTime, DateTimeFormatter.ofPattern("HH:mm"))
-                editBookingViewModel.data4 = MutableLiveData(parsedTime)
+                val parsedSlot = parseTimeSlot(selectedTime, serviceDurationInMinutes)
+                editBookingViewModel.data4 = MutableLiveData(parsedSlot)
 
                 navigateToConfirmBooking.invoke()
             },

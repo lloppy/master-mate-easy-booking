@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
+import com.example.skills.data.api.MasterForClient
 import com.example.skills.ui.client.a.new_booking.paddingBetweenText
 import com.example.skills.data.entity.Service
 import com.example.skills.data.roles.User
@@ -31,7 +32,7 @@ import com.example.skills.ui.master.b.calendar.clickable
 fun EditServiceCardClient(
     singleService: Service,
     navigateToSelectDate: () -> Unit,
-    user: User,
+    master: MasterForClient,
     editBookingViewModel: EditBookingViewModel
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -90,7 +91,7 @@ fun EditServiceCardClient(
             } else {
                 Spacer(modifier = Modifier.height(paddingBetweenText))
                 Text(
-                    text = "Адрес: " + user.master!!.address,
+                    text = "Адрес: " + master.address,
                     color = Color.LightGray,
                     fontWeight = FontWeight.Normal,
                     fontSize = 12.sp,

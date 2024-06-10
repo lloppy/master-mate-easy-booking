@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,8 +44,12 @@ import com.example.skills.data.viewmodel.route.EditBookingViewModel
 import com.example.skills.data.viewmodel.MyRepository.getMaster
 import com.example.skills.navigation.ScreenRole
 import com.example.skills.ui.master.d.CustomAlertDialog
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 
 @SuppressLint("DefaultLocale")
@@ -52,11 +57,12 @@ import java.time.ZonedDateTime
 fun RecordItemCard(
     recordItem: RecordItem,
     isClient: Boolean = false,
-    // возможны нул значения для мастера, для клиента всегда не нул
-    navController: NavHostController? = null,
+    navController: NavHostController? = null, // возможны нул значения для мастера, для клиента всегда не нул
     editBookingViewModel: EditBookingViewModel? = null,
-    viewModel: MainViewModel
+    mainViewModel: MainViewModel
 ) {
+    val masters by mainViewModel.mastersForClient.collectAsState()
+
     val context = LocalContext.current
     var showDialog by remember { mutableStateOf(false) }
     var showCalendarDialog by remember { mutableStateOf(false) }
@@ -94,7 +100,7 @@ fun RecordItemCard(
             .fillMaxWidth()
             .height(
                 164.dp
-                    .plus(if (recordItem.recordStatus == RecordStatus.ARCHIVE) 24.dp else 0.dp)
+                    .plus(if (recordItem.status == "CANCELLED" || recordItem.status == "COMPLETED") 24.dp else 0.dp)
                     .minus(if (isClient && recordItem.comment == null) 24.dp else 0.dp)
             )
             .border(1.dp, Color.LightGray, RoundedCornerShape(20.dp))
@@ -102,19 +108,25 @@ fun RecordItemCard(
     ) {
         Column(modifier = Modifier.padding(start = 20.dp, end = 15.dp)) {
             Spacer(modifier = Modifier.height(paddingBetweenText.plus(paddingBetweenText)))
-            val timeEnd = recordItem.timeFrom.plusMinutes(recordItem.duration.toLong())
+
+            val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+            val startTime = LocalTime.parse(recordItem.timeFrom, timeFormatter)
+            val totalDurationMinutes = recordItem.service.duration.hours * 60 + recordItem.service.duration.minutes
+
+            val timeEnd = startTime.plusMinutes(totalDurationMinutes.toLong())
+
             Box(modifier = Modifier.fillMaxWidth()) {
                 Column {
-                    if (recordItem.recordStatus == RecordStatus.ARCHIVE) {
-                        if (recordItem.isDone!!) {
+                    if (recordItem.status == "CANCELLED" || recordItem.status == "COMPLETED") {
+                        if (recordItem.status == "COMPLETED") {
                             BadgeCard("Выполнена", Color(41, 174, 41))
                         } else {
                             BadgeCard("Отменена", Color(236, 19, 19))
                         }
                     }
                     Text(
-                        text = "${String.format("%02d", recordItem.timeFrom.hour)}:${
-                            String.format("%02d", recordItem.timeFrom.minute)
+                        text = "${String.format("%02d", startTime.hour)}:${
+                            String.format("%02d", startTime.minute)
                         } - ${String.format("%02d", timeEnd.hour)}:${
                             String.format("%02d", timeEnd.minute)
                         }",
@@ -128,7 +140,7 @@ fun RecordItemCard(
                     )
                     Spacer(modifier = Modifier.height(paddingBetweenText))
                     Text(
-                        text = recordItem.serviceName,
+                        text = recordItem.service.name,
                         color = Color.Black,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 14.sp,
@@ -141,7 +153,7 @@ fun RecordItemCard(
                         .height(40.dp)
                         .align(Alignment.TopEnd)
                 ) {
-                    if (recordItem.recordStatus == RecordStatus.ACTUAL) {
+                    if (recordItem.status == "ACTUAL" || recordItem.status == "IN_PROGRESS") {
                         IconButton(onClick = { showCalendarDialog = true }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_calendar),
@@ -154,17 +166,21 @@ fun RecordItemCard(
                         if (isClient) {
                             try {
                                 editBookingViewModel!!.data1 =
-                                    MutableLiveData(getMaster(recordItem.masterId))
+                                    MutableLiveData(
+                                        masters.first{it.masterId == recordItem.masterId}
+
+
+                                    )
                                 editBookingViewModel.data2 =
-                                    MutableLiveData(viewModel.getService(recordItem.serviceId))
+                                    MutableLiveData(mainViewModel.getService(recordItem.service.id))
 
                                 navController!!.navigate(ScreenRole.Client.EditDate.route)
-                            } catch (e: NullPointerException) {
+                            } catch (_: NullPointerException) {
                             }
                         }
                     }) {
                         val iconResId = when {
-                            isClient && recordItem.recordStatus == RecordStatus.ACTUAL -> R.drawable.edit
+                            isClient && (recordItem.status == "ACTUAL" || recordItem.status == "IN_PROGRESS") -> R.drawable.edit
                             !isClient -> R.drawable.phone_circle
                             else -> null
                         }
@@ -179,7 +195,7 @@ fun RecordItemCard(
                             )
                         }
                     }
-                    if (recordItem.recordStatus == RecordStatus.ACTUAL) {
+                    if (recordItem.status == "ACTUAL" || recordItem.status == "IN_PROGRESS") {
                         IconButton(onClick = { showDialog = true }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.close_circle),
@@ -193,7 +209,7 @@ fun RecordItemCard(
 
             Spacer(modifier = Modifier.height(paddingBetweenText))
             Text(
-                text = recordItem.price.toString() + " руб",
+                text = recordItem.service.price.toString() + " руб",
                 color = Color.Black,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 18.sp,
@@ -203,7 +219,7 @@ fun RecordItemCard(
             if (!(isClient && recordItem.comment == null)) {
                 Spacer(modifier = Modifier.height(paddingBetweenText))
                 Text(
-                    text = if (!isClient) "Клиент: ${recordItem.clientName} ${recordItem.clientAge} лет  " else "Коментарий: ${recordItem.comment}",
+                    text = if (!isClient) "Клиент: ${recordItem.client.fullName} ${recordItem.client.age} лет  " else "Коментарий: ${recordItem.comment}",
                     color = Color.LightGray,
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp,
@@ -244,12 +260,17 @@ var instructionTextSize = 14.sp
 
 
 fun openGoogleCalendar(context: Context, recordItem: RecordItem) {
-    val zonedDateTime: ZonedDateTime =
-        recordItem.timeFrom.atZone(ZoneId.systemDefault())
+    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
 
+    val time = LocalTime.parse(recordItem.timeFrom, timeFormatter)
+    val date = LocalDate.parse(recordItem.date)
+    val dateTime = LocalDateTime.of(date, time)
+
+    val zonedDateTime: ZonedDateTime = dateTime.atZone(ZoneId.systemDefault())
+
+    val durationInMinutes = recordItem.service.duration.hours * 60 + recordItem.service.duration.minutes
     val startMillis: Long = zonedDateTime.toInstant().toEpochMilli()
-    val endMillis: Long =
-        startMillis + recordItem.duration * 60 * 1000
+    val endMillis: Long = startMillis + durationInMinutes * 60 * 1000
 
     val intent = Intent(Intent.ACTION_INSERT)
         .setData(CalendarContract.Events.CONTENT_URI)
@@ -258,7 +279,7 @@ fun openGoogleCalendar(context: Context, recordItem: RecordItem) {
             startMillis
         )
         .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endMillis)
-        .putExtra(CalendarContract.Events.TITLE, recordItem.serviceName)
+        .putExtra(CalendarContract.Events.TITLE, recordItem.service.name)
         .putExtra(
             CalendarContract.Events.DESCRIPTION,
             recordItem.comment

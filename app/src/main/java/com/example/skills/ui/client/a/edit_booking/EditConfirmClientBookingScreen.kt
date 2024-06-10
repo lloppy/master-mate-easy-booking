@@ -107,7 +107,8 @@ fun ConfirmClientBookingContent(
         Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
             Text(
                 text = date.format(DateTimeFormatter.ofPattern("d MMMM", Locale("ru")))
-                        + " в " + time.format(DateTimeFormatter.ofPattern("HH:mm")),
+                        + " в " + time.from.format(DateTimeFormatter.ofPattern("HH:mm"))
+                    .substring(0, time.from.length - 3),
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 fontSize = 18.sp,

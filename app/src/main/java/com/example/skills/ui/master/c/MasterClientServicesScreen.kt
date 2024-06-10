@@ -26,14 +26,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.example.skills.data.entity.RecordItem
-import com.example.skills.data.entity.RecordStatus
 import com.example.skills.data.viewmodel.MainViewModel
-import com.example.skills.data.viewmodel.MyRepository.getRecordsItemList
+import com.example.skills.data.viewmodel.MyRepository
 import com.example.skills.ui.master.b.calendar.clickable
 import com.example.skills.ui.master.d.CustomAlertDialog
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -71,7 +70,7 @@ fun MasterClientServices(
     innerPadding: PaddingValues,
     viewModel: MainViewModel
 ) {
-    val recordItems by remember { mutableStateOf(getRecordsItemList()) } //TODO()
+    val recordItems by remember { mutableStateOf(MyRepository.getRecordsItemList()) }
     var selectedDate: LocalDate? = null
 
     val twoSegments = remember { listOf("Актуальные", "История") }
@@ -116,13 +115,18 @@ fun MasterClientServices(
                 .padding(bottom = 100.dp)
         ) {
             val groupedItems = if (selectedTwoSegment == "Актуальные") {
-                recordItems.filter { it.recordStatus == RecordStatus.ACTUAL }.groupByDate()
+                recordItems.filter { it.status == "ACTUAL" || it.status == "IN_PROGRESS" }
+                    .groupByDate()
             } else {
-                recordItems.filter { it.recordStatus == RecordStatus.ARCHIVE }.groupByDate()
+                recordItems.filter { it.status == "CANCELLED" || it.status == "COMPLETED" }
+                    .groupByDate()
             }
             groupedItems.forEach { (date, items) ->
                 item {
-                    Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
                         Text(
                             text = date.format(formatter),
                             modifier = Modifier.padding(start = 10.dp, top = 20.dp),
@@ -137,7 +141,8 @@ fun MasterClientServices(
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 14.sp,
                             maxLines = 1,
-                            modifier = Modifier.padding(end = 10.dp, top = 20.dp)
+                            modifier = Modifier
+                                .padding(end = 10.dp, top = 20.dp)
                                 .clickable {
                                     selectedDate = date
                                     showDialog = true
@@ -146,7 +151,7 @@ fun MasterClientServices(
                     }
                 }
                 items.forEach { bookingItem ->
-                    item { RecordItemCard(bookingItem, viewModel = viewModel) }
+                    item { RecordItemCard(bookingItem, mainViewModel = viewModel) }
                 }
             }
         }
@@ -154,6 +159,10 @@ fun MasterClientServices(
 }
 
 fun List<RecordItem>.groupByDate(): Map<LocalDate, List<RecordItem>> {
-    return this.groupBy { it.timeFrom.toLocalDate() }
+    return this.groupBy {
+        val dateTime =
+            LocalDateTime.parse("${it.date}T${it.timeFrom}", DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+        dateTime.toLocalDate()
+    }
 }
 
