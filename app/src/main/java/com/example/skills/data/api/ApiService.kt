@@ -210,7 +210,7 @@ interface ApiService {
     @DELETE("api/masters/me/records")
     suspend fun deleteAllRecords(
         @Header("Authorization") token: String,
-        @Body date: String
+        @Query("date") date: String // or body? //TODO()
     ): Response<ResponseBody>
 
     @DELETE("api/masters/records/{id}")

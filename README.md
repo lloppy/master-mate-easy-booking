@@ -11,6 +11,7 @@
    - Open Google drive at [Google drive](https://drive.google.com/drive/folders/10UHVCAwOTWVzNMxHMmq8H1EpR8hKntv-?usp=sharing) <- actual version here
    - Download the "MasterMate" file.
    - Click "Install".
+   - If localhost 8080 in config settings (Network.kt file), follow this [guide](guide.md)
 
 
 ![Иллюстрация к проекту](https://github.com/lloppy/SkillSched/blob/main/cover.png)
