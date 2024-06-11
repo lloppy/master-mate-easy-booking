@@ -142,7 +142,7 @@ fun RecordItemCard(
                     )
                     Spacer(modifier = Modifier.height(paddingBetweenText))
                     Text(
-                        text = recordItem.service.name,
+                        text = recordItem.service.name.capitalize(),
                         color = Color.Black,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 14.sp,
@@ -218,10 +218,11 @@ fun RecordItemCard(
                 maxLines = 1
             )
 
-            if (!(isClient && recordItem.comment == null)) {
+            if (!isClient) {
                 Spacer(modifier = Modifier.height(paddingBetweenText))
+                val text = if (recordItem.comment.isNullOrEmpty() || recordItem.comment.isNullOrBlank()) ""  else "\nКоментарий: ${recordItem.comment}"
                 Text(
-                    text = if (!isClient) "Клиент: ${recordItem.client.fullName} ${recordItem.client.age} лет  " else "Коментарий: ${recordItem.comment}",
+                    text = "Клиент: ${recordItem.client.fullName} ${recordItem.client.age} лет  " + text,
                     color = Color.LightGray,
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp,
@@ -255,7 +256,7 @@ fun BadgeCard(text: String, color: Color) {
 }
 
 
-val paddingBetweenText = 9.dp
+val paddingBetweenText = 8.dp
 var lineHeight = 18.sp
 var spacerValue = 14.dp
 var instructionTextSize = 14.sp

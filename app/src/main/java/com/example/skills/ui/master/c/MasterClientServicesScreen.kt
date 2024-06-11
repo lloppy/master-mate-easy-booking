@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -127,8 +128,8 @@ fun MasterClientServices(
                 .padding(bottom = 100.dp)
         ) {
             val groupedItems = if (selectedTwoSegment == "Актуальные") {
-                recordItems.value!!.filter { it.status == "CREATED" || it.status == "IN_PROGRESS" }
-                    .groupByDate()
+                recordItems.value?.filter { it.status == "CREATED" || it.status == "IN_PROGRESS" }
+                    ?.groupByDate()
             } else {
                 recordItems.value?.filter { it.status == "CANCELLED" || it.status == "COMPLETED" }
                     ?.groupByDate()
@@ -165,10 +166,22 @@ fun MasterClientServices(
                 items.forEach { bookingItem ->
                     item { RecordItemCard(bookingItem, mainViewModel = viewModel) }
                 }
+            } ?: run {
+                item {
+                    Text(
+                        text = "Нет доступных записей",
+                        color = Color.Gray,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
             }
         }
     }
 }
+
 
 fun List<RecordItem>.groupByDate(): Map<LocalDate, List<RecordItem>> {
     return this.groupBy {
