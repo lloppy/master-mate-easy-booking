@@ -35,7 +35,6 @@ import com.example.skills.data.roles.Role
 import com.example.skills.data.roles.User
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -97,8 +96,6 @@ class MainViewModel(context: Context) : ViewModel() {
                 Network.updateToken(it)
                 userIsAuthenticated.value = true
                 loadCurrentUser(it, context)
-
-                Log.d(MY_LOG, "currentUser" + currentUser?.client?.mastersId?.first().toString())
             }
         } else {
             Log.d(MY_LOG, "Gg, it`s old deprecated session 💩💩")
@@ -785,36 +782,25 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
-    fun emptyLoad() {
-        viewModelScope.launch {
-            _isLoading.emit(true)
-            delay(2000)
-            _isLoading.emit(false)
-        }
-    }
-
-    fun loadAllServices(onComplete: (Boolean) -> Unit) {
+    fun getRecords(onComplete: (Boolean) -> Unit) {
         viewModelScope.launch {
             _isLoading.emit(true)
             try {
-                loadMasterServices()
-                loadMasterCategories()
+                val response = apiService.getRecords(token = "Bearer $_userToken")
+                if (response.isSuccessful) {
 
-                onComplete(true)
-            } catch (e: Exception) {
-                handleApiException(e)
-                onComplete(false)
-            }
-            _isLoading.emit(false)
-        }
-    }
+                    val records = response.body()
+                    if (records != null ) {
+                        _recordsLiveData.postValue(records!!)
+                        onComplete(true)
+                    } else {
+                        _recordsLiveData.postValue(emptyList())
+                        onComplete(false)
+                    }
 
-    fun loadMasterRecords(onComplete: (Boolean) -> Unit) {
-        viewModelScope.launch {
-            _isLoading.emit(true)
-            try {
-                loadMasterRecords()
-                onComplete(true)
+                } else {
+                    Log.e(MY_LOG, "Error is ${response.errorBody()}")
+                }
             } catch (e: Exception) {
                 handleApiException(e)
                 onComplete(false)
@@ -941,7 +927,7 @@ class MainViewModel(context: Context) : ViewModel() {
             Log.e(MY_LOG, response.body()?.first()?.status.toString())
 
             val records = response.body()
-            if (records != null) {
+            if (records != null ) {
                 _recordsLiveData.postValue(records!!)
             } else {
                 _recordsLiveData.postValue(emptyList())

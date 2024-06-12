@@ -8,8 +8,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.navigation.SetupRoleNavGraph
-import com.example.skills.navigation.clientNavGraph
-import com.example.skills.navigation.masterNavGraph
 import com.example.skills.ui.theme.SkillsTheme
 
 class MainActivity : ComponentActivity() {

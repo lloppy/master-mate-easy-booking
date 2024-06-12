@@ -231,7 +231,6 @@ fun SetupRoleNavGraph(navHostController: NavHostController, mainViewModel: MainV
     NavHost(navController = navHostController, startDestination = ScreenRole.RoleLayout.route) {
 
         composable(ScreenRole.RoleLayout.route) {
-            Log.d(MY_LOG, "master route is " + ScreenRole.Master.LogIn.route.toString())
             RoleScreen(
                 navigateToClientLogin = { navHostController.navigate(ScreenRole.Client.LogIn.route) },
                 navigateToMasterLogin = { navHostController.navigate(ScreenRole.Master.LogIn.route) }

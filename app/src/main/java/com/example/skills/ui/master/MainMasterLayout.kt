@@ -3,6 +3,7 @@ package com.example.skills.ui.master
 import android.annotation.SuppressLint
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.skills.data.viewmodel.MainViewModel
@@ -20,8 +21,8 @@ fun MainMasterLayout(navController: NavHostController, mainViewmodel: MainViewMo
         ScreenRole.Master.PasswordSettings.route
     )
 
-    val screen = navController.currentBackStackEntryAsState().value
-    val showBottomBar = screen?.destination?.route !in hideList
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val showBottomBar = currentBackStackEntry?.destination?.route !in hideList
 
     Scaffold(
         bottomBar = {

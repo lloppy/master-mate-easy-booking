@@ -107,8 +107,4 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.1")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
     implementation("androidx.compose.runtime:runtime-livedata:1.0.5")
-
-    // SwipeRefresh
-    implementation("com.google.accompanist:accompanist-swiperefresh:0.26.3-beta")
-
 }
