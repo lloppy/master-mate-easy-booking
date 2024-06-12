@@ -21,7 +21,6 @@ import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,7 +39,6 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-
 
 @Composable
 fun SelectDateTime(viewModel: MainViewModel, selection: DateSelection) {
@@ -62,7 +60,9 @@ fun SelectDateTime(viewModel: MainViewModel, selection: DateSelection) {
                 initialStartTime = interval.from,
                 initialEndTime = interval.to,
                 isEditable = inEditMode,
-            ) { updatedInterval -> intervals = intervals.toMutableList().also { it[index] = updatedInterval } }
+            ) { updatedInterval ->
+                intervals = intervals.toMutableList().also { it[index] = updatedInterval }
+            }
 
         }
 
@@ -72,6 +72,20 @@ fun SelectDateTime(viewModel: MainViewModel, selection: DateSelection) {
                 modifier = Modifier.padding(end = 8.dp)
             ) {
                 Text(text = "+ Добавить интервал")
+            }
+
+            TextButton(
+                onClick = {
+                    val dates = getDatesBetween(selection.startDate, selection.endDate)
+
+                    viewModel.deleteSchedule(dates) {}
+                    try {
+                        viewModel.getScheduleByToken {}
+                    } catch (e: Exception) { }
+                },
+                modifier = Modifier.padding(end = 8.dp)
+            ) {
+                Text(text = "Удалить интервал", color = Color.Red)
             }
         }
         Spacer(modifier = Modifier.height(10.dp))
@@ -97,8 +111,9 @@ fun SelectDateTime(viewModel: MainViewModel, selection: DateSelection) {
                         inEditMode = !inEditMode
 
                         try {
-                            viewModel.getScheduleByToken(){}
-                        } catch (e: Exception){}
+                            viewModel.getScheduleByToken {}
+                        } catch (e: Exception) {
+                        }
                     }
                 },
                 buttonText = "Сохранить"
@@ -110,13 +125,36 @@ fun SelectDateTime(viewModel: MainViewModel, selection: DateSelection) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 CustomButton(
-                    { intervals = intervals.dropLast(1) },
+                    {
+                        intervals = intervals.dropLast(1)
+                    },
                     "Удалить",
                     color = Color.Transparent,
                     width = 0.5f
                 )
                 CustomButton(
-                    { inEditMode = !inEditMode },
+                    {
+                        if (intervals.isNotEmpty()) {
+                            val dates = getDatesBetween(selection.startDate, selection.endDate)
+                            val timeSlot = intervals.last()
+                            val timeSlots = List(1) { TimeSlot(timeSlot.from, timeSlot.to) }
+
+                            val scheduleRequest = ScheduleCreateRequest(
+                                dates = dates,
+                                timeSlots = timeSlots
+                            )
+                            viewModel.changeSchedule(scheduleRequest) {
+                                inEditMode = !inEditMode
+                            }
+
+                            inEditMode = !inEditMode
+
+                            try {
+                                viewModel.getScheduleByToken {}
+                            } catch (e: Exception) {
+                            }
+                        }
+                    },
                     "Изменить"
                 )
             }

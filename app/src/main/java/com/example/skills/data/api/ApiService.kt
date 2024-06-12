@@ -15,6 +15,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -143,7 +144,7 @@ interface ApiService {
     @PUT("/api/masters/me/schedules")
     suspend fun changeSchedule(
         @Header("Authorization") token: String,
-        @Body scheduleChangeRequest: ScheduleChangeRequest
+        @Body scheduleCreateRequest: ScheduleCreateRequest
     ): Response<String>
 
     @POST("/api/masters/me/schedules")
@@ -152,11 +153,12 @@ interface ApiService {
         @Body scheduleCreateRequest: ScheduleCreateRequest
     ): Response<ResponseBody>
 
-    @DELETE("/api/masters/me/schedules")
+    //@DELETE("/api/masters/me/schedules")
+    @HTTP(method = "DELETE", path = "/api/masters/me/schedules", hasBody = true)
     suspend fun deleteSchedule(
         @Header("Authorization") token: String,
         @Body dates: List<String>
-    ): Response<String>
+    ): Response<ResponseBody>
 
     @GET("/api/masters/{id}/schedules")
     suspend fun getScheduleByMasterId(@Path("id") id: Long): Response<List<Schedule>>

@@ -781,6 +781,7 @@ class MainViewModel(context: Context) : ViewModel() {
             }
         }
     }
+
     fun getScheduleByToken(onComplete: (Boolean) -> Unit) {
         viewModelScope.launch {
             _isLoading.emit(true)
@@ -789,7 +790,7 @@ class MainViewModel(context: Context) : ViewModel() {
                 if (response.isSuccessful) {
 
                     val data = response.body()
-                    if (data != null ) {
+                    if (data != null) {
                         _schedulesLiveData.postValue(data!!)
                         onComplete(true)
                     } else {
@@ -797,6 +798,49 @@ class MainViewModel(context: Context) : ViewModel() {
                         onComplete(false)
                     }
 
+                } else {
+                    Log.e(MY_LOG, "Error is ${response.errorBody()}")
+                }
+            } catch (e: Exception) {
+                handleApiException(e)
+                onComplete(false)
+            }
+            _isLoading.emit(false)
+        }
+    }
+
+    fun changeSchedule(
+        scheduleCreateRequest: ScheduleCreateRequest,
+        onComplete: (Boolean) -> Unit
+    ) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            try {
+                val response =
+                    apiService.changeSchedule(token = "Bearer $_userToken", scheduleCreateRequest)
+                if (response.isSuccessful) {
+                    val data = response.body()
+                    if (data != null) onComplete(true) else onComplete(false)
+                } else {
+                    Log.e(MY_LOG, "Error is ${response.errorBody()}")
+                }
+            } catch (e: Exception) {
+                handleApiException(e)
+                onComplete(false)
+            }
+            _isLoading.emit(false)
+        }
+    }
+
+
+    fun deleteSchedule(dates: List<String>, onComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            try {
+                val response = apiService.deleteSchedule(token = "Bearer $_userToken", dates = dates)
+                if (response.isSuccessful) {
+                    val data = response.body()
+                    if (data != null) onComplete(true) else onComplete(false)
                 } else {
                     Log.e(MY_LOG, "Error is ${response.errorBody()}")
                 }
@@ -816,7 +860,7 @@ class MainViewModel(context: Context) : ViewModel() {
                 if (response.isSuccessful) {
 
                     val records = response.body()
-                    if (records != null ) {
+                    if (records != null) {
                         _recordsLiveData.postValue(records!!)
                         onComplete(true)
                     } else {
@@ -904,8 +948,9 @@ class MainViewModel(context: Context) : ViewModel() {
                 }
 
                 try {
-                    getScheduleByToken(){}
-                } catch (e: Exception){}
+                    getScheduleByToken() {}
+                } catch (e: Exception) {
+                }
             } else Log.e(MY_LOG, "Failed to load master")
         }
     }
@@ -957,7 +1002,7 @@ class MainViewModel(context: Context) : ViewModel() {
             Log.e(MY_LOG, response.body()?.first()?.status.toString())
 
             val records = response.body()
-            if (records != null ) {
+            if (records != null) {
                 _recordsLiveData.postValue(records!!)
             } else {
                 _recordsLiveData.postValue(emptyList())
