@@ -84,12 +84,12 @@ fun SelectDateTime(viewModel: MainViewModel, selection: DateSelection) {
                             "selection: " + selection.startDate!! + " " + selection.endDate
                         )
                         val dates = getDatesBetween(selection.startDate, selection.endDate)
-                        val timeSlots = intervals.map { TimeSlot(from = it.from, to = it.to) }
+                        val timeSlot = intervals.last()
+                        val timeSlots = List(1) { TimeSlot(timeSlot.from, timeSlot.to) }
 
                         val scheduleRequest = ScheduleCreateRequest(
                             dates = dates,
                             timeSlots = timeSlots
-                            //listOf(TimeSlot(from = "14:30:00", to = "15:30:00"))
                         )
                         viewModel.createSchedule(scheduleRequest)
 
