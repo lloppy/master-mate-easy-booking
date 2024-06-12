@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object Network {
-    val loggingInterceptor = HttpLoggingInterceptor().apply {
+    private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
@@ -26,8 +26,8 @@ object Network {
 
     val apiService: ApiService by lazy {
         Retrofit.Builder()
-            //.baseUrl("http://localhost:8080/")
-            .baseUrl("http://51.250.10.237:8080/")
+            .baseUrl("http://localhost:8080/")
+            // .baseUrl("http://51.250.10.237:8080/")
             // .baseUrl("http://158.160.136.24:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(provideClient())

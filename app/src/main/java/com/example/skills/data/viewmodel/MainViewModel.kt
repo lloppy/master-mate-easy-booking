@@ -35,6 +35,7 @@ import com.example.skills.data.roles.Role
 import com.example.skills.data.roles.User
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -96,6 +97,8 @@ class MainViewModel(context: Context) : ViewModel() {
                 Network.updateToken(it)
                 userIsAuthenticated.value = true
                 loadCurrentUser(it, context)
+
+                Log.d(MY_LOG, "currentUser" + currentUser?.client?.mastersId?.first().toString())
             }
         } else {
             Log.d(MY_LOG, "Gg, it`s old deprecated session 💩💩")
@@ -779,6 +782,44 @@ class MainViewModel(context: Context) : ViewModel() {
                 }
             } catch (_: Exception) {
             }
+        }
+    }
+
+    fun emptyLoad() {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            delay(2000)
+            _isLoading.emit(false)
+        }
+    }
+
+    fun loadAllServices(onComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            try {
+                loadMasterServices()
+                loadMasterCategories()
+
+                onComplete(true)
+            } catch (e: Exception) {
+                handleApiException(e)
+                onComplete(false)
+            }
+            _isLoading.emit(false)
+        }
+    }
+
+    fun loadMasterRecords(onComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            try {
+                loadMasterRecords()
+                onComplete(true)
+            } catch (e: Exception) {
+                handleApiException(e)
+                onComplete(false)
+            }
+            _isLoading.emit(false)
         }
     }
 

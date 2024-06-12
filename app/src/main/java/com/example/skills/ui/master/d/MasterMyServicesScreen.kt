@@ -51,6 +51,8 @@ import com.example.skills.navigation.ScreenRole
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.components.tools.LoadingScreen
 import com.example.skills.ui.theme.paddingBetweenElements
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
@@ -107,6 +109,9 @@ fun MasterMyServices(
     val receivedCategories by viewModel.categoriesLiveDataMaster.observeAsState()
     var selectedCategory by remember { mutableStateOf(if (receivedCategories?.isNotEmpty() == true) receivedCategories!!.first().name else "") }
 
+    var isRefreshing by remember { mutableStateOf(false) }
+    val swipeRefreshState = remember { SwipeRefreshState(isRefreshing) }
+
     val categories = receivedCategories?.plus(
         Category(
             Int.MAX_VALUE,
@@ -126,152 +131,156 @@ fun MasterMyServices(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column(
-            Modifier
-                .weight(1f)
-                .padding(
-                    start = 16.dp,
-                    end = 16.dp
-                )
+
+        SwipeRefresh(
+            state = swipeRefreshState,
+            onRefresh = {
+                isRefreshing = true
+                viewModel.loadAllServices {}
+                isRefreshing = false
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 100.dp)
         ) {
-            if (categories != null) {
-                Log.e("MasterMyServicesScreen", "categories != null")
-                if (categories.size <= 1) {
-                    Log.e("MasterMyServicesScreen", "categories size 1 or 0")
+            Column(
+                Modifier
+                    .weight(1f)
+                    .padding(
+                        start = 16.dp,
+                        end = 16.dp
+                    )
+            ) {
+                if (categories != null) {
+                    Log.e("MasterMyServicesScreen", "categories != null")
+                    if (categories.size <= 1) {
+                        Log.e("MasterMyServicesScreen", "categories size 1 or 0")
 
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(0.23f)
-                    ) {
-                        Button(onClick = navigateToCreateCategory, Modifier.weight(1f)) {
-                            Text("Добавить категорию")
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .fillMaxHeight(0.23f)
+                        ) {
+                            Button(onClick = navigateToCreateCategory, Modifier.weight(1f)) {
+                                Text("Добавить категорию")
+                            }
+                            Text(
+                                text = "В вашем списке отсутствуют категории услуг. Чтобы добавить категорию, воспользуйтесь кнопкой выше.",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = Color.Gray,
+                                modifier = Modifier.padding(start = 12.dp, top = 25.dp)
+                            )
                         }
-                        Text(
-                            text = "В вашем списке отсутствуют категории услуг. Чтобы добавить категорию, воспользуйтесь кнопкой выше.",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Normal,
-                            color = Color.Gray,
-                            modifier = Modifier.padding(start = 12.dp, top = 25.dp)
-                        )
-                    }
-                } else {
-                    Log.e("MasterMyServicesScreen", "categories more than 1")
+                    } else {
+                        Log.e("MasterMyServicesScreen", "categories more than 1")
 
-                    LazyRow(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 12.dp)
-                    ) {
-                        items(categories) { category ->
-                            val interactionSource = remember { MutableInteractionSource() }
-                            val viewConfiguration = LocalViewConfiguration.current
+                        LazyRow(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 12.dp)
+                        ) {
+                            items(categories) { category ->
+                                val interactionSource = remember { MutableInteractionSource() }
+                                val viewConfiguration = LocalViewConfiguration.current
 
-                            LaunchedEffect(interactionSource) {
-                                var isLongClick = false
-                                interactionSource.interactions.collectLatest { interaction ->
-                                    when (interaction) {
-                                        is PressInteraction.Press -> {
-                                            isLongClick = false
-                                            delay(viewConfiguration.longPressTimeoutMillis)
-                                            isLongClick = true
+                                LaunchedEffect(interactionSource) {
+                                    var isLongClick = false
+                                    interactionSource.interactions.collectLatest { interaction ->
+                                        when (interaction) {
+                                            is PressInteraction.Press -> {
+                                                isLongClick = false
+                                                delay(viewConfiguration.longPressTimeoutMillis)
+                                                isLongClick = true
 
-                                            try {
-                                                val selectedCategoryName = selectedCategory
-                                                Log.e(
-                                                    MY_LOG,
-                                                    "selectedCategoryName is $selectedCategoryName"
-                                                )
-
-                                                navController.navigate(
-                                                    ScreenRole.Master.ChangeCategory.route.replace(
-                                                        "{selectedCategoryName}",
-                                                        selectedCategoryName
+                                                try {
+                                                    val selectedCategoryName = selectedCategory
+                                                    Log.e(
+                                                        MY_LOG,
+                                                        "selectedCategoryName is $selectedCategoryName"
                                                     )
-                                                )
-                                            } catch (e: IllegalArgumentException) {
-                                            }
-                                        }
 
-                                        is PressInteraction.Release -> {
-                                            if (isLongClick.not()) {
-                                                // Toast.makeText(context, "click", Toast.LENGTH_SHORT).show()
+                                                    navController.navigate(
+                                                        ScreenRole.Master.ChangeCategory.route.replace(
+                                                            "{selectedCategoryName}",
+                                                            selectedCategoryName
+                                                        )
+                                                    )
+                                                } catch (e: IllegalArgumentException) {
+                                                }
+                                            }
+
+                                            is PressInteraction.Release -> {
+                                                if (isLongClick.not()) {
+                                                    // Toast.makeText(context, "click", Toast.LENGTH_SHORT).show()
+                                                }
                                             }
                                         }
                                     }
                                 }
+                                CategoryButton(
+                                    text = category.name,
+                                    onClick = {
+                                        if (category.name == "Добавить категорию") category.action.invoke() else category.action
+                                        selectedCategory = category.name
+                                    },
+                                    interactionSource = interactionSource,
+                                    containerColor = if (category.name == selectedCategory) Color.Black else Color.White,
+                                    contentColor = if (category.name == selectedCategory) Color.White else Color.Gray
+                                )
                             }
-                            CategoryButton(
-                                text = category.name,
-                                onClick = {
-                                    if (category.name == "Добавить категорию") category.action.invoke() else category.action
-                                    selectedCategory = category.name
-                                },
-                                interactionSource = interactionSource,
-                                containerColor = if (category.name == selectedCategory) Color.Black else Color.White,
-                                contentColor = if (category.name == selectedCategory) Color.White else Color.Gray
+                        }
+
+                        val selectedServicesByCategory =
+                            services?.filter { it.category.name == selectedCategory }
+
+                        if (selectedServicesByCategory != null && categories.size > 1) {
+                            LazyColumn {
+                                items(selectedServicesByCategory) { singleService ->
+                                    SingleServiceCard(singleService, navController, viewModel)
+                                }
+                            }
+                        } else {
+                            Text(
+                                text = "В этой категории пока нет услуг. \nЧтобы создать их, воспользуйтесь кнопкой ниже.",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = Color.Gray,
+                                modifier = Modifier.padding(start = 12.dp, top = 25.dp)
                             )
                         }
-                    }
-
-                    val selectedServicesByCategory =
-                        services?.filter { it.category.name == selectedCategory }
-
-                    if (selectedServicesByCategory != null && categories.size > 1) {
-                        LazyColumn {
-                            items(selectedServicesByCategory) { singleService ->
-                                SingleServiceCard(singleService, navController, viewModel)
-                            }
-                        }
-                    } else {
-                        Text(
-                            text = "В этой категории пока нет услуг. \nЧтобы создать их, воспользуйтесь кнопкой ниже.",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Normal,
-                            color = Color.Gray,
-                            modifier = Modifier.padding(start = 12.dp, top = 25.dp)
-                        )
                     }
                 }
-            } else {
-                receivedCategories?.plus(
-                    Category(
-                        Int.MAX_VALUE,
-                        "Добавить категорию",
-                        description = "",
-                        action = navigateToCreateCategory
-                    )
-                )
             }
-        }
 
-        var isCategoriesNull = true
-        try {
-            categories!!.size > 1
-            isCategoriesNull = false
-        } catch (e: Exception) {
-        }
+            var isCategoriesNull = true
+            try {
+                categories!!.size > 1
+                isCategoriesNull = false
+            } catch (e: Exception) {
+            }
 
-        if (!isCategoriesNull) {
-            if (categories!!.size > 1) {
-                Spacer(modifier = Modifier.height(12.dp))
-                CustomButton(
-                    navigateTo = {
-                        try {
-                            val selectedCategoryName = selectedCategory
-                            Log.e(MY_LOG, "selectedCategoryName is $selectedCategoryName")
+            if (!isCategoriesNull) {
+                if (categories!!.size > 1) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    CustomButton(
+                        navigateTo = {
+                            try {
+                                val selectedCategoryName = selectedCategory
+                                Log.e(MY_LOG, "selectedCategoryName is $selectedCategoryName")
 
-                            navController.navigate(
-                                ScreenRole.Master.CreateServiceCard.route.replace(
-                                    "{selectedCategoryName}",
-                                    selectedCategoryName
+                                navController.navigate(
+                                    ScreenRole.Master.CreateServiceCard.route.replace(
+                                        "{selectedCategoryName}",
+                                        selectedCategoryName
+                                    )
                                 )
-                            )
-                        } catch (e: IllegalArgumentException) { // нужно блин выбрать категорию, а не тыкать в пустоту 😤😤
-                        }
-                    },
-                    buttonText = "Добавить услугу"
-                )
+                            } catch (e: IllegalArgumentException) { // нужно блин выбрать категорию, а не тыкать в пустоту 😤😤
+                            }
+                        },
+                        buttonText = "Добавить услугу"
+                    )
+                }
             }
         }
     }

@@ -193,6 +193,7 @@ fun ContentSingIn(
                     textStyle = MaterialTheme.typography.bodyMedium,
                     singleLine = true,
                     keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Next
                     ),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -207,6 +208,7 @@ fun ContentSingIn(
                     label = "Пароль",
                     passwordState = passwordState,
                     modifier = Modifier.focusRequester(focusRequester),
+                    imeAction = ImeAction.Next
                 )
                 Password(
                     label = "Повторите пароль",
@@ -248,7 +250,11 @@ fun ContentSingIn(
                         Log.e(MY_LOG, "emailState.isValid && passwordState.isValid not valid")
                     }
                 },
-                enabled = if (firstName.isNotEmpty() && phone.isNotEmpty() && passwordState.text.trim().isNotEmpty() && emailState.text.trim().isNotEmpty() && passwordStateRepeat.text.trim().isNotEmpty() && (passwordStateRepeat.text == passwordState.text)) true else false,
+                enabled = if (firstName.isNotEmpty() && phone.isNotEmpty() && passwordState.text.trim()
+                        .isNotEmpty() && emailState.text.trim()
+                        .isNotEmpty() && passwordStateRepeat.text.trim()
+                        .isNotEmpty() && (passwordStateRepeat.text == passwordState.text)
+                ) true else false,
                 buttonText = "Зарегистрироваться"
             )
         }

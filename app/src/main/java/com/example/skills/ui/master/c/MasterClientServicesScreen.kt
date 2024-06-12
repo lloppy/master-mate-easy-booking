@@ -36,6 +36,8 @@ import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.tools.LoadingScreen
 import com.example.skills.ui.master.b.calendar.clickable
 import com.example.skills.ui.master.d.CustomAlertDialog
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshState
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -86,6 +88,9 @@ fun MasterClientServices(
     val twoSegments = remember { listOf("Актуальные", "История") }
     var selectedTwoSegment by remember { mutableStateOf(twoSegments.first()) }
 
+    var isRefreshing by remember { mutableStateOf(false) }
+    val swipeRefreshState = remember { SwipeRefreshState(isRefreshing) }
+
     var showDialog by remember { mutableStateOf(false) }
 
     if (showDialog) {
@@ -122,60 +127,73 @@ fun MasterClientServices(
         Spacer(modifier = Modifier.height(16.dp))
 
         val formatter = DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))
-        LazyColumn(
-            Modifier
+
+        SwipeRefresh(
+            state = swipeRefreshState,
+            onRefresh = {
+                isRefreshing = true
+                viewModel.loadMasterRecords {}
+                isRefreshing = false
+            },
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 100.dp)
         ) {
-            val groupedItems = if (selectedTwoSegment == "Актуальные") {
-                recordItems.value?.filter { it.status == "CREATED" || it.status == "IN_PROGRESS" }
-                    ?.groupByDate()
-            } else {
-                recordItems.value?.filter { it.status == "CANCELLED" || it.status == "COMPLETED" }
-                    ?.groupByDate()
-            }
-            groupedItems?.forEach { (date, items) ->
-                item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
+            LazyColumn(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 100.dp)
+            ) {
+                val groupedItems = if (selectedTwoSegment == "Актуальные") {
+                    recordItems.value?.filter { it.status == "CREATED" || it.status == "IN_PROGRESS" }
+                        ?.groupByDate()
+                } else {
+                    recordItems.value?.filter { it.status == "CANCELLED" || it.status == "COMPLETED" }
+                        ?.groupByDate()
+                }
+                groupedItems?.forEach { (date, items) ->
+                    item {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = date.format(formatter),
+                                modifier = Modifier.padding(start = 10.dp, top = 20.dp),
+                                color = Color.Black,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 18.sp,
+                                maxLines = 1
+                            )
+                            Text(
+                                text = "Отменить все записи",
+                                color = Color.Gray,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 14.sp,
+                                maxLines = 1,
+                                modifier = Modifier
+                                    .padding(end = 10.dp, top = 20.dp)
+                                    .clickable {
+                                        selectedDate = date
+                                        showDialog = true
+                                    }
+                            )
+                        }
+                    }
+                    items.forEach { bookingItem ->
+                        item { RecordItemCard(bookingItem, mainViewModel = viewModel) }
+                    }
+                } ?: run {
+                    item {
                         Text(
-                            text = date.format(formatter),
-                            modifier = Modifier.padding(start = 10.dp, top = 20.dp),
-                            color = Color.Black,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 18.sp,
-                            maxLines = 1
-                        )
-                        Text(
-                            text = "Отменить все записи",
+                            text = "Нет доступных записей",
                             color = Color.Gray,
                             fontWeight = FontWeight.SemiBold,
-                            fontSize = 14.sp,
-                            maxLines = 1,
-                            modifier = Modifier
-                                .padding(end = 10.dp, top = 20.dp)
-                                .clickable {
-                                    selectedDate = date
-                                    showDialog = true
-                                }
+                            fontSize = 18.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(16.dp)
                         )
                     }
-                }
-                items.forEach { bookingItem ->
-                    item { RecordItemCard(bookingItem, mainViewModel = viewModel) }
-                }
-            } ?: run {
-                item {
-                    Text(
-                        text = "Нет доступных записей",
-                        color = Color.Gray,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(16.dp)
-                    )
                 }
             }
         }
