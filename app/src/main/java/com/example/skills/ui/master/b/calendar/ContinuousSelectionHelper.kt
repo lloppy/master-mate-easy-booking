@@ -5,7 +5,6 @@ import com.kizitonwose.calendar.core.nextMonth
 import com.kizitonwose.calendar.core.previousMonth
 import com.kizitonwose.calendar.core.yearMonth
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import kotlin.LazyThreadSafetyMode.NONE
 
@@ -36,18 +35,6 @@ object ContinuousSelectionHelper {
         } else {
             DateSelection(startDate = clickedDate, endDate = null)
         }
-    }
-    fun getSelections(clickedDate: LocalDate, dateSelections: List<DateSelection>): MutableList<DateSelection> {
-        val newSelections = dateSelections.toMutableList()
-
-        if (newSelections.isEmpty() || newSelections.last().endDate != null) {
-            newSelections.add(DateSelection(startDate = clickedDate))
-        } else {
-            val lastSelection = newSelections.removeLast()
-            newSelections.add(lastSelection.copy(endDate = clickedDate))
-        }
-
-        return newSelections
     }
 
     fun isInDateBetweenSelection(

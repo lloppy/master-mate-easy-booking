@@ -63,7 +63,7 @@ fun SelectDateTime(viewModel: MainViewModel, selection: DateSelection) {
                         viewModel.deleteSchedule(dates) {}
                         try {
                             viewModel.getScheduleByToken {}
-                        } catch (e: Exception) {
+                        } catch (_: Exception) {
                         }
                     },
                     "Удалить",
@@ -164,5 +164,3 @@ private fun getDatesBetween(from: LocalDate?, to: LocalDate?): List<String> {
     }
     return dates
 }
-
-data class IntervalData(var from: String, var to: String)

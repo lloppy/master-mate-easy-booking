@@ -19,7 +19,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.tools.LoadingScreen
 import com.example.skills.ui.master.b.calendar.CalendarView
