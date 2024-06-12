@@ -153,7 +153,6 @@ interface ApiService {
         @Body scheduleCreateRequest: ScheduleCreateRequest
     ): Response<ResponseBody>
 
-    //@DELETE("/api/masters/me/schedules")
     @HTTP(method = "DELETE", path = "/api/masters/me/schedules", hasBody = true)
     suspend fun deleteSchedule(
         @Header("Authorization") token: String,

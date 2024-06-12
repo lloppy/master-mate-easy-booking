@@ -811,30 +811,6 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
-    fun changeSchedule(
-        scheduleCreateRequest: ScheduleCreateRequest,
-        onComplete: (Boolean) -> Unit
-    ) {
-        viewModelScope.launch {
-            _isLoading.emit(true)
-            try {
-                val response =
-                    apiService.changeSchedule(token = "Bearer $_userToken", scheduleCreateRequest)
-                if (response.isSuccessful) {
-                    val data = response.body()
-                    if (data != null) onComplete(true) else onComplete(false)
-                } else {
-                    Log.e(MY_LOG, "Error is ${response.errorBody()}")
-                }
-            } catch (e: Exception) {
-                handleApiException(e)
-                onComplete(false)
-            }
-            _isLoading.emit(false)
-        }
-    }
-
-
     fun deleteSchedule(dates: List<String>, onComplete: (Boolean) -> Unit) {
         viewModelScope.launch {
             _isLoading.emit(true)

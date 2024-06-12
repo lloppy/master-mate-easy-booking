@@ -34,10 +34,7 @@ import java.util.Locale
 @Composable
 fun SelectDateTime(viewModel: MainViewModel, selection: DateSelection) {
     val scrollState = rememberScrollState()
-
-    var intervals by remember { mutableStateOf(listOf<IntervalData>()) }
-    var inEditMode by remember { mutableStateOf(true) }
-    var isActionCompleted by remember { mutableStateOf(false) }
+    val inEditMode by remember { mutableStateOf(true) }
 
     var showTimePickerStart by remember { mutableStateOf(false) }
     var showTimePickerEnd by remember { mutableStateOf(false) }
