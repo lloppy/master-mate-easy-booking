@@ -773,6 +773,8 @@ class MainViewModel(context: Context) : ViewModel() {
                 val response =
                     apiService.createSchedule("Bearer $_userToken", scheduleCreateRequest)
                 if (response.isSuccessful) {
+                    getScheduleByToken {}
+
                     Log.d(MY_LOG, "Schedule created successfully")
                 } else {
                     Log.e(MY_LOG, "Schedule create fail: " + response.errorBody())
@@ -840,6 +842,7 @@ class MainViewModel(context: Context) : ViewModel() {
                 val response = apiService.deleteSchedule(token = "Bearer $_userToken", dates = dates)
                 if (response.isSuccessful) {
                     val data = response.body()
+                    getScheduleByToken {}
                     if (data != null) onComplete(true) else onComplete(false)
                 } else {
                     Log.e(MY_LOG, "Error is ${response.errorBody()}")
