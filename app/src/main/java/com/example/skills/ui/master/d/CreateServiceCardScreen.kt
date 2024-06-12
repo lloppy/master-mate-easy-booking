@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -151,7 +152,10 @@ fun ContentCreateServiceCard(
                         unfocusedLabelColor = Color.Gray,
                         unfocusedBorderColor = Color.Gray
                     ),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next
+                    ),
                     shape = RoundedCornerShape(16.dp)
                 )
                 Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
@@ -167,7 +171,10 @@ fun ContentCreateServiceCard(
                         unfocusedLabelColor = Color.Gray,
                         unfocusedBorderColor = Color.Gray
                     ),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next
+                    ),
                     shape = RoundedCornerShape(16.dp)
                 )
                 Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
@@ -184,6 +191,9 @@ fun ContentCreateServiceCard(
                         unfocusedLabelColor = Color.Gray,
                         unfocusedBorderColor = Color.Gray
                     ),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done
+                    ),
                     shape = RoundedCornerShape(16.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -197,7 +207,7 @@ fun ContentCreateServiceCard(
                                     name,
                                     description,
                                     price.toInt(),
-                                    Duration(duration.toInt()/60, duration.toInt()%60),
+                                    Duration(duration.toInt() / 60, duration.toInt() % 60),
                                     category = selectedCategory
                                 ),
                                 selectedCategory.id
@@ -206,7 +216,7 @@ fun ContentCreateServiceCard(
                                     navController.popBackStack()
                                 }
                             }
-                        } catch (e: Exception) {
+                        } catch (_: Exception) {
                         }
                     }
                 },

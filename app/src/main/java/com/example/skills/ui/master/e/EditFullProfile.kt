@@ -185,7 +185,7 @@ private fun AddMasterAccountInfo(
                 profileDescription = it
             },
             keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Default
             ),
             label = { Text(text = "Описание профиля") },
             modifier = Modifier
