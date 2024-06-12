@@ -1,4 +1,4 @@
-package com.example.skills.client.components.a.edit_booking
+package com.example.skills.ui.client.a.edit_booking
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,14 +21,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.viewmodel.route.EditBookingViewModel
-import com.example.skills.ui.client.a.edit_booking.EditClientCalendarView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditDateScreen(
     editBookingViewModel: EditBookingViewModel,
     navController: NavHostController,
+    mainViewModel: MainViewModel,
     navigateToSelectTime: () -> Unit
 ) {
     Scaffold(
@@ -59,7 +60,7 @@ fun EditDateScreen(
             )
         }
     ) { innerPadding ->
-        CustomCalendarView(innerPadding, editBookingViewModel, navigateToSelectTime)
+        CustomCalendarView(innerPadding, editBookingViewModel, navigateToSelectTime, mainViewModel )
     }
 }
 
@@ -67,7 +68,8 @@ fun EditDateScreen(
 fun CustomCalendarView(
     innerPadding: PaddingValues,
     editBookingViewModel: EditBookingViewModel,
-    navigateToSelectTime: () -> Unit
+    navigateToSelectTime: () -> Unit,
+    mainViewModel: MainViewModel
 ) {
     Column(
         modifier = Modifier
@@ -76,7 +78,8 @@ fun CustomCalendarView(
     ) {
         EditClientCalendarView(
             editBookingViewModel = editBookingViewModel,
-            navigateToSelectTime = navigateToSelectTime
+            navigateToSelectTime = navigateToSelectTime,
+            mainViewModel = mainViewModel
         )
     }
 }

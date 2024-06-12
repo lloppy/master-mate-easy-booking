@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -28,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.viewmodel.route.EditBookingViewModel
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.master.b.calendar.ContinuousSelectionHelper.getSelection
@@ -45,7 +47,10 @@ import java.time.YearMonth
 fun EditClientCalendarView(
     editBookingViewModel: EditBookingViewModel,
     navigateToSelectTime: () -> Unit,
+    mainViewModel: MainViewModel
 ) {
+    val schedules by mainViewModel.schedulesLiveData.observeAsState(emptyList())
+
     var currentMonth by remember { mutableStateOf(YearMonth.now()) }
     val startMonth = remember { currentMonth }
     val endMonth = remember { currentMonth.plusMonths(12) }
@@ -110,7 +115,8 @@ fun EditClientCalendarView(
                             Day(
                                 value,
                                 today = today,
-                                selection = selection
+                                selection = selection,
+                                schedules = schedules
                             ) { day ->
                                 if (day.position == DayPosition.MonthDate &&
                                     (day.date == today || day.date.isAfter(today))

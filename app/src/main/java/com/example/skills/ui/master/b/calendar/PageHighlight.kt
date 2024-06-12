@@ -50,6 +50,7 @@ fun Modifier.backgroundHighlight(
     selection: DateSelection,
     selectionColor: Color,
     continuousSelectionColor: Color,
+    isScheduled: Boolean,
     textColor: (Color) -> Unit,
 ): Modifier = composed {
     val (startDate, endDate) = selection
@@ -104,6 +105,13 @@ fun Modifier.backgroundHighlight(
                             shape = CircleShape,
                             color = colorResource(R.color.black),
                         )
+                        .background(color = Color.Transparent, CircleShape)
+                }
+
+                isScheduled -> {
+                    textColor(colorResource(R.color.black))
+                    padding(vertical = padding)
+                        .padding(horizontal = padding)
                         .background(color = colorResource(R.color.light_green), CircleShape)
                 }
 

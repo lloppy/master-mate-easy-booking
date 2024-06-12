@@ -781,6 +781,32 @@ class MainViewModel(context: Context) : ViewModel() {
             }
         }
     }
+    fun getScheduleByToken(onComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            try {
+                val response = apiService.getScheduleByToken(token = "Bearer $_userToken")
+                if (response.isSuccessful) {
+
+                    val data = response.body()
+                    if (data != null ) {
+                        _schedulesLiveData.postValue(data!!)
+                        onComplete(true)
+                    } else {
+                        _schedulesLiveData.postValue(emptyList())
+                        onComplete(false)
+                    }
+
+                } else {
+                    Log.e(MY_LOG, "Error is ${response.errorBody()}")
+                }
+            } catch (e: Exception) {
+                handleApiException(e)
+                onComplete(false)
+            }
+            _isLoading.emit(false)
+        }
+    }
 
     fun getRecords(onComplete: (Boolean) -> Unit) {
         viewModelScope.launch {
@@ -876,6 +902,10 @@ class MainViewModel(context: Context) : ViewModel() {
                         "Exception in loadMasterServices() loadMasterCategories()"
                     )
                 }
+
+                try {
+                    getScheduleByToken(){}
+                } catch (e: Exception){}
             } else Log.e(MY_LOG, "Failed to load master")
         }
     }

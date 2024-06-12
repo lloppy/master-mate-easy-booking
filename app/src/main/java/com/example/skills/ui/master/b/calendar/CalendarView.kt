@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -28,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.skills.data.entity.Schedule
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.master.b.calendar.ContinuousSelectionHelper.getSelection
 import com.kizitonwose.calendar.compose.VerticalCalendar
@@ -43,9 +45,8 @@ val continuousSelectionColor = Color.LightGray.copy(alpha = 0.3f)
 
 @Composable
 fun CalendarView(viewModel: MainViewModel) {
+    val schedules by viewModel.schedulesLiveData.observeAsState(emptyList())
     var currentMonth by remember { mutableStateOf(YearMonth.now()) }
-    val startMonth = remember { currentMonth }
-    val endMonth = remember { currentMonth.plusMonths(12) }
     val today = remember { LocalDate.now() }
 
     var selection by remember { mutableStateOf(DateSelection()) }
@@ -95,7 +96,8 @@ fun CalendarView(viewModel: MainViewModel) {
                         Day(
                             value,
                             today = today,
-                            selection = selection
+                            selection = selection,
+                            schedules = schedules
                         ) { day ->
                             if (day.position == DayPosition.MonthDate &&
                                 (day.date == today || day.date.isAfter(today))
@@ -122,9 +124,15 @@ fun Day(
     day: CalendarDay,
     today: LocalDate,
     selection: DateSelection,
+    schedules: List<Schedule>,
     onClick: (CalendarDay) -> Unit,
 ) {
     var textColor = Color.Transparent
+
+    val isScheduled = schedules.any {
+        val scheduleDate = LocalDate.parse(it.date)
+        scheduleDate == day.date
+    }
 
     Box(
         modifier = Modifier
@@ -141,6 +149,7 @@ fun Day(
                 today = today,
                 selection = selection,
                 selectionColor = selectionColor,
+                isScheduled = isScheduled,
                 continuousSelectionColor = continuousSelectionColor,
             ) { textColor = it },
         contentAlignment = Alignment.Center,

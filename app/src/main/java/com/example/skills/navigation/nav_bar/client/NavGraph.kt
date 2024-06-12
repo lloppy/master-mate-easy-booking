@@ -1,7 +1,6 @@
 package com.example.skills.navigation.nav_bar.client
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -12,7 +11,7 @@ import com.example.skills.ui.client.a.ClientMastersScreen
 import com.example.skills.ui.client.a.MasterServicesScreen
 import com.example.skills.ui.client.a.ViewMasterScreen
 import com.example.skills.ui.client.a.edit_booking.EditConfirmClientBookingScreen
-import com.example.skills.client.components.a.edit_booking.EditDateScreen
+import com.example.skills.ui.client.a.edit_booking.EditDateScreen
 import com.example.skills.ui.client.a.edit_booking.EditDoneClientBookingScreen
 import com.example.skills.ui.client.a.edit_booking.EditTimeScreen
 import com.example.skills.client.components.a.new_booking.ConfirmClientBookingScreen
@@ -136,7 +135,8 @@ fun SetupClientNavGraph(
                 navController = navHostController,
                 navigateToSelectTime = {
                     navHostController.navigate(ScreenRole.Client.EditTime.route)
-                }
+                },
+                mainViewModel = mainViewModel
             )
         }
 
