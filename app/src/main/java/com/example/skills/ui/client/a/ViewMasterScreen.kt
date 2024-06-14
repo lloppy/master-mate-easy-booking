@@ -134,13 +134,10 @@ fun MasterHomeScreen(
                 mainViewModel.getServicesByCategoryId(receivedCategories) { success ->
                     Log.e(MY_LOG, "getServicesByCategoryId is successful")
                 }
-                mainViewModel.getSchedulesById(
-                    user.masterId!!
-                ) { success ->
+                mainViewModel.getSchedulesById(user.masterId!!) { success ->
                     Log.e(MY_LOG, "getSchedulesById is successful")
                 }
-            } catch (e: Exception) {
-            }
+            } catch (e: Exception) { }
         }
         Log.e(MY_LOG, "bookingViewModel user categ is ${user.categories?.firstOrNull()}")
 

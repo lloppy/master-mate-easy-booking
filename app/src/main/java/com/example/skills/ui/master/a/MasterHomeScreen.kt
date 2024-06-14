@@ -45,78 +45,85 @@ fun MainMasterScreen(
     navigateToShare: () -> Unit,
     viewModel: MainViewModel
 ) {
-    val master = viewModel.currentUser!!
+    val master by viewModel.currentUser.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.Transparent,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = {
-                    Text(
-                        "${master.firstName} ${master.lastName}",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = Color.Black,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
-                },
-                actions = {
-                    IconButton(onClick = {
-                        navigateToShare.invoke()
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.Share,
-                            contentDescription = "Localized description"
+    if (isLoading || master == null) {
+        LoadingScreen()
+        return
+    }
+
+    if (master != null) {
+        Scaffold(
+            topBar = {
+                CenterAlignedTopAppBar(
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = Color.Transparent,
+                        titleContentColor = MaterialTheme.colorScheme.primary,
+                    ),
+                    title = {
+                        Text(
+                            "${master!!.firstName} ${master!!.lastName}",
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            color = Color.Black,
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
                         )
-                    }
-                },
-                navigationIcon = {
-                    var selectedImage by remember { mutableStateOf<Uri?>(null) }
-                    val context = LocalContext.current
+                    },
+                    actions = {
+                        IconButton(onClick = {
+                            navigateToShare.invoke()
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.Share,
+                                contentDescription = "Localized description"
+                            )
+                        }
+                    },
+                    navigationIcon = {
+                        var selectedImage by remember { mutableStateOf<Uri?>(null) }
+                        val context = LocalContext.current
 
-                    val imagePickerLauncher = rememberLauncherForActivityResult(
-                        contract = ActivityResultContracts.GetContent()
-                    ) { uri: Uri? ->
-                        selectedImage = uri
+                        val imagePickerLauncher = rememberLauncherForActivityResult(
+                            contract = ActivityResultContracts.GetContent()
+                        ) { uri: Uri? ->
+                            selectedImage = uri
 
-                        selectedImage?.let { uriNonNull ->
-                            val file = getFileFromUri(context, uriNonNull)
-                            if (file != null) {
-                                viewModel.uploadWorkPicture(file, context)
-                            } else {
-                                Log.e(MY_LOG, "File conversion failed")
+                            selectedImage?.let { uriNonNull ->
+                                val file = getFileFromUri(context, uriNonNull)
+                                if (file != null) {
+                                    viewModel.uploadWorkPicture(file, context)
+                                } else {
+                                    Log.e(MY_LOG, "File conversion failed")
+                                }
                             }
                         }
-                    }
-                    IconButton(onClick = {
-                        imagePickerLauncher.launch("image/*")
-                    }) {
-                        Icon(
-                            imageVector = Icons.Outlined.Add,
-                            contentDescription = "Localized description"
-                        )
-                    }
-                },
-            )
-        },
-    ) { innerPadding ->
-        val isLoading by viewModel.isLoading.collectAsState()
-        if (isLoading) {
-            LoadingScreen()
-        } else {
-            MasterHomeScreen(
-                innerPadding,
-                master,
-                viewModel
-            )
+                        IconButton(onClick = {
+                            imagePickerLauncher.launch("image/*")
+                        }) {
+                            Icon(
+                                imageVector = Icons.Outlined.Add,
+                                contentDescription = "Localized description"
+                            )
+                        }
+                    },
+                )
+            },
+        ) { innerPadding ->
+            val isLoading by viewModel.isLoading.collectAsState()
+            if (isLoading) {
+                LoadingScreen()
+            } else {
+                MasterHomeScreen(
+                    innerPadding,
+                    master!!,
+                    viewModel
+                )
+            }
         }
     }
 }
-
 
 @Composable
 fun MasterHomeScreen(

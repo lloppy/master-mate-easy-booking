@@ -73,6 +73,7 @@ interface ApiService {
 
     @GET("/api/masters/additional_images/{id}")
     suspend fun getMastersWorkById(
+        @Header("Authorization") token: String,
         @Path("id") id: Int
     ): Response<ResponseBody>
 
@@ -117,7 +118,10 @@ interface ApiService {
     suspend fun getMasterServicesByToken(@Header("Authorization") token: String): Response<List<Service>> // было MasterServices
 
     @GET("/api/masters/categories/{id}/services")
-    suspend fun getCategoryServices(@Path("id") id: Int): Response<List<Service>>
+    suspend fun getCategoryServices(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): Response<List<Service>>
 
     // Category controller
     @PUT("/api/masters/me/categories/{id}")
