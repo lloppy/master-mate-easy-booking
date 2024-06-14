@@ -50,7 +50,7 @@ import kotlin.random.Random
 
 const val MY_LOG = "MY_LOG"
 
-class MainViewModel(context: Context) : ViewModel() {
+class MainViewModel(private val context: Context) : ViewModel() {
     var currentUser: User? by mutableStateOf(null)
         private set
 
@@ -155,6 +155,7 @@ class MainViewModel(context: Context) : ViewModel() {
                 } else {
                     Log.e(MY_LOG, "Registration failed: ${response.errorBody().toString()}")
                     Log.e(MY_LOG, "Try to reinstall app")
+                    Toast.makeText(context, "Registration failed", Toast.LENGTH_SHORT).show()
                     onResponse(false)
                 }
             } catch (e: Exception) {
@@ -184,6 +185,7 @@ class MainViewModel(context: Context) : ViewModel() {
                         onResponse(true)
                     } else {
                         Log.e(MY_LOG, "Authentication failed: ${response.errorBody().toString()}")
+                        Toast.makeText(context, "Authentication failed", Toast.LENGTH_SHORT).show()
                         onResponse(false)
                     }
                 }
@@ -209,6 +211,7 @@ class MainViewModel(context: Context) : ViewModel() {
                     Log.d(MY_LOG, "Account activated")
                     onActivationComplete(true)
                 } else {
+                    Toast.makeText(context, "Activation failed", Toast.LENGTH_SHORT).show()
                     Log.e(MY_LOG, "Activation failed: ${response.errorBody()?.string()}")
                     onActivationComplete(false)
                 }
@@ -912,6 +915,9 @@ class MainViewModel(context: Context) : ViewModel() {
             if (response.isSuccessful) {
                 Log.d(MY_LOG, "User loaded successfully")
                 currentUser = response.body()
+
+                Log.e(MY_LOG, "currentUser ${currentUser?.client?.mastersId?.first()}")
+                Log.e(MY_LOG, "currentUser ${currentUser?.client?.mastersId?.last()}")
 
                 try {
                     loadMasterServices()
