@@ -139,7 +139,7 @@ fun ContentLogIn(
     val email by remember {
         mutableStateOf(
             if (viewModel.userIsAuthenticated.value) {
-                viewModel.currentUser?.email
+                viewModel.currentUser.value?.email
             } else ""
         )
     }
@@ -155,7 +155,7 @@ fun ContentLogIn(
     val password by remember {
         mutableStateOf(
             if (viewModel.userIsAuthenticated.value) {
-                viewModel.currentUser?.password
+                viewModel.currentUser.value?.password
             } else ""
         )
     }
@@ -392,16 +392,16 @@ fun Password(
 
 
 fun loginWithout(viewModel: MainViewModel, navigateToMain: () -> Unit) {
-    Log.e(MY_LOG, "email is " + viewModel.currentUser?.email.toString())
-    Log.e(MY_LOG, "password is " + viewModel.currentUser?.password.toString())
+    Log.e(MY_LOG, "email is " + viewModel.currentUser.value?.email.toString())
+    Log.e(MY_LOG, "password is " + viewModel.currentUser.value?.password.toString())
     Log.e(MY_LOG, "route is " + viewModel.userRole.toString())
 
-    if (!viewModel.currentUser?.email.isNullOrEmpty()) {
+    if (!viewModel.currentUser.value?.email.isNullOrEmpty()) {
 
         try {
             val authRequest = LogInRequest(
-                email = viewModel.currentUser?.email!!,
-                password = viewModel.currentUser?.password!!
+                email = viewModel.currentUser.value?.email!!,
+                password = viewModel.currentUser.value?.password!!
             )
             viewModel.authenticate(
                 viewModel.userRole.toString().toLowerCase(),
@@ -414,7 +414,7 @@ fun loginWithout(viewModel: MainViewModel, navigateToMain: () -> Unit) {
         } catch (e: Exception) {
             Log.e(
                 MY_LOG,
-                "LOGIN SCREEN: error login with email " + viewModel.currentUser?.email.toString()
+                "LOGIN SCREEN: error login with email " + viewModel.currentUser.value?.email.toString()
             )
         }
 

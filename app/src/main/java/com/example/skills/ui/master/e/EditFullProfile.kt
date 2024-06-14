@@ -113,19 +113,19 @@ private fun AddMasterAccountInfo(
     context: Context
 ) {
     val scrollState = rememberScrollState()
-    val master = viewModel.currentUser!!
+    val master = viewModel.currentUser
 
-    val email by remember { mutableStateOf(master.email) }
-    var firstName by remember { mutableStateOf(master.firstName) }
-    var secondName by remember { mutableStateOf(master.lastName) }
-    var phone by remember { mutableStateOf(master.phone) }
+    val email by remember { mutableStateOf(master.value!!.email) }
+    var firstName by remember { mutableStateOf(master.value!!.firstName) }
+    var secondName by remember { mutableStateOf(master.value!!.lastName) }
+    var phone by remember { mutableStateOf(master.value!!.phone) }
 
     val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
         mutableStateOf(EmailState(email))
     }
-    var profileDescription by remember { mutableStateOf(checkAndInsert(master.master?.description)) }
-    var address by remember { mutableStateOf(checkAndInsert(master.master?.address?.city)) }
-    var link by remember { mutableStateOf(checkAndInsert(master.master?.linkCode)) }
+    var profileDescription by remember { mutableStateOf(checkAndInsert(master.value?.master?.description)) }
+    var address by remember { mutableStateOf(checkAndInsert(master.value?.master?.address?.city)) }
+    var link by remember { mutableStateOf(checkAndInsert(master.value?.master?.linkCode)) }
 
     Column(
         modifier = Modifier
