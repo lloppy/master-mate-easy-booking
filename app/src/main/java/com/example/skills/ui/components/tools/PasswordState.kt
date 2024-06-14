@@ -1,8 +1,9 @@
 package com.example.skills.ui.components.tools
 
 
-class PasswordState :
+class PasswordState(initialValue: String = "") :
     TextFieldState(validator = ::isPasswordValid, errorFor = ::passwordValidationError)
+
 
 class ConfirmPasswordState(private val passwordState: PasswordState) : TextFieldState() {
     override val isValid

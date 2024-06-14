@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skills.R
+import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.theme.fontFamilyInter
 
@@ -26,6 +27,7 @@ import com.example.skills.ui.theme.fontFamilyInter
 fun RoleScreen(
     navigateToClientLogin: () -> Unit,
     navigateToMasterLogin: () -> Unit,
+    mainViewModel: MainViewModel
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),

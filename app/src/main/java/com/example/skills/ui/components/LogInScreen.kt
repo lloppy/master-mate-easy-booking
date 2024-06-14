@@ -18,7 +18,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -50,6 +51,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -60,6 +62,7 @@ import com.example.skills.ui.components.tools.EmailState
 import com.example.skills.ui.components.tools.EmailStateSaver
 import com.example.skills.ui.components.tools.LoadingScreen
 import com.example.skills.ui.components.tools.PasswordState
+import com.example.skills.ui.components.tools.PasswordStateSaver
 import com.example.skills.ui.components.tools.TextFieldState
 import com.example.skills.ui.theme.backgroundMaterial
 
@@ -102,7 +105,7 @@ fun LogInScreen(
                     }
                 }
             )
-        },
+        }
     ) { innerPadding ->
         Box(Modifier.fillMaxSize()) {
             ContentLogIn(
@@ -130,10 +133,34 @@ fun ContentLogIn(
     navigateToMain: () -> Unit,
     viewModel: MainViewModel
 ) {
-    val email by remember { mutableStateOf(if (viewModel.userIsAuthenticated.value) viewModel.currentUser?.email else "") }
+    val email by remember {
+        mutableStateOf(
+            if (viewModel.userIsAuthenticated.value) {
+                viewModel.currentUser?.email
+            } else ""
+        )
+    }
     val focusRequester = remember { FocusRequester() }
-    val emailState by rememberSaveable(stateSaver = EmailStateSaver) { mutableStateOf(EmailState(email)) }
-    val passwordState = remember { PasswordState() }
+    val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
+        mutableStateOf(
+            EmailState(
+                email
+            )
+        )
+    }
+
+    val password by remember {
+        mutableStateOf(
+            if (viewModel.userIsAuthenticated.value) {
+                viewModel.currentUser?.password
+            } else ""
+        )
+    }
+    val passwordState by rememberSaveable(stateSaver = PasswordStateSaver) {
+        mutableStateOf(
+            PasswordState((if (password == null) "" else password).toString())
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -190,7 +217,9 @@ fun ContentLogIn(
                         Log.e(MY_LOG, "emailState.isValid && passwordState.isValid not valid")
                     }
                 },
-                enabled = if (passwordState.text.trim().isNotEmpty() && emailState.text.trim().isNotEmpty()) true else false,
+                enabled = if (passwordState.text.trim().isNotEmpty() && emailState.text.trim()
+                        .isNotEmpty()
+                ) true else false,
                 buttonText = "Войти"
             )
             Spacer(modifier = Modifier.height(8.dp))

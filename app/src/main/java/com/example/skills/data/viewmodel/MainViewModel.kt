@@ -95,14 +95,14 @@ class MainViewModel(private val context: Context) : ViewModel() {
             _userToken?.let {
                 Network.updateToken(it)
                 userIsAuthenticated.value = true
-                loadCurrentUser(it, context)
+                loadCurrentUser(it, context, _userRole!!)
             }
         } else {
             Log.d(MY_LOG, "Gg, it`s old deprecated session 💩💩")
         }
     }
 
-    fun registerUser(authRequest: AuthRequest, onResponse: (Boolean) -> Unit) {
+    fun registerUser(password: String, authRequest: AuthRequest, onResponse: (Boolean) -> Unit) {
         viewModelScope.launch {
             _isLoading.emit(true)
 
@@ -123,7 +123,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
                         currentUser = User(
                             token = _userToken!!,
                             email = authRequest.email,
-                            password = authRequest.password,
+                            password = password,
                             firstName = authRequest.firstName,
                             lastName = authRequest.lastName,
                             phone = authRequest.phoneNumber,
@@ -409,7 +409,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
                     val body = response.body()
 
                     if (body != null) {
-                        loadCurrentUser(_userToken!!, context)
+                        loadCurrentUser(_userToken!!, context, "Master")
 
                         Log.i(MY_LOG, "Master profile edit successful")
                         onProfileEditComplete(true)
@@ -896,6 +896,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
     fun logout() {
         Log.d(MY_LOG, "Logging out user")
         preferences.edit().remove("token").apply()
+        preferences.edit().remove("role").apply()
         _userRole = null
 
         _userToken = null
@@ -907,7 +908,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
 
 
     // ---------------- PRIVATE FUN ------------------------------------------------
-    private fun loadCurrentUser(token: String, context: Context) {
+    private fun loadCurrentUser(token: String, context: Context, userRole: String) {
         viewModelScope.launch {
             Log.d(MY_LOG, "Attempting to load user by token")
             val response = apiService.getUserByToken("Bearer $token")
@@ -916,15 +917,17 @@ class MainViewModel(private val context: Context) : ViewModel() {
                 Log.d(MY_LOG, "User loaded successfully")
                 currentUser = response.body()
 
-                Log.e(MY_LOG, "currentUser ${currentUser?.client?.mastersId?.first()}")
-                Log.e(MY_LOG, "currentUser ${currentUser?.client?.mastersId?.last()}")
+                Log.e(MY_LOG, "mastersId first ${currentUser?.client?.mastersId?.first()}")
+                Log.e(MY_LOG, "mastersId last ${currentUser?.client?.mastersId?.last()}")
 
                 try {
-                    loadMasterServices()
-                    loadMasterCategories()
-                    loadMasterImage(context)
-                    loadMasterWorks(context)
-                    loadMasterRecords()
+                    if (userRole.capitalize() == "Master") {
+                        loadMasterServices()
+                        loadMasterCategories()
+                        loadMasterImage(context)
+                        loadMasterWorks(context)
+                        loadMasterRecords()
+                    }
                 } catch (e: Exception) {
                     Log.e(
                         MY_LOG,
@@ -936,7 +939,8 @@ class MainViewModel(private val context: Context) : ViewModel() {
                     getScheduleByToken() {}
                 } catch (e: Exception) {
                 }
-            } else Log.e(MY_LOG, "Failed to load master")
+
+            } else Log.e(MY_LOG, "Failed to load user")
         }
     }
 

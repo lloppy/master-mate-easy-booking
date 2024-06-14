@@ -229,15 +229,15 @@ fun NavGraphBuilder.masterNavGraph(
 @Composable
 fun SetupRoleNavGraph(navHostController: NavHostController, mainViewModel: MainViewModel) {
     NavHost(navController = navHostController, startDestination = ScreenRole.RoleLayout.route) {
+        clientNavGraph(navHostController = navHostController, mainViewModel)
+        masterNavGraph(navHostController = navHostController, mainViewModel)
 
         composable(ScreenRole.RoleLayout.route) {
             RoleScreen(
                 navigateToClientLogin = { navHostController.navigate(ScreenRole.Client.LogIn.route) },
-                navigateToMasterLogin = { navHostController.navigate(ScreenRole.Master.LogIn.route) }
+                navigateToMasterLogin = { navHostController.navigate(ScreenRole.Master.LogIn.route) },
+                mainViewModel = mainViewModel
             )
         }
-
-        clientNavGraph(navHostController = navHostController, mainViewModel)
-        masterNavGraph(navHostController = navHostController, mainViewModel)
     }
 }

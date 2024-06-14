@@ -127,6 +127,7 @@ fun ContentSingIn(
     val passwordState = remember { PasswordState() }
     val passwordStateRepeat = remember { PasswordState() }
 
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -221,7 +222,7 @@ fun ContentSingIn(
 
             CustomButton(
                 navigateTo = {
-                    Log.v(MY_LOG, "click!")
+                    viewModel.logout()
 
                     //  If the birthDate = null, then the master is registered, otherwise the Client.
                     // Date format is yyyy-MM-dd.
@@ -242,7 +243,7 @@ fun ContentSingIn(
                                 desiredFormat.format(date!!)
                             }
                         )
-                        viewModel.registerUser(authRequest) { successful ->
+                        viewModel.registerUser(passwordState.text, authRequest) { successful ->
                             if (successful) {
                                 navigateToCodeVerification.invoke()
                             }

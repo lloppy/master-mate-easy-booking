@@ -22,3 +22,5 @@ private fun isEmailValid(email: String): Boolean {
 }
 
 val EmailStateSaver = textFieldStateSaver(EmailState())
+
+val PasswordStateSaver = textFieldStateSaver(PasswordState())
