@@ -116,10 +116,10 @@ private fun AddMasterAccountInfo(
 ) {
     val scrollState = rememberScrollState()
 
-    val email by remember { mutableStateOf(viewModel.currentUser.value!!.email) }
-    var firstName by remember { mutableStateOf(viewModel.currentUser.value!!.firstName) }
-    var secondName by remember { mutableStateOf(viewModel.currentUser.value!!.lastName) }
-    var phone by remember { mutableStateOf(viewModel.currentUser.value!!.phone) }
+    val email by remember { mutableStateOf(viewModel.currentUser!!.email) }
+    var firstName by remember { mutableStateOf(viewModel.currentUser!!.firstName) }
+    var secondName by remember { mutableStateOf(viewModel.currentUser!!.lastName) }
+    var phone by remember { mutableStateOf(viewModel.currentUser!!.phone) }
 
     val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
         mutableStateOf(EmailState(email))
@@ -241,9 +241,9 @@ private fun AddMasterAccountInfo(
         ) {
             CustomButton(
                 {
-                    viewModel.currentUser.value!!.master?.description = profileDescription
-                    viewModel.currentUser.value!!.master?.linkCode = link
-                    viewModel.currentUser.value!!.master?.address = Address(address)
+                    viewModel.currentUser!!.master?.description = profileDescription
+                    viewModel.currentUser!!.master?.linkCode = link
+                    viewModel.currentUser!!.master?.address = Address(address)
 
                     navigateToDoneRegistration.invoke()
                 },

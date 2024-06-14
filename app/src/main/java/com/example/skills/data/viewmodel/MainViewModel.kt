@@ -58,9 +58,8 @@ import kotlin.system.exitProcess
 const val MY_LOG = "MY_LOG"
 
 class MainViewModel(private val context: Context) : ViewModel() {
-    private val _currentUser = MutableStateFlow<User?>(null)
-    val currentUser: StateFlow<User?> = _currentUser
-
+    var currentUser: User? by mutableStateOf(null)
+        private set
 
     private var _userToken: String? = null
         private set
@@ -132,7 +131,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
 
                     // Client
                     if (authRequest.birthDate != null) {
-                        _currentUser.value = User(
+                        currentUser = User(
                             token = _userToken!!,
                             email = authRequest.email,
                             password = password,
@@ -149,7 +148,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
                         Log.i(MY_LOG, "current User is Client")
                     } else {
                         // Master
-                        _currentUser.value = User(
+                        currentUser = User(
                             token = _userToken!!,
                             email = authRequest.email,
                             password = password,
@@ -279,7 +278,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
                     file = multipartBody
                 )
                 if (response.isSuccessful) {
-                    _currentUser.value?.master?.profileImage = file
+                    currentUser?.master?.profileImage = file
                     Log.d(MY_LOG, "Upload image success")
                 } else {
                     Log.e(MY_LOG, "Upload image fail: ${response.errorBody()}")
@@ -302,7 +301,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
                     picture = multipartBody
                 )
                 if (response.isSuccessful) {
-                    _currentUser.value?.master?.images?.add(file)
+                    currentUser?.master?.images?.add(file)
                     Log.d(MY_LOG, "Upload image success: ${response.body()}")
                     loadMasterWorks(context)
                 } else {
@@ -770,7 +769,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
     fun getMasterCode(onComplete: (String?) -> Unit) {
         viewModelScope.launch {
             _isLoading.emit(true)
-            val masterId = _currentUser.value?.id
+            val masterId = currentUser?.id
 
             val masterCode = if (masterId != null) {
                 generateCode(masterId)
@@ -972,7 +971,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
 
         _userRole = null
         _userToken = null
-        _currentUser.value = null
+        currentUser = null
 
         userIsAuthenticated.value = false
         Network.updateToken(null)
@@ -990,12 +989,13 @@ class MainViewModel(private val context: Context) : ViewModel() {
     // ---------------- PRIVATE FUN ------------------------------------------------
     private fun loadCurrentUser(token: String, context: Context, userRole: String) {
         viewModelScope.launch {
+
             val newToken = if(!token.startsWith("Bearer")) "Bearer $token" else token
 
             val response = apiService.getUserByToken(newToken)
             if (response.isSuccessful) {
                 Log.d(MY_LOG, "User loaded successfully")
-                _currentUser.value = response.body()
+                currentUser = response.body()
                 saveRoleToPreferences(userRole.toLowerCase())
 
                 try {
@@ -1007,8 +1007,8 @@ class MainViewModel(private val context: Context) : ViewModel() {
                         loadMasterRecords()
                     }
                     else if (userRole.capitalize() == "Client") {
-                        if (_currentUser.value?.client?.mastersIds != null) {
-                            getMastersByIds(ids = _currentUser.value!!.client!!.mastersIds) {}
+                        if (currentUser?.client?.mastersIds != null) {
+                            getMastersByIds(ids = currentUser!!.client!!.mastersIds) {}
                         }
                     }
                 } catch (e: Exception) {
@@ -1156,7 +1156,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
                     }
                 }
 
-                _currentUser.value?.master?.images = imageFiles.toMutableList()
+                currentUser?.master?.images = imageFiles.toMutableList()
             }
         } else {
             Log.d(MY_LOG, "Failed to loadMastersWorks")
@@ -1184,7 +1184,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
                 val bitmap = BitmapFactory.decodeStream(responseBody.byteStream())
                 val file = saveBitmapToFile(bitmap, context)
                 file?.let {
-                    _currentUser.value?.master?.profileImage = it
+                    currentUser?.master?.profileImage = it
                 }
             }
             Log.d(MY_LOG, "Success to loadMasterImage")

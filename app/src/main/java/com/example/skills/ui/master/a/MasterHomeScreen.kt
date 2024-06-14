@@ -45,7 +45,7 @@ fun MainMasterScreen(
     navigateToShare: () -> Unit,
     viewModel: MainViewModel
 ) {
-    val master by viewModel.currentUser.collectAsState()
+    val master = viewModel.currentUser
     val isLoading by viewModel.isLoading.collectAsState()
 
     if (isLoading || master == null) {
@@ -117,7 +117,7 @@ fun MainMasterScreen(
             } else {
                 MasterHomeScreen(
                     innerPadding,
-                    master!!,
+                    master,
                     viewModel
                 )
             }
