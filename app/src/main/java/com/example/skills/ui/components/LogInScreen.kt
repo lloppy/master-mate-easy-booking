@@ -392,16 +392,16 @@ fun Password(
 
 
 fun loginWithout(viewModel: MainViewModel, navigateToMain: () -> Unit) {
-    Log.e(MY_LOG, viewModel.currentUser?.email.toString())
-    Log.e(MY_LOG, viewModel.currentUser?.password.toString())
-    Log.e(MY_LOG, viewModel.userRole.toString())
+    Log.e(MY_LOG, "email is " + viewModel.currentUser?.email.toString())
+    Log.e(MY_LOG, "password is " + viewModel.currentUser?.password.toString())
+    Log.e(MY_LOG, "route is " + viewModel.userRole.toString())
 
     if (!viewModel.currentUser?.email.isNullOrEmpty()) {
 
         try {
             val authRequest = LogInRequest(
                 email = viewModel.currentUser?.email!!,
-                password = "00pp" //viewModel.currentUser?.password!!
+                password = viewModel.currentUser?.password!!
             )
             viewModel.authenticate(
                 viewModel.userRole.toString().toLowerCase(),
@@ -414,7 +414,7 @@ fun loginWithout(viewModel: MainViewModel, navigateToMain: () -> Unit) {
         } catch (e: Exception) {
             Log.e(
                 MY_LOG,
-                "error login with email " + viewModel.currentUser?.email.toString()
+                "LOGIN SCREEN: error login with email " + viewModel.currentUser?.email.toString()
             )
         }
 

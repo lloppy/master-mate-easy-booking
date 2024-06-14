@@ -46,15 +46,14 @@ fun ViewMasterHead(master: MasterForClient, navigateToServices: () -> Unit) {
     //val imageFile = master?.profilePictureId
     val imageFile = null
 
-    val painter = if (imageFile != null) {
-        rememberAsyncImagePainter(
-            model = imageFile,
-            placeholder = painterResource(id = R.drawable.master),
-            error = painterResource(id = R.drawable.master)
-        )
-    } else {
-        painterResource(id = R.drawable.master)
-    }
+//    if (imageFile != null) {
+//        rememberAsyncImagePainter(
+//            model = imageFile,
+//            placeholder = painterResource(id = R.drawable.master),
+//            error = painterResource(id = R.drawable.master)
+//        )
+//    } else { }
+    val painter =  painterResource(id = R.drawable.master)
 
     if (master.messenger == null) master.messenger = "https://t.me/lloppy"
     val uri = Uri.parse(master.messenger)

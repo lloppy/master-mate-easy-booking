@@ -106,7 +106,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
             }
         } else {
             Log.d(MY_LOG, "Gg, it`s old deprecated session 💩💩")
-            logout()
+            //logout()
         }
     }
 
@@ -181,22 +181,21 @@ class MainViewModel(private val context: Context) : ViewModel() {
 
             try {
                 val response = apiService.authenticate(authRequest)
+                if (response.isSuccessful && response.body()?.token != null) {
+                    _userToken = response.body()!!.token
+                    saveTokenToPreferences(_userToken!!)
+                    Network.updateToken(_userToken)
 
-                if (route == "client" && currentUser?.client != null
-                    || route == "master" && currentUser?.master != null
-                ) {
-                    if (response.isSuccessful && response.body()?.token != null) {
-                        _userToken = response.body()!!.token
-                        saveTokenToPreferences(_userToken!!)
-                        Network.updateToken(_userToken)
-                        userIsAuthenticated.value = true
-                        onResponse(true)
-                    } else {
-                        Log.e(MY_LOG, "Authentication failed: ${response.errorBody().toString()}")
-                        Toast.makeText(context, "Authentication failed", Toast.LENGTH_SHORT).show()
-                        onResponse(false)
-                    }
+                    loadCurrentUser(userRole = route, context = context, token = "Bearer $_userToken")
+
+                    userIsAuthenticated.value = true
+                    onResponse(true)
+                } else {
+                    Log.e(MY_LOG, "Authentication failed: ${response.errorBody().toString()}")
+                    Toast.makeText(context, "Authentication failed", Toast.LENGTH_SHORT).show()
+                    onResponse(false)
                 }
+
             } catch (e: Exception) {
                 Log.d(MY_LOG, "Authorization exception")
                 handleApiException(e)
@@ -437,6 +436,59 @@ class MainViewModel(private val context: Context) : ViewModel() {
         }
     }
 
+    fun getMastersByIds(ids: List<Int>, onAddComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            try {
+                val responses = ids.map { id ->
+                    async {
+                        apiService.getUserById(id = id, token = "Bearer $_userToken")
+                    }
+                }.awaitAll()
+
+                val masterResponses = responses.mapNotNull { response ->
+                    if (response.isSuccessful) {
+                        response.body()?.let { data ->
+                            MasterForClient(
+                                id = data.id,
+                                fullName ="${data.firstName} ${data.lastName}" ,
+                                description = data.master?.description,
+                                address = data.master?.address,
+                                masterId = data.master?.masterId,
+                                messenger = data.master?.messenger,
+                                profilePictureId = data.master?.profilePictureId,
+                                additionalImagesIds = data.master?.additionalImagesIds,
+                                phoneNumber = data.phone,
+                                services = data.master?.services,
+                                categories = data.master?.categories,
+                                schedule = data.master?.schedule,
+                                profileImage = null,
+                                images = null
+                            )
+                        }
+                    } else {
+                        null
+                    }
+                }
+
+                val newMasters = masterResponses.filter { master ->
+                    _mastersForClient.value.none { it.id == master.id }
+                }
+
+                if (newMasters.isNotEmpty()) {
+                    _mastersForClient.value += newMasters
+                }
+
+                onAddComplete(true)
+            } catch (e: Exception) {
+                handleApiException(e)
+                onAddComplete(false)
+            }
+            _isLoading.emit(false)
+        }
+    }
+
+
     fun addMasterById(id: Int, onAddComplete: (Boolean) -> Unit) {
         viewModelScope.launch {
             _isLoading.emit(true)
@@ -465,9 +517,10 @@ class MainViewModel(private val context: Context) : ViewModel() {
                             images = null
                         )
 
-                        if (_mastersForClient.value.all { it.id != id }) {
+                        //if (_mastersForClient.value.all { it.id != id }) {
+                            Log.e(MY_LOG, "add + master, ${data.fullName}")
                             _mastersForClient.value += masterResponse
-                        }
+                        //}
                     }
                 }
             } catch (e: Exception) {
@@ -826,7 +879,8 @@ class MainViewModel(private val context: Context) : ViewModel() {
         viewModelScope.launch {
             _isLoading.emit(true)
             try {
-                val response = apiService.deleteSchedule(token = "Bearer $_userToken", dates = dates)
+                val response =
+                    apiService.deleteSchedule(token = "Bearer $_userToken", dates = dates)
                 if (response.isSuccessful) {
                     val data = response.body()
                     getScheduleByToken {}
@@ -918,7 +972,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
             if (context is MainActivity) {
                 context.restartApp()
             }
-        //            Handler(Looper.getMainLooper()).postDelayed({
+            //            Handler(Looper.getMainLooper()).postDelayed({
 //                exitProcess(0)
 //            }, 100)
         }
@@ -927,15 +981,15 @@ class MainViewModel(private val context: Context) : ViewModel() {
     // ---------------- PRIVATE FUN ------------------------------------------------
     private fun loadCurrentUser(token: String, context: Context, userRole: String) {
         viewModelScope.launch {
-            Log.d(MY_LOG, "Attempting to load user by token")
-            val response = apiService.getUserByToken("Bearer $token")
 
+            val response = apiService.getUserByToken(token)
             if (response.isSuccessful) {
                 Log.d(MY_LOG, "User loaded successfully")
-                currentUser = response.body()
+                //   currentUser = response.body()
+                 currentUser = response.body()
 
-                Log.e(MY_LOG, "mastersId first ${currentUser?.client?.mastersId?.first()}")
-                Log.e(MY_LOG, "mastersId last ${currentUser?.client?.mastersId?.last()}")
+                Log.e(MY_LOG, "mastersId first ${currentUser?.client?.mastersIds?.first()}")
+                Log.e(MY_LOG, "mastersId last ${currentUser?.client?.mastersIds?.last()}")
 
                 try {
                     if (userRole.capitalize() == "Master") {
@@ -945,6 +999,11 @@ class MainViewModel(private val context: Context) : ViewModel() {
                         loadMasterWorks(context)
                         loadMasterRecords()
                     }
+                    else if (userRole.capitalize() == "Client") {
+                        if (currentUser?.client?.mastersIds != null) {
+                            getMastersByIds(ids = currentUser!!.client!!.mastersIds) {}
+                        }
+                    }
                 } catch (e: Exception) {
                     Log.e(
                         MY_LOG,
@@ -953,7 +1012,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
                 }
 
                 try {
-                    getScheduleByToken() {}
+                    getScheduleByToken {}
                 } catch (e: Exception) {
                 }
 

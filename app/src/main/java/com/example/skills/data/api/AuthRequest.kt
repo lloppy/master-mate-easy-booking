@@ -125,16 +125,10 @@ data class ScheduleResponse(
     val endTime: String? = null
 )
 
-data class StartTimeSlot(
-    val hour: Int,
-    val minute: Int,
-    val second: Int,
-    val nano: Int
-)
-
 data class BookingRequest(
     val date: String,
     val timeFrom: String,
     val serviceId: Int,
     val comment: String
 )
+

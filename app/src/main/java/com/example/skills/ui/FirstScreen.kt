@@ -38,8 +38,7 @@ import com.example.skills.ui.theme.fontFamilyInter
 fun RoleScreen(
     navigateToClientLogin: () -> Unit,
     navigateToMasterLogin: () -> Unit,
-    mainViewModel: MainViewModel,
-    navHostController: NavHostController
+    mainViewModel: MainViewModel
 ) {
     val isLoading by mainViewModel.isLoading.collectAsState()
     if (isLoading) {
@@ -105,14 +104,4 @@ fun RoleScreen(
             }
         }
     }
-}
-
-
-@Composable
-fun EmptyScreen(
-
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()){}
 }

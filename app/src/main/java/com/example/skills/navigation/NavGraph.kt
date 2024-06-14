@@ -1,18 +1,12 @@
 package com.example.skills.navigation
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
-import com.example.skills.data.api.LogInRequest
-import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.RoleScreen
 import com.example.skills.ui.client.MainClientLayout
@@ -240,14 +234,13 @@ fun SetupRoleNavGraph(navHostController: NavHostController, mainViewModel: MainV
         if (mainViewModel.currentUser != null) {
             val role = mainViewModel.userRole
             if (role?.toLowerCase() == "master") {
-                    navHostController.navigate(ScreenRole.Master.LogIn.route) {
-                        popUpTo(ScreenRole.RoleLayout.route) { inclusive = true }
+                navHostController.navigate(ScreenRole.Master.LogIn.route) {
+                    popUpTo(ScreenRole.RoleLayout.route) { inclusive = true }
 
                 }
             } else if (role?.toLowerCase() == "client") {
-                    navHostController.navigate(ScreenRole.Client.LogIn.route) {
-                        popUpTo(ScreenRole.RoleLayout.route) { inclusive = true }
-
+                navHostController.navigate(ScreenRole.Client.LogIn.route) {
+                    popUpTo(ScreenRole.RoleLayout.route) { inclusive = true }
                 }
             }
         } else {
@@ -259,8 +252,7 @@ fun SetupRoleNavGraph(navHostController: NavHostController, mainViewModel: MainV
                     navigateToMasterLogin = {
                         navHostController.navigate(ScreenRole.Master.LogIn.route)
                     },
-                    mainViewModel = mainViewModel,
-                    navHostController = navHostController
+                    mainViewModel = mainViewModel
                 )
             }
         }
