@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.toLowerCase
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -96,6 +97,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
         Log.d(MY_LOG, "Initializing ViewModel, reading user credentials")
         _userToken = preferences.getString("token", null)
         _userRole = preferences.getString("role", null)
+
         if (_userRole != null) {
             Log.i(MY_LOG, "👋 Init session. Role is $_userRole, token is $_userToken")
 
@@ -106,7 +108,6 @@ class MainViewModel(private val context: Context) : ViewModel() {
             }
         } else {
             Log.d(MY_LOG, "Gg, it`s old deprecated session 💩💩")
-            //logout()
         }
     }
 
@@ -164,6 +165,8 @@ class MainViewModel(private val context: Context) : ViewModel() {
                     Log.e(MY_LOG, "Registration failed: ${response.errorBody().toString()}")
                     Log.e(MY_LOG, "Try to reinstall app")
                     Toast.makeText(context, "Registration failed", Toast.LENGTH_SHORT).show()
+
+                    logout()
                     onResponse(false)
                 }
             } catch (e: Exception) {
@@ -187,8 +190,8 @@ class MainViewModel(private val context: Context) : ViewModel() {
                     Network.updateToken(_userToken)
 
                     loadCurrentUser(userRole = route, context = context, token = "Bearer $_userToken")
-
                     userIsAuthenticated.value = true
+
                     onResponse(true)
                 } else {
                     Log.e(MY_LOG, "Authentication failed: ${response.errorBody().toString()}")
@@ -985,11 +988,8 @@ class MainViewModel(private val context: Context) : ViewModel() {
             val response = apiService.getUserByToken(token)
             if (response.isSuccessful) {
                 Log.d(MY_LOG, "User loaded successfully")
-                //   currentUser = response.body()
-                 currentUser = response.body()
-
-                Log.e(MY_LOG, "mastersId first ${currentUser?.client?.mastersIds?.first()}")
-                Log.e(MY_LOG, "mastersId last ${currentUser?.client?.mastersIds?.last()}")
+                currentUser = response.body()
+                saveRoleToPreferences(userRole.toLowerCase())
 
                 try {
                     if (userRole.capitalize() == "Master") {
