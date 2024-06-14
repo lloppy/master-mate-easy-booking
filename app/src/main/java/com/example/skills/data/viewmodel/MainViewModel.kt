@@ -1,6 +1,7 @@
 package com.example.skills.data.viewmodel
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -11,10 +12,12 @@ import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.skills.MainActivity
 import com.example.skills.data.api.ActivationRequest
 import com.example.skills.data.api.AuthRequest
 import com.example.skills.data.api.BookingRequest
@@ -912,12 +915,14 @@ class MainViewModel(private val context: Context) : ViewModel() {
         Network.updateToken(null)
 
         if (isExit) {
-            Handler(Looper.getMainLooper()).postDelayed({
-                exitProcess(0)
-            }, 100)
+            if (context is MainActivity) {
+                context.restartApp()
+            }
+        //            Handler(Looper.getMainLooper()).postDelayed({
+//                exitProcess(0)
+//            }, 100)
         }
     }
-
 
     // ---------------- PRIVATE FUN ------------------------------------------------
     private fun loadCurrentUser(token: String, context: Context, userRole: String) {

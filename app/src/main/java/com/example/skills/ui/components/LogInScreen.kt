@@ -1,7 +1,6 @@
 package com.example.skills.ui.components
 
 import android.util.Log
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,7 +18,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -34,7 +32,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,7 +55,6 @@ import androidx.navigation.NavHostController
 import com.example.skills.data.api.LogInRequest
 import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
-import com.example.skills.navigation.ScreenRole
 import com.example.skills.ui.components.tools.EmailState
 import com.example.skills.ui.components.tools.EmailStateSaver
 import com.example.skills.ui.components.tools.LoadingScreen
@@ -113,6 +109,11 @@ fun LogInScreen(
     ) { innerPadding ->
         loginWithout(viewModel, navigateToMain)
 
+        val isLoading by viewModel.isLoading.collectAsState()
+        if (isLoading) {
+            LoadingScreen()
+        }
+
         Box(Modifier.fillMaxSize()) {
             ContentLogIn(
                 innerPadding,
@@ -125,6 +126,7 @@ fun LogInScreen(
         }
     }
 }
+
 @Composable
 fun ContentLogIn(
     innerPadding: PaddingValues,
@@ -209,7 +211,10 @@ fun ContentLogIn(
                             email = emailState.text.trim(),
                             password = passwordState.text.trim()
                         )
-                        viewModel.authenticate(routeLogIn.take(6), authRequest) { successful ->
+                        val route = if (routeLogIn.take(6)
+                                .isEmpty() && !viewModel.userRole.isNullOrEmpty()
+                        ) viewModel.userRole!! else routeLogIn.take(6)
+                        viewModel.authenticate(route, authRequest) { successful ->
                             if (successful) {
                                 navigateToMain.invoke()
                             }
