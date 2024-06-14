@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
@@ -22,6 +23,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,6 +36,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skills.R
+import com.example.skills.data.viewmodel.MainViewModel
+import com.example.skills.ui.master.d.CustomAlertDialog
+import kotlin.system.exitProcess
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,6 +46,7 @@ fun MasterSettingsScreen(
     navigateToEditAccount: () -> Unit,
     navigateToEditPassword: () -> Unit,
     navigateToNotifications: () -> Unit,
+    mainViewModel: MainViewModel,
     exit: () -> Unit
 ) {
     Scaffold(
@@ -65,6 +74,7 @@ fun MasterSettingsScreen(
             navigateToEditAccount,
             navigateToEditPassword,
             navigateToNotifications,
+            mainViewModel,
             exit
         )
     }
@@ -76,8 +86,25 @@ private fun SettingsContent(
     navigateToEditAccount: () -> Unit,
     navigateToEditPassword: () -> Unit,
     navigateToNotifications: () -> Unit,
+    mainViewModel: MainViewModel,
     exit: () -> Unit
 ) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    if (showDialog) {
+        CustomAlertDialog(
+            onDismiss = {
+                showDialog = false
+            },
+            onExit = {
+                showDialog = false
+                mainViewModel.logout(true)
+            },
+            "Закрыть приложение",
+            "Вы уверены что хотите выйти из аккаунта и закрыть приложение?"
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -105,7 +132,7 @@ private fun SettingsContent(
                 navigateToNotifications
             )
         }
-        TextButton(onClick = exit, modifier = Modifier.padding(bottom = 90.dp)) {
+        TextButton(onClick = { showDialog = true }, modifier = Modifier.padding(bottom = 90.dp)) {
             Text(
                 text = "Выйти",
                 color = Color.Red,
@@ -152,7 +179,7 @@ fun SettingsItem(icon: Int, title: String, desc: String, navigateTo: () -> Unit)
                 }
             }
             IconButton(onClick = navigateTo) {
-                Icon(Icons.Default.ArrowForwardIos, contentDescription = "icon")
+                Icon(Icons.AutoMirrored.Filled.ArrowForwardIos, contentDescription = "icon")
             }
         }
         Spacer(modifier = Modifier.height(16.dp))

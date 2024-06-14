@@ -1,6 +1,7 @@
 package com.example.skills.ui.components
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -49,6 +50,7 @@ import androidx.navigation.NavHostController
 import com.example.skills.data.api.AuthRequest
 import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
+import com.example.skills.navigation.ScreenRole
 import com.example.skills.ui.components.tools.EmailState
 import com.example.skills.ui.components.tools.EmailStateSaver
 import com.example.skills.ui.components.tools.LoadingScreen
@@ -84,7 +86,10 @@ fun RegistrationScreen(
                 },
                 navigationIcon = {
                     Row {
-                        IconButton(onClick = { navController.popBackStack() }) {
+                        IconButton(onClick = {
+                            //navController.navigate(ScreenRole.RoleLayout.route)
+                            navController.popBackStack()
+                        }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 tint = Color.Black,
@@ -97,6 +102,7 @@ fun RegistrationScreen(
             )
         },
     ) { innerPadding ->
+
         Box(Modifier.fillMaxSize()) {
             ContentSingIn(innerPadding, navigateToCodeVerification, viewModel, isClient)
 
@@ -105,6 +111,13 @@ fun RegistrationScreen(
                 LoadingScreen()
             }
         }
+    }
+}
+
+@Composable
+fun BackButtonHandler(onBackPressed: () -> Unit) {
+    BackHandler {
+        onBackPressed()
     }
 }
 
@@ -238,9 +251,15 @@ fun ContentSingIn(
                                     SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
                                 val desiredFormat =
                                     SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                                val date = sourceFormat.parse(birthday)
 
-                                desiredFormat.format(date!!)
+                                try {
+                                    val date = sourceFormat.parse(birthday)
+                                    desiredFormat.format(date!!)
+                                } catch (e: Exception){
+                                    val date = sourceFormat.parse("17.04.2004")
+                                    desiredFormat.format(date!!)
+                                }
+
                             }
                         )
                         viewModel.registerUser(passwordState.text, authRequest) { successful ->

@@ -1,5 +1,7 @@
 package com.example.skills.ui
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,17 +12,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skills.R
+import com.example.skills.data.api.LogInRequest
+import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.CustomButton
+import com.example.skills.ui.components.tools.LoadingScreen
 import com.example.skills.ui.theme.fontFamilyInter
 
 @Composable
@@ -29,6 +37,11 @@ fun RoleScreen(
     navigateToMasterLogin: () -> Unit,
     mainViewModel: MainViewModel
 ) {
+    val isLoading by mainViewModel.isLoading.collectAsState()
+    if (isLoading) {
+        LoadingScreen()
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -88,4 +101,14 @@ fun RoleScreen(
             }
         }
     }
+}
+
+
+@Composable
+fun EmptyScreen(
+
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()){}
 }

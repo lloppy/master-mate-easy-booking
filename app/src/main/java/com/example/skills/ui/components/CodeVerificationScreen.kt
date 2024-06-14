@@ -52,6 +52,7 @@ import com.example.skills.data.api.ActivationRequest
 import com.example.skills.data.api.Network
 import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
+import com.example.skills.navigation.ScreenRole
 import com.example.skills.ui.components.tools.LoadingScreen
 import kotlinx.coroutines.delay
 
@@ -95,7 +96,6 @@ fun CodeVerificationScreen(
             )
         },
     ) { innerPadding ->
-
         val isLoading by viewModel.isLoading.collectAsState()
         if (isLoading) {
             LoadingScreen()

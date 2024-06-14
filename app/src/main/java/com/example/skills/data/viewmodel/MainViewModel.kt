@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.getValue
@@ -47,6 +49,7 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import java.net.SocketTimeoutException
 import kotlin.random.Random
+import kotlin.system.exitProcess
 
 const val MY_LOG = "MY_LOG"
 
@@ -56,9 +59,10 @@ class MainViewModel(private val context: Context) : ViewModel() {
 
     private var _userToken: String? = null
         private set
-
     private var _userRole: String? = null
         private set
+    val userRole: String?
+        get() = _userRole
 
     val servicesLiveDataMaster = MutableLiveData<List<Service>?>()
     val categoriesLiveDataMaster = MutableLiveData<List<Category>?>()
@@ -99,6 +103,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
             }
         } else {
             Log.d(MY_LOG, "Gg, it`s old deprecated session 💩💩")
+            logout()
         }
     }
 
@@ -140,7 +145,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
                         currentUser = User(
                             token = _userToken!!,
                             email = authRequest.email,
-                            password = authRequest.password,
+                            password = password,
                             firstName = authRequest.firstName,
                             lastName = authRequest.lastName,
                             phone = authRequest.phoneNumber,
@@ -893,17 +898,24 @@ class MainViewModel(private val context: Context) : ViewModel() {
         }
     }
 
-    fun logout() {
+    fun logout(isExit: Boolean = false) {
         Log.d(MY_LOG, "Logging out user")
-        preferences.edit().remove("token").apply()
-        preferences.edit().remove("role").apply()
-        _userRole = null
 
+        preferences.edit().remove("token").commit()
+        preferences.edit().remove("role").commit()
+
+        _userRole = null
         _userToken = null
         currentUser = null
 
         userIsAuthenticated.value = false
         Network.updateToken(null)
+
+        if (isExit) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                exitProcess(0)
+            }, 100)
+        }
     }
 
 

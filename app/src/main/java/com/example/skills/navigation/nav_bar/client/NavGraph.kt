@@ -61,6 +61,7 @@ fun SetupClientNavGraph(
                 navigateToNotifications = {
                     navHostController.navigate(ScreenRole.Client.Notifications.route)
                 },
+                mainViewModel = mainViewModel,
                 exit = {
                     // крашится, потому что другой роут, нужно потом полностью закрывать приложение
                     navHostController.navigate(ScreenRole.Client.LogIn.route)

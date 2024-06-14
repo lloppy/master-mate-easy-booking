@@ -1,6 +1,7 @@
 package com.example.skills.ui.components
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,7 +20,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -34,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,13 +52,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.api.LogInRequest
 import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
+import com.example.skills.navigation.ScreenRole
 import com.example.skills.ui.components.tools.EmailState
 import com.example.skills.ui.components.tools.EmailStateSaver
 import com.example.skills.ui.components.tools.LoadingScreen
@@ -74,7 +75,7 @@ fun LogInScreen(
     navigateToRegistration: () -> Unit,
     navigateToForgotPassword: () -> Unit,
     navigateToMain: () -> Unit,
-    mainViewModel: MainViewModel
+    viewModel: MainViewModel
 ) {
     Scaffold(
         topBar = {
@@ -95,7 +96,10 @@ fun LogInScreen(
                 },
                 navigationIcon = {
                     Row {
-                        IconButton(onClick = { navController.popBackStack() }) {
+                        IconButton(onClick = {
+                            navController.popBackStack()
+                        }
+                        ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 tint = Color.Black,
@@ -107,6 +111,8 @@ fun LogInScreen(
             )
         }
     ) { innerPadding ->
+        loginWithout(viewModel, navigateToMain)
+
         Box(Modifier.fillMaxSize()) {
             ContentLogIn(
                 innerPadding,
@@ -114,16 +120,15 @@ fun LogInScreen(
                 navigateToRegistration,
                 navigateToForgotPassword,
                 navigateToMain,
-                mainViewModel
+                viewModel
             )
-            val isLoading by mainViewModel.isLoading.collectAsState()
+            val isLoading by viewModel.isLoading.collectAsState()
             if (isLoading) {
                 LoadingScreen()
             }
         }
     }
 }
-
 @Composable
 fun ContentLogIn(
     innerPadding: PaddingValues,
@@ -384,3 +389,33 @@ fun Password(
     )
 }
 
+
+fun loginWithout(viewModel: MainViewModel, navigateToMain: () -> Unit) {
+    Log.e(MY_LOG, viewModel.currentUser?.email.toString())
+    Log.e(MY_LOG, viewModel.currentUser?.password.toString())
+    Log.e(MY_LOG, viewModel.userRole.toString())
+
+    if (!viewModel.currentUser?.email.isNullOrEmpty()) {
+
+        try {
+            val authRequest = LogInRequest(
+                email = viewModel.currentUser?.email!!,
+                password = "00pp" //viewModel.currentUser?.password!!
+            )
+            viewModel.authenticate(
+                viewModel.userRole.toString().toLowerCase(),
+                authRequest
+            ) { successful ->
+                if (successful) {
+                    navigateToMain.invoke()
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(
+                MY_LOG,
+                "error login with email " + viewModel.currentUser?.email.toString()
+            )
+        }
+
+    }
+}
