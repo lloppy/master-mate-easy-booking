@@ -3,6 +3,7 @@ package com.example.skills.navigation
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -235,67 +236,33 @@ fun SetupRoleNavGraph(navHostController: NavHostController, mainViewModel: MainV
         clientNavGraph(navHostController = navHostController, mainViewModel)
         masterNavGraph(navHostController = navHostController, mainViewModel)
 
-        composable(ScreenRole.RoleLayout.route) {
-            if (mainViewModel.currentUser != null) {
-                val role = mainViewModel.userRole
 
-                if (role != null) {
-                    if (role.toLowerCase() == "master") {
-                        navHostController.navigate(ScreenRole.Master.LogIn.route)
-                    } else if (role.toLowerCase() == "client") {
-                        navHostController.navigate(ScreenRole.Client.LogIn.route)
-                    }
+        if (mainViewModel.currentUser != null) {
+            val role = mainViewModel.userRole
+            if (role?.toLowerCase() == "master") {
+                    navHostController.navigate(ScreenRole.Master.LogIn.route) {
+                        popUpTo(ScreenRole.RoleLayout.route) { inclusive = true }
+
                 }
-            } else {
+            } else if (role?.toLowerCase() == "client") {
+                    navHostController.navigate(ScreenRole.Client.LogIn.route) {
+                        popUpTo(ScreenRole.RoleLayout.route) { inclusive = true }
+
+                }
+            }
+        } else {
+            composable(ScreenRole.RoleLayout.route) {
                 RoleScreen(
-                    navigateToClientLogin = { navHostController.navigate(ScreenRole.Client.LogIn.route) },
-                    navigateToMasterLogin = { navHostController.navigate(ScreenRole.Master.LogIn.route) },
-                    mainViewModel = mainViewModel
+                    navigateToClientLogin = {
+                        navHostController.navigate(ScreenRole.Client.LogIn.route)
+                    },
+                    navigateToMasterLogin = {
+                        navHostController.navigate(ScreenRole.Master.LogIn.route)
+                    },
+                    mainViewModel = mainViewModel,
+                    navHostController = navHostController
                 )
             }
         }
     }
 }
-
-
-/*
-                    val role = mainViewModel.userRole
-                    if (role != null) {
-                        if (role.toLowerCase() == "master") {
-                            try {
-                                val authRequest = LogInRequest(
-                                    email = mainViewModel.currentUser!!.email,
-                                    password = mainViewModel.currentUser!!.password
-                                )
-
-                                mainViewModel.authenticate(
-                                    "master",
-                                    authRequest
-                                ){
-                                    Log.e(MY_LOG, "mastermastermaster")
-
-                                }
-                            } catch (e: Exception) {
-                                Toast.makeText(LocalContext.current, "Fail to load master automatically", Toast.LENGTH_SHORT).show()
-                            }
-                        } else if (role.toLowerCase() == "client") {
-                            try {
-                                val authRequest = LogInRequest(
-                                    email = mainViewModel.currentUser!!.email,
-                                    password = mainViewModel.currentUser!!.password
-                                )
-
-                                mainViewModel.authenticate(
-                                    "client",
-                                    authRequest
-                                ){
-                                    Log.e(MY_LOG, "clientclientclientclient")
-
-                                }
-                            } catch (e: Exception) {
-                                Toast.makeText(LocalContext.current, "Fail to load client automatically", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
-                }
-*/

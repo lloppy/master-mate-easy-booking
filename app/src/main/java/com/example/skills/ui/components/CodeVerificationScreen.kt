@@ -83,7 +83,10 @@ fun CodeVerificationScreen(
                 },
                 navigationIcon = {
                     Row {
-                        IconButton(onClick = { navController.popBackStack() }) {
+                        IconButton(onClick = {
+                            //navController.popBackStack()
+                            navController.navigate(ScreenRole.RoleLayout.route)
+                        }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 tint = Color.Black,
@@ -96,6 +99,10 @@ fun CodeVerificationScreen(
             )
         },
     ) { innerPadding ->
+        BackButtonHandler {
+            navController.navigate(ScreenRole.RoleLayout.route)
+        }
+
         val isLoading by viewModel.isLoading.collectAsState()
         if (isLoading) {
             LoadingScreen()

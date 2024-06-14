@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -23,10 +24,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.skills.R
 import com.example.skills.data.api.LogInRequest
 import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
+import com.example.skills.navigation.ScreenRole
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.components.tools.LoadingScreen
 import com.example.skills.ui.theme.fontFamilyInter
@@ -35,7 +38,8 @@ import com.example.skills.ui.theme.fontFamilyInter
 fun RoleScreen(
     navigateToClientLogin: () -> Unit,
     navigateToMasterLogin: () -> Unit,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    navHostController: NavHostController
 ) {
     val isLoading by mainViewModel.isLoading.collectAsState()
     if (isLoading) {

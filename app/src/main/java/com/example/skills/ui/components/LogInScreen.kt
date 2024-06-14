@@ -122,10 +122,6 @@ fun LogInScreen(
                 navigateToMain,
                 viewModel
             )
-            val isLoading by viewModel.isLoading.collectAsState()
-            if (isLoading) {
-                LoadingScreen()
-            }
         }
     }
 }
