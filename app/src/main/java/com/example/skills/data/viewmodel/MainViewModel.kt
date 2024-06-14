@@ -104,6 +104,8 @@ class MainViewModel(private val context: Context) : ViewModel() {
             _userToken?.let {
                 Network.updateToken(it)
                 userIsAuthenticated.value = true
+                Log.d(MY_LOG, "_userToken let is $it")
+
                 loadCurrentUser(it, context, _userRole!!)
             }
         } else {
@@ -184,6 +186,8 @@ class MainViewModel(private val context: Context) : ViewModel() {
 
             try {
                 val response = apiService.authenticate(authRequest)
+                Log.e(MY_LOG, "------------authenticate : ${response.body()?.token.toString()}")
+
                 if (response.isSuccessful && response.body()?.token != null) {
                     _userToken = response.body()!!.token
                     saveTokenToPreferences(_userToken!!)
@@ -985,7 +989,9 @@ class MainViewModel(private val context: Context) : ViewModel() {
     private fun loadCurrentUser(token: String, context: Context, userRole: String) {
         viewModelScope.launch {
 
-            val response = apiService.getUserByToken(token)
+            val newToken = if(!token.startsWith("Bearer")) "Bearer $token" else token
+
+            val response = apiService.getUserByToken(newToken)
             if (response.isSuccessful) {
                 Log.d(MY_LOG, "User loaded successfully")
                 currentUser = response.body()
