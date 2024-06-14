@@ -8,8 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -17,18 +21,19 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.skills.data.viewmodel.MainViewModel
-import com.example.skills.data.viewmodel.MyRepository.getRecordsItemList
 import com.example.skills.data.viewmodel.route.EditBookingViewModel
 import com.example.skills.ui.components.tools.LoadingScreen
 import com.example.skills.ui.master.c.RecordItemCard
@@ -61,6 +66,16 @@ fun ClientBookingsScreen(
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                     )
+                },
+                actions = {
+                    IconButton(onClick = {
+                        viewModel.getRecords {}
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.Refresh,
+                            contentDescription = "Localized description"
+                        )
+                    }
                 }
             )
         }
@@ -88,7 +103,7 @@ fun MasterClientServices(
             end = 16.dp
         )
     ) {
-        val recordItems by remember { mutableStateOf(getRecordsItemList()) }
+        val recordItems = viewModel.recordsLiveData.observeAsState()
 
         val twoSegments = remember { listOf("Актуальные", "История") }
         var selectedTwoSegment by remember { mutableStateOf(twoSegments.first()) }
@@ -109,13 +124,13 @@ fun MasterClientServices(
                 .padding(bottom = 100.dp)
         ) {
             val groupedItems = if (selectedTwoSegment == "Актуальные") {
-                recordItems.filter { it.status == "CREATED" || it.status == "IN_PROGRESS" }
-                    .groupByDate()
+                recordItems.value?.filter { it.status == "CREATED" || it.status == "IN_PROGRESS" }
+                    ?.groupByDate()
             } else {
-                recordItems.filter { it.status == "CANCELLED" || it.status == "COMPLETED" }
-                    .groupByDate()
+                recordItems.value?.filter { it.status == "CANCELLED" || it.status == "COMPLETED" }
+                    ?.groupByDate()
             }
-            groupedItems.forEach { (date, items) ->
+            groupedItems?.forEach { (date, items) ->
                 item {
                     Text(
                         text = date.format(formatter),
@@ -137,6 +152,17 @@ fun MasterClientServices(
                             viewModel
                         )
                     }
+                }
+            } ?: run {
+                item {
+                    Text(
+                        text = "У вас пока нет записей",
+                        color = Color.Gray,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
             }
         }

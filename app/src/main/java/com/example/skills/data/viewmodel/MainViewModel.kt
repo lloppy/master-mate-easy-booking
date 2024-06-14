@@ -1,19 +1,14 @@
 package com.example.skills.data.viewmodel
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.text.toLowerCase
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -53,7 +48,6 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import java.net.SocketTimeoutException
 import kotlin.random.Random
-import kotlin.system.exitProcess
 
 const val MY_LOG = "MY_LOG"
 
@@ -192,7 +186,11 @@ class MainViewModel(private val context: Context) : ViewModel() {
                 if (response.isSuccessful && response.body()?.token != null) {
                     _userToken = response.body()!!.token
                     Network.updateToken(_userToken)
-                    loadCurrentUser(userRole = route, context = context, token = "Bearer $_userToken")
+                    loadCurrentUser(
+                        userRole = route,
+                        context = context,
+                        token = "Bearer $_userToken"
+                    )
 
                     saveTokenToPreferences(_userToken!!)
                     userIsAuthenticated.value = true
@@ -247,7 +245,12 @@ class MainViewModel(private val context: Context) : ViewModel() {
             try {
                 val responses = categoryIds.map { category ->
                     async {
-                        category.id?.let { apiService.getCategoryServices(token = "Bearer $_userToken", it) }
+                        category.id?.let {
+                            apiService.getCategoryServices(
+                                token = "Bearer $_userToken",
+                                it
+                            )
+                        }
                     }
                 }.awaitAll()
 
@@ -445,6 +448,11 @@ class MainViewModel(private val context: Context) : ViewModel() {
     }
 
     fun getMastersByIds(ids: List<Int>, onAddComplete: (Boolean) -> Unit) {
+        Log.e(
+            MY_LOG,
+            "ids for getting first master: first is ${ids.first()}, last is ${ids.last()}"
+        )
+
         viewModelScope.launch {
             _isLoading.emit(true)
             try {
@@ -459,7 +467,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
                         response.body()?.let { data ->
                             MasterForClient(
                                 id = data.id,
-                                fullName ="${data.firstName} ${data.lastName}" ,
+                                fullName = "${data.firstName} ${data.lastName}",
                                 description = data.master?.description,
                                 address = data.master?.address,
                                 masterId = data.master?.masterId,
@@ -477,14 +485,19 @@ class MainViewModel(private val context: Context) : ViewModel() {
                     } else {
                         null
                     }
-                }
 
+                }
                 val newMasters = masterResponses.filter { master ->
                     _mastersForClient.value.none { it.id == master.id }
                 }
 
                 if (newMasters.isNotEmpty()) {
                     _mastersForClient.value += newMasters
+                    Log.e(
+                        MY_LOG,
+                        "getting first master: id is ${newMasters.first().id}, MasterID is ${newMasters.first().masterId}"
+                    )
+
                 }
 
                 onAddComplete(true)
@@ -526,8 +539,8 @@ class MainViewModel(private val context: Context) : ViewModel() {
                         )
 
                         //if (_mastersForClient.value.all { it.id != id }) {
-                            Log.e(MY_LOG, "add + master, ${data.fullName}")
-                            _mastersForClient.value += masterResponse
+                        Log.e(MY_LOG, "add + master, ${data.fullName}")
+                        _mastersForClient.value += masterResponse
                         //}
                     }
                 }
@@ -990,7 +1003,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
     private fun loadCurrentUser(token: String, context: Context, userRole: String) {
         viewModelScope.launch {
 
-            val newToken = if(!token.startsWith("Bearer")) "Bearer $token" else token
+            val newToken = if (!token.startsWith("Bearer")) "Bearer $token" else token
 
             val response = apiService.getUserByToken(newToken)
             if (response.isSuccessful) {
@@ -1005,10 +1018,10 @@ class MainViewModel(private val context: Context) : ViewModel() {
                         loadMasterImage(context)
                         loadMasterWorks(context)
                         loadMasterRecords()
-                    }
-                    else if (userRole.capitalize() == "Client") {
+                    } else if (userRole.capitalize() == "Client") {
                         if (currentUser?.client?.mastersIds != null) {
-                            getMastersByIds(ids = currentUser!!.client!!.mastersIds) {}
+                            getMastersByIds(ids = currentUser!!.client!!.mastersIds) {
+                            }
                         }
                     }
                 } catch (e: Exception) {
@@ -1142,7 +1155,8 @@ class MainViewModel(private val context: Context) : ViewModel() {
                 val imageFiles = mutableListOf<File>()
 
                 for (id in it) {
-                    val picResponse = apiService.getMastersWorkById(token = "Bearer $_userToken", id)
+                    val picResponse =
+                        apiService.getMastersWorkById(token = "Bearer $_userToken", id)
                     if (picResponse.isSuccessful) {
                         picResponse.body()?.let { responseBody ->
                             val fileName = "image_$id.jpeg"
