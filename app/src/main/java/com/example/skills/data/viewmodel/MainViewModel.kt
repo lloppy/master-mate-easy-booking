@@ -469,6 +469,10 @@ class MainViewModel(private val context: Context) : ViewModel() {
                                 fetchImageById(it)
                             }
 
+                            val worksImages = data.master?.profilePictureId?.let {
+                                fetchImageById(it)
+                            }
+
                             MasterForClient(
                                 id = data.id,
                                 fullName = "${data.firstName} ${data.lastName}",
