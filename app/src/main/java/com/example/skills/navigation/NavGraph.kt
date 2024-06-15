@@ -251,8 +251,7 @@ fun SetupRoleNavGraph(navHostController: NavHostController, mainViewModel: MainV
                     },
                     navigateToMasterLogin = {
                         navHostController.navigate(ScreenRole.Master.LogIn.route)
-                    },
-                    mainViewModel = mainViewModel
+                    }
                 )
             }
         }

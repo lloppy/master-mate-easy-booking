@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.provider.CalendarContract
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -38,6 +39,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.example.skills.R
 import com.example.skills.data.entity.RecordItem
+import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.viewmodel.route.EditBookingViewModel
 import com.example.skills.navigation.ScreenRole
@@ -93,7 +95,7 @@ fun RecordItemCard(
             "Добавить событие в Google Календарь"
         )
     }
-
+    Log.e(MY_LOG, "recordItem.comment is ${recordItem.comment}")
     Column(
         modifier = Modifier
             .padding(bottom = 10.dp, top = 10.dp, start = 8.dp, end = 8.dp)
@@ -101,7 +103,10 @@ fun RecordItemCard(
             .height(
                 164.dp
                     .plus(if (recordItem.status == "CANCELLED" || recordItem.status == "COMPLETED") 24.dp else 0.dp)
-                    .minus(if (isClient && recordItem.comment == null) 24.dp else 0.dp)
+                    .minus(if (isClient && recordItem.comment.isNullOrEmpty()) 36.dp else 0.dp)
+                    .minus(if (isClient && !recordItem.comment.isNullOrEmpty()) 10.dp else 0.dp)
+                    .plus(if (!isClient && !recordItem.comment.isNullOrEmpty() ) 6.dp else 0.dp)
+                    .minus(if (!isClient && recordItem.comment.isNullOrEmpty() ) 10.dp else 0.dp)
             )
             .border(1.dp, Color.LightGray, RoundedCornerShape(20.dp))
             .background(Color.White)
@@ -229,16 +234,19 @@ fun RecordItemCard(
                     maxLines = 3,
                     lineHeight = lineHeight
                 )
-                if (!recordItem.comment.isNullOrEmpty() || !recordItem.comment.isNullOrBlank()) {
-                    Text(
-                        text = "Коментарий: ${recordItem.comment}",
-                        color = Color.LightGray,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 14.sp,
-                        maxLines = 3,
-                        lineHeight = lineHeight
-                    )
+            }
+            if (!recordItem.comment.isNullOrEmpty()) {
+                if (isClient) {
+                    Spacer(modifier = Modifier.height(paddingBetweenText))
                 }
+                Text(
+                    text = "Коментарий: ${recordItem.comment}",
+                    color = Color.LightGray,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp,
+                    maxLines = 3,
+                    lineHeight = lineHeight
+                )
             }
         }
     }

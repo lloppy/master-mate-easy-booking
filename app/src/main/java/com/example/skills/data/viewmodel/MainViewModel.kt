@@ -488,7 +488,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
 
                 }
                 val newMasters = masterResponses.filter { master ->
-                    _mastersForClient.value.none { it.masterId == master.id }
+                    _mastersForClient.value.none { it.masterId == master.masterId }
                 }
 
                 if (newMasters.isNotEmpty()) {

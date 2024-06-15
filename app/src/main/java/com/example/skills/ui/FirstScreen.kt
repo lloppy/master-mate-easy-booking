@@ -37,14 +37,8 @@ import com.example.skills.ui.theme.fontFamilyInter
 @Composable
 fun RoleScreen(
     navigateToClientLogin: () -> Unit,
-    navigateToMasterLogin: () -> Unit,
-    mainViewModel: MainViewModel
+    navigateToMasterLogin: () -> Unit
 ) {
-    val isLoading by mainViewModel.isLoading.collectAsState()
-    if (isLoading) {
-        LoadingScreen()
-    }
-
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
