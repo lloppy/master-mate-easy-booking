@@ -146,10 +146,12 @@ fun MasterClientServices(
 
 
 fun List<RecordItem>.groupByDate(): Map<LocalDate, List<RecordItem>> {
-    return this.groupBy {
-        val dateTime =
+    return this
+        .sortedBy {
             LocalDateTime.parse("${it.date}T${it.timeFrom}", DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-        dateTime.toLocalDate()
-    }
+        }
+        .groupBy {
+            val dateTime = LocalDateTime.parse("${it.date}T${it.timeFrom}", DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+            dateTime.toLocalDate()
+        }
 }
-

@@ -69,7 +69,7 @@ fun ClientBookingsScreen(
                 },
                 actions = {
                     IconButton(onClick = {
-                        viewModel.getRecords {}
+                        viewModel.getClientRecords {}
                     }) {
                         Icon(
                             imageVector = Icons.Filled.Refresh,

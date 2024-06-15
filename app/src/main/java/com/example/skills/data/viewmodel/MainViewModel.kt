@@ -984,7 +984,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
 
                     if (body != null) {
                         loadMasterCategories()
-
+                        loadClientRecords()
                         Log.i(MY_LOG, "createRecord successful")
                         onComplete(true)
                     } else {
