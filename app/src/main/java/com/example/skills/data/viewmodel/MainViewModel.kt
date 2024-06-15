@@ -465,6 +465,10 @@ class MainViewModel(private val context: Context) : ViewModel() {
                 val masterResponses = responses.mapNotNull { response ->
                     if (response.isSuccessful) {
                         response.body()?.let { data ->
+                            val profileImage = data.master?.profilePictureId?.let {
+                                fetchImageById(it)
+                            }
+
                             MasterForClient(
                                 id = data.id,
                                 fullName = "${data.firstName} ${data.lastName}",
@@ -478,7 +482,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
                                 services = data.master?.services,
                                 categories = data.master?.categories,
                                 schedule = data.master?.schedule,
-                                profileImage = null,
+                                profileImage = profileImage,
                                 images = null
                             )
                         }
@@ -574,19 +578,20 @@ class MainViewModel(private val context: Context) : ViewModel() {
         }
     }
 
-    fun getImageById(id: Int, onAddComplete: (Boolean) -> Unit) {
-        viewModelScope.launch {
-            try {
-                val response = apiService.getImageById(id = id, token = "Bearer $_userToken")
-                if (response.isSuccessful) {
-                    response.body()?.let { data ->
-                        Log.e(MY_LOG, "img is $data")
-                    }
+    suspend fun fetchImageById(id: Int): Bitmap? {
+        return try {
+            val response = apiService.getImageById("Bearer $_userToken", id)
+            if (response.isSuccessful) {
+                response.body()?.let { responseBody ->
+                    BitmapFactory.decodeStream(responseBody.byteStream())
                 }
-            } catch (e: Exception) {
-                handleApiException(e)
-                onAddComplete(false)
+            } else {
+                Log.e("API_ERROR", "Error occurred: ${response.errorBody()}")
+                null
             }
+        } catch (e: Exception) {
+            Log.e("API_ERROR", "Exception occurred: $e")
+            null
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.skills.data.api
 
+import android.graphics.Bitmap
 import com.example.skills.data.entity.Address
 import com.example.skills.data.entity.Duration
 import com.example.skills.data.entity.TimeSlot
@@ -96,7 +97,7 @@ data class MasterForClient(
     var categories: List<CategoryResponse>? = null,
     var schedule: List<ScheduleResponse>? = null,
 
-    var profileImage: File? = null,
+    var profileImage: Bitmap? = null,
     var images: MutableList<File>? = null
 )
 

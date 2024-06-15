@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -43,18 +44,6 @@ fun ViewMasterHead(master: MasterForClient, navigateToServices: () -> Unit) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
 
-    //val imageFile = master?.profilePictureId
-    val imageFile = null
-
-//    if (imageFile != null) {
-//        rememberAsyncImagePainter(
-//            model = imageFile,
-//            placeholder = painterResource(id = R.drawable.master),
-//            error = painterResource(id = R.drawable.master)
-//        )
-//    } else { }
-    val painter =  painterResource(id = R.drawable.master)
-
     if (master.messenger == null) master.messenger = "https://t.me/lloppy"
     val uri = Uri.parse(master.messenger)
     val intent = Intent(Intent.ACTION_VIEW, uri)
@@ -73,15 +62,27 @@ fun ViewMasterHead(master: MasterForClient, navigateToServices: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            Image(
-                painter = painter,
-                contentDescription = "Master image",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(120.dp)
-                    .clip(CircleShape),
-                alignment = Alignment.TopCenter
-            )
+            if (master.profileImage != null) {
+                Image(
+                    bitmap = master.profileImage!!.asImageBitmap(),
+                    contentDescription = "Master Image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(CircleShape),
+                    alignment = Alignment.TopCenter
+                )
+            } else {
+                Image(
+                    painter = painterResource(id = R.drawable.master),
+                    contentDescription = "Master image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(CircleShape),
+                    alignment = Alignment.TopCenter
+                )
+            }
         }
         if (master?.description == null) master?.description = ""
         Text(
@@ -163,8 +164,7 @@ fun ViewMasterHead(master: MasterForClient, navigateToServices: () -> Unit) {
                 navigateTo = {
                     navigateToServices.invoke()
                 },
-                buttonText = "Записаться",
-                color = Color.Transparent,
+                buttonText = "Записаться"
             )
         }
     }

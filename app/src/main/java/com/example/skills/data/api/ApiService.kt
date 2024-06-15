@@ -183,7 +183,7 @@ interface ApiService {
 
 
     // image-controller
-    @GET("/api/images/{id}")
+    @GET("api/images/{id}")
     suspend fun getImageById(
         @Header("Authorization") token: String,
         @Path("id") id: Int

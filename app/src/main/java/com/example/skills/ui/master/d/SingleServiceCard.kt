@@ -110,6 +110,17 @@ fun SingleServiceCard(singleService: Service, navController: NavHostController, 
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.clickable { expanded = !expanded })
+            } else {
+                Spacer(modifier = Modifier.height(com.example.skills.ui.client.a.new_booking.paddingBetweenText))
+                Text(
+                    text = "Адрес: " + if (viewModel.currentUser?.master?.address?.city != null && viewModel.currentUser?.master?.address?.city?.isBlank() == false && viewModel.currentUser?.master?.address?.city?.isEmpty() == false) {
+                        viewModel.currentUser!!.master!!.address?.city
+                    } else " — " ,
+                    color = Color.LightGray,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 12.sp,
+                    lineHeight = 17.sp
+                )
             }
             Spacer(modifier = Modifier.height(24.dp))
 
