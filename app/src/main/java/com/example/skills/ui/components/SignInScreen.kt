@@ -39,8 +39,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -51,11 +49,11 @@ import androidx.navigation.NavHostController
 import com.example.skills.data.api.AuthRequest
 import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
-import com.example.skills.navigation.ScreenRole
 import com.example.skills.ui.components.tools.EmailState
 import com.example.skills.ui.components.tools.EmailStateSaver
 import com.example.skills.ui.components.tools.LoadingScreen
 import com.example.skills.ui.components.tools.PasswordState
+import com.example.skills.ui.components.tools.Validator.isBirthDateValid
 import com.example.skills.ui.theme.backgroundMaterial
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -241,33 +239,35 @@ fun ContentSingIn(
                     //  If the birthDate = null, then the master is registered, otherwise the Client.
                     // Date format is yyyy-MM-dd.
                     if (emailState.isValid && passwordState.isValid) {
-                        val authRequest = AuthRequest(
-                            email = emailState.text.trim(),
-                            password = passwordState.text.trim(),
-                            firstName = firstName,
-                            lastName = secondName,
-                            phoneNumber = phone,
-                            birthDate = if (!isClient) null else {
-                                val sourceFormat =
-                                    SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-                                val desiredFormat =
-                                    SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                        //if ((isClient && isBirthDateValid(birthday)) || !isClient) {
+                            val authRequest = AuthRequest(
+                                email = emailState.text.trim(),
+                                password = passwordState.text.trim(),
+                                firstName = firstName,
+                                lastName = secondName,
+                                phoneNumber = phone,
+                                birthDate = if (!isClient) null else {
+                                    val sourceFormat =
+                                        SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+                                    val desiredFormat =
+                                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
-                                try {
-                                    val date = sourceFormat.parse(birthday)
-                                    desiredFormat.format(date!!)
-                                } catch (e: Exception){
-                                    val date = sourceFormat.parse("17.04.2004")
-                                    desiredFormat.format(date!!)
+                                    try {
+                                        val date = sourceFormat.parse(birthday)
+                                        desiredFormat.format(date!!)
+                                    } catch (e: Exception) {
+                                        val date = sourceFormat.parse("17.04.2004")
+                                        desiredFormat.format(date!!)
+                                    }
+
                                 }
-
-                            }
-                        )
-                        viewModel.registerUser(passwordState.text, authRequest) { successful ->
-                            if (successful) {
-                                navigateToCodeVerification.invoke()
-                            }
-                        }
+                            )
+                            viewModel.registerUser(passwordState.text, authRequest) { successful ->
+                                if (successful) {
+                                    navigateToCodeVerification.invoke()
+                                }
+                           }
+                        //   } else { Log.e(MY_LOG, "BirthDate is not valid") }
                     } else {
                         Log.e(MY_LOG, "emailState.isValid && passwordState.isValid not valid")
                     }

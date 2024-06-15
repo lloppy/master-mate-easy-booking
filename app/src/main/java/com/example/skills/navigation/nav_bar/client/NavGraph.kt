@@ -220,7 +220,8 @@ fun SetupClientNavGraph(
                 navController = navHostController,
                 navigateToMain = {
                     navHostController.navigate(ScreenClient.ClientBookingsScreen.route)
-                }
+                },
+                viewModel = mainViewModel
             )
         }
 

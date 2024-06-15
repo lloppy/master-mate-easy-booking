@@ -4,10 +4,8 @@ import android.graphics.Bitmap
 import com.example.skills.data.entity.Address
 import com.example.skills.data.entity.Duration
 import com.example.skills.data.entity.TimeSlot
-import com.example.skills.data.roles.User
+import com.example.skills.data.roles.ClientRequest
 import com.example.skills.data.roles.UserRequest
-import java.io.File
-import java.time.LocalDateTime
 
 data class AuthRequest(
     val email: String,
@@ -49,8 +47,8 @@ data class EditMasterResponse(
 )
 
 data class EditClientRequest(
-    val user: User,
-    val birthDate: LocalDateTime
+    val user: ClientRequest,
+    val birthDate: String
 )
 
 data class EditClientResponse(

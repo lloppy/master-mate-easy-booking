@@ -46,6 +46,13 @@ class UserRequest(
     var phone: String
 )
 
+class ClientRequest(
+    var firstName: String,
+    var lastName: String,
+    val email: String,
+    var phone: String
+)
+
 data class UserTokenResponse(
     val id: Int,
     val email: String = "",

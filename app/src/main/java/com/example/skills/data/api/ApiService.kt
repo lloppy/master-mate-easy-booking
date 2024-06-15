@@ -60,7 +60,7 @@ interface ApiService {
 
     @Multipart
     @POST("/api/masters/me/upload_image")
-    suspend fun uploadMastersPicture(                   // Uploads an additional image
+    suspend fun uploadMastersPicture(
         @Header("Authorization") token: String,
         @Part picture: MultipartBody.Part
     ): Response<ResponseBody>

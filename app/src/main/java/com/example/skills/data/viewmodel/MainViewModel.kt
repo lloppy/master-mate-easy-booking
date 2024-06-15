@@ -19,6 +19,7 @@ import com.example.skills.data.api.ActivationRequest
 import com.example.skills.data.api.AuthRequest
 import com.example.skills.data.api.BookingRequest
 import com.example.skills.data.api.CategoryResponse
+import com.example.skills.data.api.EditClientRequest
 import com.example.skills.data.api.EditMasterRequest
 import com.example.skills.data.api.LogInRequest
 import com.example.skills.data.api.MasterForClient
@@ -424,6 +425,39 @@ class MainViewModel(private val context: Context) : ViewModel() {
             } catch (e: Exception) {
                 handleApiException(e)
                 onServiceEditComplete(false)
+            }
+            _isLoading.emit(false)
+        }
+    }
+
+    fun editClientProfile(
+        newClientInfo: EditClientRequest,
+        context: Context,
+        onProfileEditComplete: (Boolean) -> Unit
+    ) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            try {
+                val response = apiService.editClientProfile("Bearer $_userToken", newClientInfo)
+                if (response.isSuccessful) {
+                    val body = response.body()
+
+                    if (body != null) {
+                        loadCurrentUser(_userToken!!, context, "Client")
+
+                        Log.i(MY_LOG, "Client profile edit successful")
+                        onProfileEditComplete(true)
+                    } else {
+                        Log.e(MY_LOG, "response is null")
+                        onProfileEditComplete(false)
+                    }
+                } else {
+                    Log.e(MY_LOG, "Error is ${response.errorBody()}")
+
+                }
+            } catch (e: Exception) {
+                handleApiException(e)
+                onProfileEditComplete(false)
             }
             _isLoading.emit(false)
         }

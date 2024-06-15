@@ -1,5 +1,7 @@
 package com.example.skills.ui.client.c
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -40,6 +43,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.skills.data.api.EditClientRequest
+import com.example.skills.data.roles.ClientRequest
+import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.ui.components.CustomButton
 import com.example.skills.ui.components.CustomOutlinedTextField
@@ -47,13 +53,15 @@ import com.example.skills.ui.components.Email
 import com.example.skills.ui.components.spaceBetweenOutlinedTextField
 import com.example.skills.ui.components.tools.EmailState
 import com.example.skills.ui.components.tools.EmailStateSaver
-import com.example.skills.ui.master.c.openGoogleCalendar
-import com.example.skills.ui.master.d.CustomAlertDialog
+import com.example.skills.ui.components.tools.Validator.isBirthDateValid
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditClientProfileScreen(
     navController: NavHostController,
+    viewModel: MainViewModel,
     navigateToMain: () -> Unit
 ) {
     Scaffold(
@@ -88,24 +96,29 @@ fun EditClientProfileScreen(
             )
         },
     ) { innerPadding ->
-        EditClientAccountInfo(innerPadding, navigateToMain)
+        EditClientAccountInfo(innerPadding, viewModel, navigateToMain)
     }
 }
 
 @Composable
 private fun EditClientAccountInfo(
     innerPadding: PaddingValues,
+    viewModel: MainViewModel,
     navigateToMain: () -> Unit
 ) {
-    val email by remember { mutableStateOf("") }
-    var firstName by remember { mutableStateOf("") }
-    var secondName by remember { mutableStateOf("") }
-    var phone by remember { mutableStateOf("") }
+    val client = viewModel.currentUser!!
+    val context = LocalContext.current
+
+    val email by remember { mutableStateOf(client.email) }
+    var firstName by remember { mutableStateOf(client.firstName) }
+    var secondName by remember { mutableStateOf(client.lastName) }
+    var phone by remember { mutableStateOf(client.phone) }
+    var birthday by remember { mutableStateOf(if (client.client?.birthday != null) client.client!!.birthday!! else "") }
+
     val focusRequester = remember { FocusRequester() }
     val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
         mutableStateOf(EmailState(email))
     }
-    var birthday by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -149,7 +162,7 @@ private fun EditClientAccountInfo(
                 shape = RoundedCornerShape(16.dp)
             )
             Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
-            Email(emailState, onImeAction = { focusRequester.requestFocus() })
+            Email(emailState, readOnly = true, onImeAction = { focusRequester.requestFocus() })
 
             Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
             OutlinedTextField(
@@ -173,7 +186,40 @@ private fun EditClientAccountInfo(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomButton(
-            navigateToMain, "Сохранить"
+            {
+                if (isBirthDateValid(birthday)) {
+                    val sourceFormat =
+                        SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+                    val desiredFormat =
+                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+                    val date = sourceFormat.parse(birthday)
+
+                    viewModel.editClientProfile(
+                        EditClientRequest(
+                            user = ClientRequest(
+                                firstName = firstName,
+                                lastName = secondName,
+                                email = email,
+                                phone = phone
+                            ),
+                            birthDate = desiredFormat.format(date!!).toString()
+                        ),
+                        context = context
+                    ) { successful ->
+                        if (successful) {
+                            navigateToMain.invoke()
+                        }
+                    }
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Введите дату рождения в формате dd.MM.yyyy",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            },
+            "Сохранить"
         )
         Spacer(modifier = Modifier.height(16.dp))
     }

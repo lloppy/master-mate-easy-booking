@@ -52,6 +52,7 @@ fun CustomOutlinedTextField(
         ),
         interactionSource = interactionSource,
         readOnly = readOnly,
+        enabled = !readOnly,
         shape = RoundedCornerShape(16.dp)
     )
 }
