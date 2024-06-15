@@ -221,6 +221,11 @@ interface ApiService {
         @Header("Authorization") token: String,
     ): Response<List<RecordItem>>
 
+    @GET("api/masters/records/my")
+    suspend fun getClientRecords(
+        @Header("Authorization") token: String,
+    ): Response<List<RecordItem>>
+
     @DELETE("api/masters/me/records")
     suspend fun deleteAllRecords(
         @Header("Authorization") token: String,

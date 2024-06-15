@@ -488,7 +488,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
 
                 }
                 val newMasters = masterResponses.filter { master ->
-                    _mastersForClient.value.none { it.id == master.id }
+                    _mastersForClient.value.none { it.masterId == master.id }
                 }
 
                 if (newMasters.isNotEmpty()) {
@@ -497,9 +497,8 @@ class MainViewModel(private val context: Context) : ViewModel() {
                         MY_LOG,
                         "getting first master: id is ${newMasters.first().id}, MasterID is ${newMasters.first().masterId}"
                     )
-
                 }
-
+                _mastersForClient.value = _mastersForClient.value.distinctBy { it.id }
                 onAddComplete(true)
             } catch (e: Exception) {
                 handleApiException(e)
@@ -944,6 +943,33 @@ class MainViewModel(private val context: Context) : ViewModel() {
         }
     }
 
+    fun getClientRecords(onComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.emit(true)
+            try {
+                val response = apiService.getClientRecords(token = "Bearer $_userToken")
+                if (response.isSuccessful) {
+
+                    val records = response.body()
+                    if (records != null) {
+                        _recordsLiveData.postValue(records!!)
+                        onComplete(true)
+                    } else {
+                        _recordsLiveData.postValue(emptyList())
+                        onComplete(false)
+                    }
+
+                } else {
+                    Log.e(MY_LOG, "Error is ${response.errorBody()}")
+                }
+            } catch (e: Exception) {
+                handleApiException(e)
+                onComplete(false)
+            }
+            _isLoading.emit(false)
+        }
+    }
+
     fun createRecord(
         id: Int,
         bookingRequest: BookingRequest,
@@ -1022,6 +1048,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
                         if (currentUser?.client?.mastersUserIds != null) {
                             getMastersByIds(ids = currentUser!!.client!!.mastersUserIds) {}
                         }
+                        loadClientRecords()
                     }
                 } catch (e: Exception) {
                     Log.e(
@@ -1081,6 +1108,23 @@ class MainViewModel(private val context: Context) : ViewModel() {
 
     private suspend fun loadMasterRecords() {
         val response = apiService.getRecords(token = "Bearer $_userToken")
+        if (response.isSuccessful) {
+            Log.e(MY_LOG, "getRecords is Successful")
+            Log.e(MY_LOG, response.body()?.first()?.status.toString())
+
+            val records = response.body()
+            if (records != null) {
+                _recordsLiveData.postValue(records!!)
+            } else {
+                _recordsLiveData.postValue(emptyList())
+            }
+        } else {
+            Log.e(MY_LOG, "Error is ${response.errorBody()?.string()}")
+        }
+    }
+
+    private suspend fun loadClientRecords() {
+        val response = apiService.getClientRecords(token = "Bearer $_userToken")
         if (response.isSuccessful) {
             Log.e(MY_LOG, "getRecords is Successful")
             Log.e(MY_LOG, response.body()?.first()?.status.toString())
