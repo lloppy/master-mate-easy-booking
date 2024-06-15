@@ -111,7 +111,8 @@ fun RecordItemCard(
 
             val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
             val startTime = LocalTime.parse(recordItem.timeFrom, timeFormatter)
-            val totalDurationMinutes = recordItem.service.duration.hours * 60 + recordItem.service.duration.minutes
+            val totalDurationMinutes =
+                recordItem.service.duration.hours * 60 + recordItem.service.duration.minutes
 
             val timeEnd = startTime.plusMinutes(totalDurationMinutes.toLong())
 
@@ -167,7 +168,7 @@ fun RecordItemCard(
                             try {
                                 editBookingViewModel!!.data1 =
                                     MutableLiveData(
-                                        masters.first{it.masterId == recordItem.masterId}
+                                        masters.first { it.masterId == recordItem.masterId }
 
 
                                     )
@@ -218,15 +219,26 @@ fun RecordItemCard(
 
             if (!isClient) {
                 Spacer(modifier = Modifier.height(paddingBetweenText))
-                val text = if (recordItem.comment.isNullOrEmpty() || recordItem.comment.isNullOrBlank()) ""  else "\nКоментарий: ${recordItem.comment}"
+                val ageWithoutDashes = recordItem.client.age.toString().filterNot { it == '-' }
+
                 Text(
-                    text = "Клиент: ${recordItem.client.fullName} ${recordItem.client.age} лет  " + text,
+                    text = "Клиент: ${recordItem.client.fullName}, $ageWithoutDashes лет",
                     color = Color.LightGray,
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp,
                     maxLines = 3,
                     lineHeight = lineHeight
                 )
+                if (!recordItem.comment.isNullOrEmpty() || !recordItem.comment.isNullOrBlank()) {
+                    Text(
+                        text = "Коментарий: ${recordItem.comment}",
+                        color = Color.LightGray,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 14.sp,
+                        maxLines = 3,
+                        lineHeight = lineHeight
+                    )
+                }
             }
         }
     }
@@ -269,7 +281,8 @@ fun openGoogleCalendar(context: Context, recordItem: RecordItem) {
 
     val zonedDateTime: ZonedDateTime = dateTime.atZone(ZoneId.systemDefault())
 
-    val durationInMinutes = recordItem.service.duration.hours * 60 + recordItem.service.duration.minutes
+    val durationInMinutes =
+        recordItem.service.duration.hours * 60 + recordItem.service.duration.minutes
     val startMillis: Long = zonedDateTime.toInstant().toEpochMilli()
     val endMillis: Long = startMillis + durationInMinutes * 60 * 1000
 

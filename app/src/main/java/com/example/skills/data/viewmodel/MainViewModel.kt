@@ -1019,9 +1019,8 @@ class MainViewModel(private val context: Context) : ViewModel() {
                         loadMasterWorks(context)
                         loadMasterRecords()
                     } else if (userRole.capitalize() == "Client") {
-                        if (currentUser?.client?.mastersIds != null) {
-                            getMastersByIds(ids = currentUser!!.client!!.mastersIds) {
-                            }
+                        if (currentUser?.client?.mastersUserIds != null) {
+                            getMastersByIds(ids = currentUser!!.client!!.mastersUserIds) {}
                         }
                     }
                 } catch (e: Exception) {
