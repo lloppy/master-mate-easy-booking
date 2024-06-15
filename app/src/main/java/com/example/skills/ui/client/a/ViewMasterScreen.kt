@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.rounded.DeleteOutline
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,6 +33,7 @@ import com.example.skills.data.api.MasterForClient
 import com.example.skills.data.viewmodel.MY_LOG
 import com.example.skills.data.viewmodel.MainViewModel
 import com.example.skills.data.viewmodel.route.BookingViewModel
+import com.example.skills.ui.master.a.MasterGallery
 import com.example.skills.ui.master.d.CustomAlertDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -142,6 +142,6 @@ fun MasterHomeScreen(
         Log.e(MY_LOG, "bookingViewModel user categ is ${user.categories?.firstOrNull()}")
 
         ViewMasterHead(user, navigateToServices)
-        //TODO if (user.master?.images != null) MasterGallery(user.master!!.images!!)
+        if (user.images != null) MasterGallery(user.images!!)
     }
 }

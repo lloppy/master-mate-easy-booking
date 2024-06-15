@@ -40,6 +40,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -165,13 +166,13 @@ fun ContentSingIn(
                 Spacer(modifier = Modifier.height(8.dp))
                 CustomOutlinedTextField(
                     value = firstName,
-                    onValueChange = { firstName = it },
+                    onValueChange = { firstName = it.capitalize() },
                     label = "Имя"
                 )
                 Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
                 CustomOutlinedTextField(
                     value = secondName,
-                    onValueChange = { secondName = it },
+                    onValueChange = { secondName = it.capitalize() },
                     label = "Фамилия"
                 )
 

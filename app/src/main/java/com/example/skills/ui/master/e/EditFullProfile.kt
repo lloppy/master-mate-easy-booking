@@ -148,13 +148,13 @@ private fun AddMasterAccountInfo(
         Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField.plus(12.dp)))
         CustomOutlinedTextField(
             value = firstName,
-            onValueChange = { firstName = it },
+            onValueChange = { firstName = it.capitalize() },
             label = "Имя"
         )
         Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))
         CustomOutlinedTextField(
             value = secondName,
-            onValueChange = { secondName = it },
+            onValueChange = { secondName = it.capitalize() },
             label = "Фамилия"
         )
         Spacer(modifier = Modifier.height(spaceBetweenOutlinedTextField))

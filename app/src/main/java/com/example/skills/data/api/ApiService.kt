@@ -60,7 +60,7 @@ interface ApiService {
 
     @Multipart
     @POST("/api/masters/me/upload_image")
-    suspend fun uploadMastersPicture(
+    suspend fun uploadMastersPicture(                   // Uploads an additional image
         @Header("Authorization") token: String,
         @Part picture: MultipartBody.Part
     ): Response<ResponseBody>
@@ -71,7 +71,7 @@ interface ApiService {
     @GET("/api/masters/me/additional_images")
     suspend fun getMastersWorksId(@Header("Authorization") token: String): Response<List<Int>>
 
-    @GET("/api/masters/additional_images/{id}")
+    @GET("/api/images/{id}")
     suspend fun getMastersWorkById(
         @Header("Authorization") token: String,
         @Path("id") id: Int

@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -47,19 +48,6 @@ fun ProfileHead(user: User) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
 
-    val imageFile = user.master?.profileImage
-    val painter = if (imageFile != null && imageFile.exists()) {
-        rememberAsyncImagePainter(
-            ImageRequest.Builder(LocalContext.current).data(data = imageFile).apply(block = fun ImageRequest.Builder.() {
-                placeholder(R.drawable.ic_bin)
-                error(R.drawable.logo)
-            }).build()
-        )
-    } else {
-        painterResource(id = R.drawable.master)
-    }
-
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -74,14 +62,27 @@ fun ProfileHead(user: User) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            Image(
-                painter = painter,
-                contentDescription = "Master image",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.size(120.dp)
-                    .clip(CircleShape),
-                alignment = Alignment.TopCenter
-            )
+            if (user.master?.profileImage != null) {
+                Image(
+                    bitmap = user.master!!.profileImage!!.asImageBitmap(),
+                    contentDescription = "Master Image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(CircleShape),
+                    alignment = Alignment.TopCenter
+                )
+            } else {
+                Image(
+                    painter = painterResource(id = R.drawable.master),
+                    contentDescription = "Master image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(CircleShape),
+                    alignment = Alignment.TopCenter
+                )
+            }
         }
         if (user.master?.description != null) {
             Text(

@@ -31,7 +31,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberAsyncImagePainter
 import com.example.skills.R
 import com.example.skills.data.api.MasterForClient
 import com.example.skills.ui.components.CustomButton
@@ -117,31 +116,32 @@ fun ViewMasterHead(master: MasterForClient, navigateToServices: () -> Unit) {
                 modifier = Modifier.padding(start = 8.dp, end = 8.dp)
             )
         }
-        Spacer(modifier = Modifier.height(paddingBetweenText))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_link),
-                contentDescription = "link",
-                tint = Color(0, 122, 255),
-            )
-            if (master?.messenger == "https://t.me/lloppy") master?.messenger = "Мастер ещё не добавил мессенджер"
-            Text(
-                text = master?.messenger.toString(),
-                fontSize = 14.sp,
-                fontFamily = fontFamilyInter,
-                fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Center,
-                color = Color(0, 122, 255),
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .clickable {
-                        context.startActivity(intent)
-                    }
-            )
+        if (master?.messenger != "https://t.me/lloppy") {
+            Spacer(modifier = Modifier.height(paddingBetweenText))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_link),
+                    contentDescription = "link",
+                    tint = Color(0, 122, 255),
+                )
+                Text(
+                    text = master?.messenger.toString(),
+                    fontSize = 14.sp,
+                    fontFamily = fontFamilyInter,
+                    fontWeight = FontWeight.Normal,
+                    textAlign = TextAlign.Center,
+                    color = Color(0, 122, 255),
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .clickable {
+                            context.startActivity(intent)
+                        }
+                )
+            }
         }
         Row(
             modifier = Modifier

@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -157,8 +158,11 @@ class MainViewModel(private val context: Context) : ViewModel() {
                         Log.i(MY_LOG, "current User is Master")
                     }
                     onResponse(true)
+                } else if (response.body()?.error == "409") {
+                    Toast.makeText(context, "Вы уже зарегистрированны!", Toast.LENGTH_SHORT).show()
                 } else {
                     Log.e(MY_LOG, "Registration failed: ${response.errorBody().toString()}")
+                    Log.e(MY_LOG, "Registration failed: ${response.body()?.error}")
                     Log.e(MY_LOG, "Try to reinstall app")
                     Toast.makeText(context, "Registration failed", Toast.LENGTH_SHORT).show()
 
@@ -281,8 +285,11 @@ class MainViewModel(private val context: Context) : ViewModel() {
                     file = multipartBody
                 )
                 if (response.isSuccessful) {
-                    currentUser?.master?.profileImage = file
-                    Log.d(MY_LOG, "Upload image success")
+                    file.inputStream().use { inputStream ->
+                        val bitmap = BitmapFactory.decodeStream(inputStream)
+                        currentUser?.master?.profileImage = bitmap
+                        Log.d(MY_LOG, "Upload image success")
+                    }
                 } else {
                     Log.e(MY_LOG, "Upload image fail: ${response.errorBody()}")
                 }
@@ -304,12 +311,20 @@ class MainViewModel(private val context: Context) : ViewModel() {
                     picture = multipartBody
                 )
                 if (response.isSuccessful) {
-                    currentUser?.master?.images?.add(file)
+                    currentUser?.master?.images?.add(BitmapFactory.decodeFile(file.absolutePath))
                     Log.d(MY_LOG, "Upload image success: ${response.body()}")
                     loadMasterWorks(context)
                 } else {
-                    Toast.makeText(context, "Upload image fail", Toast.LENGTH_SHORT).show()
-                    Log.e(MY_LOG, "Upload image fail: ${response.code()} - ${response.message()}")
+                    val errorBody = response.errorBody()?.string()
+                    Toast.makeText(
+                        context,
+                        "Upload image fail: ${response.code()}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    Log.e(
+                        MY_LOG,
+                        "Upload image fail: ${response.code()} - ${response.message()} - ${errorBody ?: "No error body"}"
+                    )
                 }
             } catch (e: Exception) {
                 Log.e(MY_LOG, "Exception. Upload image fail: ${e.message}")
@@ -469,8 +484,8 @@ class MainViewModel(private val context: Context) : ViewModel() {
                                 fetchImageById(it)
                             }
 
-                            val worksImages = data.master?.profilePictureId?.let {
-                                fetchImageById(it)
+                            val worksImages = data.master?.additionalImagesIds?.let {
+                                fetchImagesByIds(it)
                             }
 
                             MasterForClient(
@@ -487,7 +502,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
                                 categories = data.master?.categories,
                                 schedule = data.master?.schedule,
                                 profileImage = profileImage,
-                                images = null
+                                images = worksImages
                             )
                         }
                     } else {
@@ -590,11 +605,49 @@ class MainViewModel(private val context: Context) : ViewModel() {
                     BitmapFactory.decodeStream(responseBody.byteStream())
                 }
             } else {
-                Log.e("API_ERROR", "Error occurred: ${response.errorBody()}")
+                Log.e(MY_LOG, "Error occurred: ${response.errorBody()}")
                 null
             }
         } catch (e: Exception) {
-            Log.e("API_ERROR", "Exception occurred: $e")
+            Log.e(MY_LOG, "Exception occurred: $e")
+            null
+        }
+    }
+
+    suspend fun fetchAdditionalImageById(id: Int): Bitmap? {
+        return try {
+            val response = apiService.getMastersWorkById("Bearer $_userToken", id)
+            if (response.isSuccessful) {
+                response.body()?.let { responseBody ->
+                    BitmapFactory.decodeStream(responseBody.byteStream())
+                }
+            } else {
+                Log.e(MY_LOG, "Error occurred: ${response.errorBody()}")
+                Log.e(MY_LOG, "Error occurred id: $id")
+                null
+            }
+        } catch (e: Exception) {
+            Log.e(MY_LOG, "Exception occurred: $e")
+            null
+        }
+    }
+
+    suspend fun fetchImagesByIds(ids: List<Int>): MutableList<Bitmap>? {
+        return try {
+            val images = mutableListOf<Bitmap?>()
+
+            for (id in ids) {
+                val image = fetchAdditionalImageById(id)
+                if (image != null) {
+                    images.add(image)
+                } else {
+                    Log.e(MY_LOG, "Failed to fetch image for id: $id")
+                    return null
+                }
+            }
+            images as MutableList<Bitmap>
+        } catch (e: Exception) {
+            Log.e(MY_LOG, "Exception occurred: $e")
             null
         }
     }
@@ -1050,7 +1103,7 @@ class MainViewModel(private val context: Context) : ViewModel() {
                     if (userRole.capitalize() == "Master") {
                         loadMasterServices()
                         loadMasterCategories()
-                        loadMasterImage(context)
+                        loadMasterImage()
                         loadMasterWorks(context)
                         loadMasterRecords()
                     } else if (userRole.capitalize() == "Client") {
@@ -1149,41 +1202,6 @@ class MainViewModel(private val context: Context) : ViewModel() {
         }
     }
 
-    private fun saveResponseBodyToDisk(
-        responseBody: ResponseBody,
-        context: Context,
-        fileName: String
-    ): File? {
-        return try {
-            val file = File(context.cacheDir, fileName)
-            var inputStream: InputStream? = null
-            var outputStream: FileOutputStream? = null
-
-            try {
-                inputStream = responseBody.byteStream()
-                outputStream = FileOutputStream(file)
-                val buffer = ByteArray(4096)
-                var read: Int
-
-                while (inputStream.read(buffer).also { read = it } != -1) {
-                    outputStream.write(buffer, 0, read)
-                }
-
-                outputStream.flush()
-                file
-            } catch (e: Exception) {
-                Log.e(MY_LOG, "Failed to save file: ${e.message}")
-                null
-            } finally {
-                inputStream?.close()
-                outputStream?.close()
-            }
-        } catch (e: Exception) {
-            Log.e(MY_LOG, "Error writing file to disk: ${e.message}")
-            null
-        }
-    }
-
     private fun generateCode(specificDigit: Int?): String {
         if (specificDigit == null) return "Something went wrong. Please try agan"
 
@@ -1204,24 +1222,23 @@ class MainViewModel(private val context: Context) : ViewModel() {
             val imageIds = response.body()
             imageIds?.let {
                 Log.d(MY_LOG, "Fetched images id: $it")
-                val imageFiles = mutableListOf<File>()
+                val imageFiles = mutableListOf<Bitmap>()
 
                 for (id in it) {
                     val picResponse =
                         apiService.getMastersWorkById(token = "Bearer $_userToken", id)
                     if (picResponse.isSuccessful) {
                         picResponse.body()?.let { responseBody ->
-                            val fileName = "image_$id.jpeg"
-                            val imageFile = saveResponseBodyToDisk(responseBody, context, fileName)
-                            imageFile?.let { file ->
-                                imageFiles.add(file)
+                            val bitmap = BitmapFactory.decodeStream(responseBody.byteStream())
+                            val file = saveBitmapToFile(bitmap, context)
+                            file?.let { file ->
+                                imageFiles.add(BitmapFactory.decodeFile(file.absolutePath))
                             }
                         }
                     } else {
                         Log.d(MY_LOG, "Failed to fetch image for id: $id")
                     }
                 }
-
                 currentUser?.master?.images = imageFiles.toMutableList()
             }
         } else {
@@ -1243,15 +1260,11 @@ class MainViewModel(private val context: Context) : ViewModel() {
         }
     }
 
-    private suspend fun loadMasterImage(context: Context) {
+    private suspend fun loadMasterImage() {
         val response = apiService.getProfilePicture("Bearer $_userToken")
         if (response.isSuccessful) {
             response.body()?.let { responseBody ->
-                val bitmap = BitmapFactory.decodeStream(responseBody.byteStream())
-                val file = saveBitmapToFile(bitmap, context)
-                file?.let {
-                    currentUser?.master?.profileImage = it
-                }
+                currentUser?.master?.profileImage = BitmapFactory.decodeStream(responseBody.byteStream())
             }
             Log.d(MY_LOG, "Success to loadMasterImage")
 

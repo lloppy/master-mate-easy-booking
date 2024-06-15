@@ -1,13 +1,11 @@
 package com.example.skills.data.roles
 
+import android.graphics.Bitmap
 import com.example.skills.data.api.AddressResponse
 import com.example.skills.data.api.CategoryResponse
 import com.example.skills.data.api.ScheduleResponse
 import com.example.skills.data.api.ServiceResponse
 import com.example.skills.data.entity.Address
-import com.example.skills.data.entity.Category
-import com.example.skills.data.entity.Schedule
-import com.example.skills.data.entity.Service
 import java.io.File
 
 class User(
@@ -26,19 +24,19 @@ class User(
 
 ) {
     class Client(
-        val mastersUserIds : List<Int> = emptyList(),
+        val mastersUserIds: List<Int> = emptyList(),
         var birthday: String?
     )
 
     class Master(
         var id: Int? = null,
-        var profileImage: File? = null,
-        var images: MutableList<File>? = null,
+        var profileImage: Bitmap? = null,
+        var images: MutableList<Bitmap>? = null,
 
         var description: String? = null,
         var linkCode: String? = null,
         var personalCode: String? = null,
-        var address: Address? = null,
+        var address: Address? = null
     )
 }
 
@@ -50,32 +48,32 @@ class UserRequest(
 
 data class UserTokenResponse(
     val id: Int,
-    val email: String = "",                  
-    val emailToChange: String = "",          
-    val firstName: String = "",              
-    val lastName: String = "",               
-    val phone: String = "",                  
-    val roles: List<String> = listOf(),      
+    val email: String = "",
+    val emailToChange: String = "",
+    val firstName: String = "",
+    val lastName: String = "",
+    val phone: String = "",
+    val roles: List<String> = listOf(),
     val master: Master? = null,
     val client: Client? = null
 ) {
     data class Master(
-        val masterId: Int,                   
-        val fullName: String = "",               
-        val description: String = "",            
+        val masterId: Int,
+        val fullName: String = "",
+        val description: String = "",
         val address: AddressResponse,
-        val messenger: String = "",              
-        val profilePictureId: Int,           
-        val additionalImagesIds: List<Int> = listOf(), 
-        val phoneNumber: String = "",            
+        val messenger: String = "",
+        val profilePictureId: Int,
+        val additionalImagesIds: List<Int> = listOf(),
+        val phoneNumber: String = "",
         val services: List<ServiceResponse> = listOf(),
         val categories: List<CategoryResponse> = listOf(),
         val schedule: List<ScheduleResponse> = listOf()
     )
 
     data class Client(
-        val id: Int,                        
-        val mastersIds: List<Int> = listOf(),   
-        val birthDate: String = ""              
+        val id: Int,
+        val mastersIds: List<Int> = listOf(),
+        val birthDate: String = ""
     )
 }

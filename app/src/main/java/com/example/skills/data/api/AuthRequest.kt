@@ -98,7 +98,7 @@ data class MasterForClient(
     var schedule: List<ScheduleResponse>? = null,
 
     var profileImage: Bitmap? = null,
-    var images: MutableList<File>? = null
+    var images: MutableList<Bitmap>? = null
 )
 
 data class ServiceResponse(
