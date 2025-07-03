@@ -17,17 +17,20 @@
 ![Иллюстрация к проекту](https://github.com/lloppy/SkillSched/blob/main/cover.png)
 
 
-
-
 ## Description
+
 **MasterMate** is a service for the self-employed (hairdressers, tutors, etc.), who take clients at home, enabling them to schedule appointments and manage these appointments efficiently.
 
-Take a hairdresser, for example. A specialist keeps track of client appointments in a paper diary. After each haircut or by phone, through messengers, clients can schedule their next visit to the master. In this scenario, the client must remember their schedule; there is a risk that the client will forget the appointment and not show up. Also, if the master needs to cancel appointments, they have to call or send messages to everyone and rearrange.
+Take a hairdresser, for example. A specialist keeps track of client appointments in a paper diary. After each haircut or by phone, through messengers, clients can schedule their next visit to the master. In this scenario, the client must remember their schedule; there is a risk that the client will forget the appointment and not show up. Also, if the master needs to cancel appointments, they have to call or send messages to everyone and rearrange.  
 The goal is to automate the appointment booking process with a web service integrated with Google Calendar, mailing services, and Telegram, easing the master's management of appointments for their services.
 
+<br>
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/6a553123-973c-46be-99c1-4d3de3c8514e" alt="Image 2" width="600" />
+</p>
 
-
+<img src="https://github.com/user-attachments/assets/1c3b4b2d-af2d-4731-b4f2-3ab51e3da38a" alt="Image 1" width="200" align="left" style="margin-right: 15px; margin-bottom: 10px;" />
 
 ## Features
 
@@ -39,8 +42,7 @@ The goal is to automate the appointment booking process with a web service integ
 - The ability for the master to cancel all appointments for specific days. Notifications to clients to reschedule at a different time.
 - Additional waiting list feature: clients can join a waiting list if their preferred time is taken. If an earlier booked client cancels their appointment, the waiting list client will be notified that the time has become available and can confirm or decline their booking.
 
-
-
+<br>
 
 ## Support
 
