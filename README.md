@@ -1,5 +1,5 @@
 # MasterMate 
-
+[Figma design source — Дизайн проекта](https://www.figma.com/design/SUfNZlKV60uOeBPLnQhBPA/Дизайн?node-id=0-1&t=gOfnjuJXDXHVdRXW-0)
 
 
 ## Installation
